@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOWN — 기능정의서 v1</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --g:#054f19;--l:#DAF15B;--c:#F5F0E8;--w:#ffffff;
+  --g100:#f0f4f0;--g200:#e0eae0;--g400:#7a9a7a;--g600:#4a6a4a;
+  --a:#1a2e3b;--al:#e8f0f5;
+  --gray100:#f4f4f2;--gray200:#e8e8e4;--gray400:#aaa9a3;--gray600:#666660;--gray900:#1a1a18;
+}
+body{font-family:'Pretendard',sans-serif;background:var(--c);color:var(--gray900);font-size:14px;line-height:1.6}
+
+.doc-header{background:var(--g);color:#fff;padding:48px 60px 40px}
+.doc-header .brand{font-size:11px;letter-spacing:.25em;color:var(--l);text-transform:uppercase;margin-bottom:12px}
+.doc-header h1{font-size:32px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.doc-header .meta{font-size:13px;color:rgba(255,255,255,.5)}
+.doc-header .meta span{margin-right:24px}
+
+.summary-bar{background:var(--g);color:#fff;padding:24px 60px;display:flex;gap:40px;align-items:center;border-top:1px solid rgba(255,255,255,.1)}
+.s-item{text-align:center}
+.s-num{font-size:28px;font-weight:700;color:var(--l)}
+.s-desc{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.1em;margin-top:2px}
+.s-div{width:1px;background:rgba(255,255,255,.15);height:40px}
+
+.sec-label{padding:12px 60px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--gray200)}
+.sec-label.customer{background:var(--w);color:var(--g)}
+.sec-label.admin{background:var(--a);color:var(--l)}
+.sec-label.later{background:var(--gray100);color:var(--gray400)}
+
+.content{padding:40px 60px}
+.content.admin-bg{background:#f0f4f7}
+.content.later-bg{background:var(--gray100)}
+
+.group-title{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gray400);margin-bottom:16px;margin-top:32px;padding-bottom:8px;border-bottom:1px solid var(--gray200)}
+.group-title:first-child{margin-top:0}
+
+.screen-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.screen-grid.three{grid-template-columns:repeat(3,1fr)}
+
+.card{background:#fff;border:1px solid var(--gray200);border-radius:2px;overflow:hidden}
+.card.admin-card{border-color:#c8dae5}
+.card.later-card{opacity:.65}
+
+.card-head{padding:14px 20px;border-bottom:1px solid var(--gray200);display:flex;align-items:baseline;gap:10px}
+.admin-card .card-head{border-bottom-color:#c8dae5}
+.cnum{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--gray400);flex-shrink:0}
+.cnum.g{color:var(--g)}
+.cnum.a{color:var(--a)}
+.ctitle{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.cbadge{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 8px;border-radius:2px;flex-shrink:0}
+.b-must{background:var(--l);color:var(--g)}
+.b-admin{background:var(--al);color:var(--a)}
+.b-later{background:var(--gray200);color:var(--gray400)}
+
+.card-body{padding:0 20px 4px}
+
+.section-block{padding:14px 0;border-bottom:1px solid var(--gray100)}
+.section-block:last-child{border-bottom:none}
+.sb-title{font-size:12px;font-weight:700;color:var(--gray900);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.sb-title .tag{font-size:10px;font-weight:600;letter-spacing:.05em;padding:2px 6px;border-radius:2px;flex-shrink:0}
+.tag-comp{background:#eef7ee;color:var(--g)}
+.tag-func{background:#fff8e0;color:#7a6000}
+.tag-state{background:#f0f0f0;color:var(--gray600)}
+.tag-flow{background:#e8f0f5;color:var(--a)}
+.tag-note{background:#fff0f0;color:#c00}
+
+ul.sl{list-style:none;display:flex;flex-direction:column;gap:3px}
+ul.sl li{font-size:12px;color:var(--gray600);padding-left:12px;position:relative;line-height:1.55}
+ul.sl li::before{content:'—';position:absolute;left:0;color:var(--gray400);font-size:10px;top:3px}
+ul.sl li strong{color:var(--gray900);font-weight:600}
+
+.card-foot{padding:10px 20px;border-top:1px solid var(--gray100);font-size:11px;color:var(--gray400)}
+.card-foot span{color:var(--g);font-weight:600}
+.admin-card .card-foot span{color:var(--a)}
+.admin-card .card-foot{border-top-color:#e8f0f5}
+
+.note-box{background:#fff;border:1.5px solid var(--l);border-radius:2px;padding:18px 22px;margin-top:24px}
+.note-title{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:10px}
+ul.note-list{list-style:none}
+ul.note-list li{font-size:13px;color:var(--gray600);padding:4px 0 4px 16px;position:relative}
+ul.note-list li::before{content:'!';position:absolute;left:0;color:var(--l);font-weight:900;background:var(--g);width:14px;height:14px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;top:6px}
+
+.footer{padding:24px 60px;border-top:1px solid var(--gray200);font-size:12px;color:var(--gray400);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="brand">SOWN — 기능정의서</div>
+  <h1>Feature Definition v1</h1>
+  <div class="meta">
+    <span>2026-05-13</span>
+    <span>고객 화면 11개 · 어드민 8개 · 총 19화면</span>
+    <span>Phase 1 기준</span>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <div class="s-item"><div class="s-num">11</div><div class="s-desc">고객 화면</div></div>
+  <div class="s-div"></div>
+  <div class="s-item"><div class="s-num">8</div><div class="s-desc">어드민 화면</div></div>
+  <div class="s-div"></div>
+  <div class="s-item"><div class="s-num">19</div><div class="s-desc">Phase 1 총계</div></div>
+  <div class="s-div"></div>
+  <div class="s-item"><div class="s-num">+2</div><div class="s-desc">이후 추가 (Journal)</div></div>
+</div>
+
+<!-- ──────────── 고객 화면 ──────────── -->
+<div class="sec-label customer">고객 화면 — Phase 1 필수</div>
+<div class="content">
+
+  <div class="group-title">브랜드 · 탐색</div>
+  <div class="screen-grid">
+
+    <!-- 01 Home -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">01</span>
+        <span class="ctitle">Home</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>브랜드 첫인상 전달 + 핵심 상품·클래스 진입 유도</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB 로고 클릭 / 도메인 직접 접근 / 외부 링크</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>히어로 섹션</strong> — 풀블리드 비주얼 + 슬로건 + Shop CTA 버튼</li>
+            <li><strong>추천 상품 그리드</strong> — 큐레이션 Picks 4~6개 (상품 카드)</li>
+            <li><strong>카테고리 진입 배너</strong> — 장류 / 발효 도구·재료 / 술 담그기</li>
+            <li><strong>브랜드 스토리 한 줄</strong> — 발효·기다림 컨셉</li>
+            <li><strong>Class 진입 CTA</strong> — 체험 클래스 소개 + 신청 버튼</li>
+            <li><strong>신상품 / 시즌 배너</strong> — 어드민에서 ON/OFF 가능</li>
+            <li><strong>GNB</strong> — 로고 / Shop / Class / About / 검색 / 장바구니 / 마이페이지</li>
+            <li><strong>Footer</strong> — 사업자 정보 / SNS / 이용약관 / 개인정보처리방침</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>추천 상품 클릭 → Product Detail 이동</li>
+            <li>카테고리 배너 클릭 → Shop 목록 (카테고리 필터 적용)</li>
+            <li>Class CTA 클릭 → Class 랜딩 이동</li>
+            <li>장바구니 아이콘 → Cart 이동 (담긴 수량 뱃지 표시)</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 상품 카드 skeleton 표시</li>
+            <li><strong>에러</strong> — 상품 로드 실패 시 재시도 버튼</li>
+            <li><strong>빈 상태</strong> — 추천 상품 없을 시 기본 카테고리 배너만 표시</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl">
+            <li>Shop 목록 / Product Detail / Class / About / Cart / 마이페이지 / 검색 결과</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Shop 목록</span> · <span>Product Detail</span> · <span>Class</span> · <span>About</span></div>
+    </div>
+
+    <!-- 02 Shop 목록 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">02</span>
+        <span class="ctitle">Shop 목록</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>전체 상품 탐색 · 카테고리 분류 · 정렬로 구매 욕구 유도</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB Shop 클릭 / Home 카테고리 배너 / 검색 결과 "전체 보기"</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>카테고리 탭</strong> — 전체 / 장류 / 발효 도구·재료 / 술 담그기 / 선물 세트</li>
+            <li><strong>정렬 드롭다운</strong> — 신상 / 인기 / 가격 낮은순 / 가격 높은순</li>
+            <li><strong>상품 카드 그리드</strong> — 이미지 + 이름 + 가격 + 큐레이션 한 줄 + 품절 뱃지</li>
+            <li><strong>페이지네이션 or 무한스크롤</strong> (구현 방식 결정 필요)</li>
+            <li><strong>결과 수 표시</strong> — "총 N개 상품"</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>카테고리 탭 전환 → 해당 카테고리 상품 필터링</li>
+            <li>정렬 변경 → 상품 목록 재정렬</li>
+            <li>상품 카드 클릭 → Product Detail 이동</li>
+            <li>품절 상품 — 카드 표시하되 클릭 비활성화</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 카드 skeleton 6개</li>
+            <li><strong>에러</strong> — 로드 실패 메시지 + 재시도</li>
+            <li><strong>빈 상태</strong> — "해당 카테고리 상품이 없습니다" + 전체 보기 버튼</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Product Detail / 검색 결과</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Product Detail</span> · <span>검색 결과</span></div>
+    </div>
+
+    <!-- 03 Product Detail -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">03</span>
+        <span class="ctitle">Product Detail</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>상품 정보 + 큐레이션 노트 제공으로 구매 전환</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>Shop 목록 카드 클릭 / Home 추천 상품 / 검색 결과 / 마이페이지 주문 이력</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>상품 이미지 갤러리</strong> — 메인 + 썸네일 / 줌 기능</li>
+            <li><strong>상품명 + 가격</strong></li>
+            <li><strong>큐레이션 노트</strong> — SOWN 에디터 설명 (브랜드 차별화 핵심)</li>
+            <li><strong>수량 선택 스피너</strong></li>
+            <li><strong>장바구니 담기 / 바로 구매 버튼</strong></li>
+            <li><strong>상세 설명 탭</strong> — 원산지 / 용량 / 보관법 / 제조사</li>
+            <li><strong>배송 안내</strong> — 무료배송 기준 / 예상 도착일</li>
+            <li><strong>연관 상품 추천</strong> — 같은 카테고리 4개</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>장바구니 담기 → Cart에 수량 추가 + 토스트 알림</li>
+            <li>바로 구매 → Checkout 이동 (Cart 스킵)</li>
+            <li>비로그인 장바구니 → 로컬스토리지 임시 저장 후 로그인 시 병합</li>
+            <li>품절 상태 → 버튼 비활성화 + "품절" 텍스트</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — skeleton UI</li>
+            <li><strong>에러</strong> — 상품 없음 메시지 + Shop 목록 이동</li>
+            <li><strong>품절</strong> — 버튼 비활성화 / 입고 알림 기능 (미정)</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Cart / Checkout (바로구매) / Shop 목록</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Cart</span> · <span>Checkout</span> · <span>Shop 목록</span></div>
+    </div>
+
+    <!-- 08 About -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">08</span>
+        <span class="ctitle">About</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>브랜드 철학·스토리 전달로 신뢰 형성 및 충성 고객 전환</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB About 클릭 / Home 브랜드 스토리 섹션</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>브랜드 스토리</strong> — SOWN의 탄생 이유 + 대표 이미지</li>
+            <li><strong>브랜드 철학</strong> — 발효 = 기다림의 미학 (핵심 카피)</li>
+            <li><strong>큐레이션 기준</strong> — 어떻게 상품을 고르는가</li>
+            <li><strong>팀 / 창업자 소개</strong></li>
+            <li><strong>Shop 진입 CTA</strong> — "지금 쇼핑하기" 버튼</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>CTA 클릭 → Shop 목록 이동</li>
+            <li>인터랙션: 스크롤 리빌 애니메이션</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl"><li>정적 페이지 — 별도 로딩/에러 상태 없음</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Shop 목록 / Home</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Home</span> · <span>Shop 목록</span></div>
+    </div>
+
+    <!-- 11 검색 결과 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">11</span>
+        <span class="ctitle">검색 결과</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>키워드 검색으로 원하는 상품 빠르게 탐색</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB 검색 아이콘 → 검색어 입력 → 엔터 or 검색 버튼</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>검색어 표시</strong> — '"OOO" 검색 결과 N개'</li>
+            <li><strong>상품 결과 목록</strong> — Shop 목록과 동일한 카드 컴포넌트</li>
+            <li><strong>카테고리 필터</strong> — 결과 내 재필터</li>
+            <li><strong>빈 상태 컴포넌트</strong> — 추천 상품 4개</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>상품명 / 큐레이션 노트 텍스트 대상 검색</li>
+            <li>검색어 변경 → 실시간 재검색 (debounce 300ms)</li>
+            <li>카테고리 필터 클릭 → 결과 내 필터링</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — skeleton 카드</li>
+            <li><strong>결과 없음</strong> — "검색 결과가 없습니다" + 추천 상품</li>
+            <li><strong>에러</strong> — 재시도 버튼</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Product Detail / Shop 목록</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Product Detail</span> · <span>Shop 목록</span></div>
+    </div>
+
+  </div>
+
+  <!-- Class -->
+  <div class="group-title">Class</div>
+  <div class="screen-grid three">
+
+    <!-- 04 Class -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">04</span>
+        <span class="ctitle">Class (랜딩)</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>장담그기·술담그기 체험 클래스 소개 및 신청 유도</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB Class / Home Class CTA</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>클래스 소개</strong> — 장담그기 / 술담그기 카드</li>
+            <li><strong>일정 안내</strong> — 다음 기수 예정일</li>
+            <li><strong>커리큘럼 개요</strong></li>
+            <li><strong>후기 섹션</strong></li>
+            <li><strong>신청 CTA</strong> — 폼 or 카카오톡 연결</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-note">Phase 1 제한</span></div>
+          <ul class="sl">
+            <li>예약 시스템 없음 — 외부 채널(폼/카톡) 연결만</li>
+            <li>Phase 2에서 예약·결제 시스템 개발 예정</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl"><li>정적 페이지 — 일정 정보만 CMS 업데이트</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>외부 신청 채널 / Home</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Home</span> · 외부 신청 채널</div>
+    </div>
+
+  </div>
+
+  <!-- 구매 플로우 -->
+  <div class="group-title">구매 플로우</div>
+  <div class="screen-grid three">
+
+    <!-- 05 Cart -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">05</span>
+        <span class="ctitle">Cart</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>담긴 상품 확인·수정 후 결제 진입</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB 장바구니 아이콘 / 상품 상세 "장바구니 담기" 후 토스트</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>담긴 상품 목록</strong> — 이미지 + 이름 + 가격 + 수량</li>
+            <li><strong>수량 변경 스피너</strong></li>
+            <li><strong>상품 삭제 버튼</strong></li>
+            <li><strong>금액 요약</strong> — 상품금액 / 배송비 / 합계</li>
+            <li><strong>무료배송 기준 안내</strong> — 진행 바 or 텍스트</li>
+            <li><strong>결제하기 CTA</strong></li>
+            <li><strong>빈 장바구니</strong> — 추천 상품 4개</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>수량 변경 → 금액 실시간 재계산</li>
+            <li>상품 삭제 → 목록에서 제거 + 합계 재계산</li>
+            <li>비로그인 → 로컬스토리지 Cart, 로그인 시 서버 동기화</li>
+            <li>결제하기 클릭 → 비로그인이면 로그인 페이지로 리다이렉트</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — skeleton 목록</li>
+            <li><strong>에러</strong> — 재시도</li>
+            <li><strong>빈 상태</strong> — "장바구니가 비어있습니다" + 추천 상품</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Checkout / Product Detail</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Checkout</span> · <span>Product Detail</span></div>
+    </div>
+
+    <!-- 06 Checkout -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">06</span>
+        <span class="ctitle">Checkout</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>배송지·결제 수단 입력 후 최종 결제 완료</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>Cart "결제하기" / Product Detail "바로 구매"</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>주문 상품 요약</strong> — 이미지 + 이름 + 수량 + 가격</li>
+            <li><strong>배송지 입력 폼</strong> — 이름 / 연락처 / 우편번호 검색 / 주소 / 상세주소</li>
+            <li><strong>배송 메모</strong> — 드롭다운 + 직접 입력</li>
+            <li><strong>결제 수단 선택</strong> — 신용카드 / 무통장입금 / 카카오페이 / 네이버페이</li>
+            <li><strong>최종 금액 확인</strong> — 상품금액 + 배송비 + 합계</li>
+            <li><strong>결제하기 버튼</strong> — PG 연동</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>우편번호 검색 → 카카오 주소 API 연동</li>
+            <li>저장된 배송지 자동 불러오기 (로그인 시)</li>
+            <li>PG 결제 모듈 연동 (포트원 or 토스페이먼츠 — 결정 필요)</li>
+            <li>결제 완료 → Order Complete 이동</li>
+            <li>결제 실패 → 에러 메시지 + 재시도</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 결제 처리 중 스피너 + 버튼 비활성화</li>
+            <li><strong>에러</strong> — 결제 실패 메시지 (코드별)</li>
+            <li><strong>빈 상태</strong> — 상품 없으면 Cart로 리다이렉트</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Order Complete / Cart (취소 or 실패)</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Order Complete</span> · <span>Cart</span></div>
+    </div>
+
+    <!-- 07 Order Complete -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">07</span>
+        <span class="ctitle">Order Complete</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>주문 완료 확인 + 마이페이지 이동 유도</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>Checkout 결제 성공 후 자동 이동</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>주문 완료 메시지</strong> — 아이콘 + 텍스트</li>
+            <li><strong>주문 번호</strong></li>
+            <li><strong>주문 요약</strong> — 상품명 / 금액 / 배송지</li>
+            <li><strong>마이페이지 이동 버튼</strong> — 주문 내역 확인</li>
+            <li><strong>쇼핑 계속하기 CTA</strong> — Home or Shop 이동</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>주문 완료 이메일 자동 발송 (Supabase Edge Function)</li>
+            <li>Cart 초기화</li>
+            <li>주문 번호 복사 버튼</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>정상</strong> — 주문 완료 화면</li>
+            <li><strong>비정상 접근</strong> — 주문 없으면 Home 리다이렉트</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>마이페이지 / Home / Shop 목록</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>마이페이지</span> · <span>Home</span></div>
+    </div>
+
+  </div>
+
+  <!-- 계정 -->
+  <div class="group-title">계정 · 마이페이지</div>
+  <div class="screen-grid">
+
+    <!-- 09 회원가입/로그인 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">09</span>
+        <span class="ctitle">회원가입 / 로그인</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>회원 인증 후 구매·마이페이지 기능 사용 가능</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB 마이페이지 / Checkout 비로그인 상태 / Cart "결제하기" 클릭</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>탭 전환</strong> — 로그인 / 회원가입</li>
+            <li><strong>이메일 + 비밀번호 폼</strong></li>
+            <li><strong>소셜 로그인</strong> — 카카오 / 네이버 (도입 검토)</li>
+            <li><strong>비밀번호 찾기 링크</strong></li>
+            <li><strong>회원가입 폼</strong> — 이메일 / 비밀번호 / 이름 / 연락처 / 약관 동의</li>
+            <li><strong>비회원 구매 안내</strong> — Checkout 연결 시 옵션 제공</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>Supabase Auth 연동 — 이메일/소셜 로그인</li>
+            <li>로그인 성공 → 이전 페이지 or 마이페이지 이동</li>
+            <li>비밀번호 찾기 → 이메일 재설정 링크 발송</li>
+            <li>회원가입 → 이메일 인증 후 활성화</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 버튼 스피너</li>
+            <li><strong>에러</strong> — 잘못된 비밀번호 / 미가입 이메일 / 중복 이메일 메시지</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>마이페이지 / Checkout / 이전 페이지</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>마이페이지</span> · <span>Checkout</span></div>
+    </div>
+
+    <!-- 10 마이페이지 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="cnum g">10</span>
+        <span class="ctitle">마이페이지</span>
+        <span class="cbadge b-must">필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>주문 이력 확인 / 배송 조회 / 개인정보 관리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>GNB 마이페이지 / Order Complete 이동 버튼</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>주문 내역 목록</strong> — 날짜 / 상품명 / 금액 / 배송 상태</li>
+            <li><strong>배송 조회</strong> — 운송장 번호 → 택배사 API 연동</li>
+            <li><strong>취소 / 반품 신청 폼</strong></li>
+            <li><strong>개인정보 수정</strong> — 비밀번호 / 이름 / 연락처</li>
+            <li><strong>배송지 관리</strong> — 저장 주소 CRUD</li>
+            <li><strong>로그아웃 버튼</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>주문 상세 클릭 → 주문 상세 모달</li>
+            <li>취소 신청 → 어드민 CS 알림</li>
+            <li>비밀번호 변경 → 현재 비밀번호 확인 후 변경</li>
+            <li>배송지 최대 5개 저장</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 주문 목록 skeleton</li>
+            <li><strong>빈 상태</strong> — 주문 없음 + Shop 바로가기</li>
+            <li><strong>비로그인 접근</strong> — 로그인 페이지 리다이렉트</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Product Detail / Shop 목록 / Home</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>Order Complete</span> · <span>Product Detail</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ──────────── 어드민 화면 ──────────── -->
+<div class="sec-label admin">어드민 화면 — 운영 필수</div>
+<div class="content admin-bg">
+
+  <div class="screen-grid">
+
+    <!-- 14 대시보드 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">14</span>
+        <span class="ctitle">대시보드</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>운영 현황 한눈에 파악 + 긴급 처리 항목 빠른 접근</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 로그인 후 기본 화면</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>KPI 카드</strong> — 오늘 매출 / 주문 수 / 신규 회원</li>
+            <li><strong>처리 대기 주문 수</strong> — 바로가기 링크</li>
+            <li><strong>재고 부족 알림</strong> — 기준 이하 상품 목록</li>
+            <li><strong>기간별 매출 차트</strong> — 일 / 주 / 월 탭</li>
+            <li><strong>최근 주문 목록</strong> — 최신 10건</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>KPI 실시간 갱신 (또는 새로고침)</li>
+            <li>재고 부족 알림 클릭 → 재고 관리 이동</li>
+            <li>최근 주문 클릭 → 주문 관리 상세</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 카드 skeleton</li>
+            <li><strong>데이터 없음</strong> — "오늘 주문 없음" 등 메시지</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>주문 관리 / 재고 관리 / 정산·매출</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>주문 관리</span> · <span>재고 관리</span> · <span>정산</span></div>
+    </div>
+
+    <!-- 15 상품 관리 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">15</span>
+        <span class="ctitle">상품 관리</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>상품 등록·수정·삭제·노출 관리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바 "상품 관리"</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>상품 목록 테이블</strong> — 이름 / 카테고리 / 가격 / 재고 / 노출 상태</li>
+            <li><strong>카테고리 필터 + 검색</strong></li>
+            <li><strong>상품 등록 폼</strong> — 이름 / 가격 / 이미지 / 설명 / 큐레이션 노트 / 카테고리</li>
+            <li><strong>이미지 업로드</strong> — 대표 1장 + 상세 다수 (Supabase Storage)</li>
+            <li><strong>노출 토글</strong> — ON / OFF / 품절</li>
+            <li><strong>카테고리 관리</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>상품 등록 → 즉시 Shop에 반영</li>
+            <li>노출 OFF → Shop 목록에서 숨김</li>
+            <li>삭제 → 소프트 삭제 (주문 이력 보존)</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 테이블 skeleton</li>
+            <li><strong>빈 상태</strong> — "등록된 상품 없음" + 등록 버튼</li>
+            <li><strong>저장 중</strong> — 버튼 비활성화 + 스피너</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>재고 관리</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>재고 관리</span></div>
+    </div>
+
+    <!-- 16 주문 관리 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">16</span>
+        <span class="ctitle">주문 관리</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>전체 주문 조회·상태 변경·취소·환불 처리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바 / 대시보드 주문 목록</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>주문 목록 테이블</strong> — 주문번호 / 날짜 / 주문자 / 금액 / 상태</li>
+            <li><strong>상태 필터 탭</strong> — 전체 / 결제완료 / 준비중 / 배송중 / 완료 / 취소</li>
+            <li><strong>검색</strong> — 주문번호 / 이름 / 연락처</li>
+            <li><strong>주문 상세 모달/페이지</strong> — 상품 / 배송지 / 결제 정보</li>
+            <li><strong>상태 변경 드롭다운</strong></li>
+            <li><strong>취소/환불 처리 버튼</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>상태 변경 → 고객 이메일 자동 발송</li>
+            <li>취소 처리 → PG 환불 API 연동</li>
+            <li>배송 준비중 → 배송 관리로 연결</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 테이블 skeleton</li>
+            <li><strong>빈 상태</strong> — "해당 조건 주문 없음"</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>배송 관리 / CS·문의</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>배송 관리</span> · <span>CS/문의</span></div>
+    </div>
+
+    <!-- 17 배송 관리 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">17</span>
+        <span class="ctitle">배송 관리</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>발송 대기 주문 운송장 입력 및 배송 현황 관리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바 / 주문 관리 "배송 준비중" 탭</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>발송 대기 목록</strong> — 운송장 미입력 주문</li>
+            <li><strong>운송장 입력 인풋</strong> — 택배사 선택 + 운송장 번호</li>
+            <li><strong>엑셀 일괄 등록</strong> — CSV 업로드</li>
+            <li><strong>배송 현황 확인</strong> — 택배사 API 조회</li>
+            <li><strong>배송 완료 처리 버튼</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>운송장 입력 → 주문 상태 자동 "배송중" 변경</li>
+            <li>고객 마이페이지 배송 조회 연동</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>빈 상태</strong> — "처리할 배송 없음"</li>
+            <li><strong>업로드 중</strong> — 엑셀 처리 진행 바</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>주문 관리</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>주문 관리</span></div>
+    </div>
+
+    <!-- 18 회원 관리 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">18</span>
+        <span class="ctitle">회원 관리</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>회원 정보 조회 및 계정 관리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>회원 목록 테이블</strong> — 가입일 / 이름 / 이메일 / 주문 수 / 상태</li>
+            <li><strong>회원 검색</strong> — 이름 / 이메일</li>
+            <li><strong>회원 상세</strong> — 개인정보 + 주문 이력</li>
+            <li><strong>계정 정지 / 탈퇴 처리 버튼</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>계정 정지 → 로그인 차단</li>
+            <li>탈퇴 처리 → GDPR 기준 데이터 처리</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 테이블 skeleton</li>
+            <li><strong>빈 상태</strong> — "가입 회원 없음"</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>주문 관리</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>주문 관리</span></div>
+    </div>
+
+    <!-- 19 재고 관리 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">19</span>
+        <span class="ctitle">재고 관리</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>상품별 재고 수량 관리 및 품절 자동 처리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바 / 대시보드 재고 부족 알림</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>상품별 재고 현황 테이블</strong> — 상품명 / 재고 / 부족 여부</li>
+            <li><strong>재고 수동 입력</strong> — 입고 / 조정</li>
+            <li><strong>입출고 이력</strong> — 날짜 / 수량 / 사유</li>
+            <li><strong>부족 알림 기준 설정</strong> — N개 이하 시 알림</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>재고 0 → 상품 자동 품절 처리</li>
+            <li>부족 기준 도달 → 대시보드 알림</li>
+            <li>주문 완료 → 재고 자동 차감</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>부족 경고</strong> — 행 하이라이트</li>
+            <li><strong>품절</strong> — 빨간 뱃지</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>상품 관리 / 대시보드</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>상품 관리</span> · <span>대시보드</span></div>
+    </div>
+
+    <!-- 20 정산/매출 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">20</span>
+        <span class="ctitle">정산 / 매출</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>매출 데이터 분석 및 엑셀 정산 지원</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>기간 선택</strong> — 일 / 주 / 월 / 커스텀 (날짜 피커)</li>
+            <li><strong>매출 합계 카드</strong></li>
+            <li><strong>카테고리별 매출 차트</strong></li>
+            <li><strong>상품별 판매량 순위 테이블</strong></li>
+            <li><strong>결제 수단별 통계</strong></li>
+            <li><strong>엑셀 다운로드 버튼</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>기간 변경 → 데이터 재조회</li>
+            <li>엑셀 다운로드 → CSV or XLSX 파일 생성</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>로딩</strong> — 차트 skeleton</li>
+            <li><strong>데이터 없음</strong> — "해당 기간 매출 없음"</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>대시보드</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>대시보드</span></div>
+    </div>
+
+    <!-- 21 CS/문의 -->
+    <div class="card admin-card">
+      <div class="card-head">
+        <span class="cnum a">21</span>
+        <span class="ctitle">CS / 문의</span>
+        <span class="cbadge b-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>고객 문의 수신·답변·처리 완료 관리</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title">진입 경로</div>
+          <ul class="sl"><li>어드민 사이드바 / 주문 관리 취소 신청</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>문의 목록 테이블</strong> — 날짜 / 유형 / 작성자 / 처리 상태</li>
+            <li><strong>유형 필터</strong> — 배송 / 교환반품 / 상품 / 기타</li>
+            <li><strong>문의 상세 + 답변 작성 에디터</strong></li>
+            <li><strong>처리 완료 토글</strong></li>
+            <li><strong>미처리 수 뱃지</strong> — 사이드바</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-func">기능</span></div>
+          <ul class="sl">
+            <li>답변 저장 → 고객 이메일 발송</li>
+            <li>처리 완료 → 목록 상태 업데이트</li>
+            <li>신규 문의 → 대시보드 알림</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-state">상태</span></div>
+          <ul class="sl">
+            <li><strong>미처리</strong> — 빨간 뱃지</li>
+            <li><strong>빈 상태</strong> — "처리할 문의 없음"</li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>주문 관리 / 회원 관리</li></ul>
+        </div>
+      </div>
+      <div class="card-foot">연결: <span>주문 관리</span> · <span>회원 관리</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ──────────── 이후 추가 ──────────── -->
+<div class="sec-label later">이후 추가 — Phase 2</div>
+<div class="content later-bg">
+  <div class="screen-grid">
+
+    <!-- 12 Journal 목록 -->
+    <div class="card later-card">
+      <div class="card-head">
+        <span class="cnum">12</span>
+        <span class="ctitle">Journal 목록</span>
+        <span class="cbadge b-later">이후 추가</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>발효 이야기·레시피·큐레이션 아티클로 브랜드 신뢰·체류 유도</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>아티클 그리드</strong> — 썸네일 + 제목 + 날짜 + 태그</li>
+            <li><strong>카테고리 태그 필터</strong></li>
+            <li><strong>페이지네이션</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Journal 상세 / Shop 목록</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13 Journal 상세 -->
+    <div class="card later-card">
+      <div class="card-head">
+        <span class="cnum">13</span>
+        <span class="ctitle">Journal 상세</span>
+        <span class="cbadge b-later">이후 추가</span>
+      </div>
+      <div class="card-body">
+        <div class="section-block">
+          <div class="sb-title">목적</div>
+          <ul class="sl"><li>아티클 본문 전달 + 연관 상품 구매 전환</li></ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-comp">컴포넌트</span></div>
+          <ul class="sl">
+            <li><strong>아티클 본문</strong> — 타이틀 / 이미지 / 리치 텍스트</li>
+            <li><strong>연관 상품 CTA</strong> — 아티클 내 상품 연결</li>
+            <li><strong>다음 아티클</strong></li>
+            <li><strong>Journal 목록 돌아가기</strong></li>
+          </ul>
+        </div>
+        <div class="section-block">
+          <div class="sb-title"><span class="tag tag-flow">나가는 경로</span></div>
+          <ul class="sl"><li>Product Detail / Journal 목록</li></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <div class="note-title">이후 결정 항목</div>
+    <ul class="note-list">
+      <li>쿠폰 / 프로모션 관리 — Phase 2 이후 추가</li>
+      <li>클래스 예약 시스템 — Phase 2에서 개발 (Phase 1은 랜딩·외부 연결만)</li>
+      <li>멤버십 / 구독 모델 — 도입 여부 결정 필요</li>
+      <li>PG 결제 모듈 — 포트원 vs 토스페이먼츠 결정 필요</li>
+      <li>소셜 로그인 — 카카오·네이버 도입 여부 결정 필요</li>
+      <li>페이지네이션 vs 무한스크롤 — Shop 목록 구현 방식 결정 필요</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <div>SOWN — 기능정의서 v1 · 2026-05-13</div>
+  <div>총 19화면 (고객 11 + 어드민 8) · Phase 1 기준</div>
+</div>
+
+</body>
+</html>

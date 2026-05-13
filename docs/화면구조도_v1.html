@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOWN — 화면구조도 v1</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #054f19;
+    --lime: #DAF15B;
+    --cream: #F5F0E8;
+    --white: #ffffff;
+    --gray-100: #f4f4f2;
+    --gray-200: #e8e8e4;
+    --gray-400: #aaa9a3;
+    --gray-600: #666660;
+    --gray-900: #1a1a18;
+    --admin: #1a2e3b;
+    --admin-light: #e8f0f5;
+  }
+
+  body {
+    font-family: 'Pretendard', sans-serif;
+    background: var(--cream);
+    color: var(--gray-900);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .doc-header {
+    background: var(--green);
+    color: white;
+    padding: 48px 60px 40px;
+  }
+  .doc-header .brand { font-size: 11px; letter-spacing: 0.25em; color: var(--lime); text-transform: uppercase; margin-bottom: 12px; }
+  .doc-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .doc-header .meta { font-size: 13px; color: rgba(255,255,255,0.5); }
+  .doc-header .meta span { margin-right: 24px; }
+
+  /* SECTION LABEL */
+  .section-label {
+    padding: 12px 60px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .section-label.customer { background: var(--white); color: var(--green); }
+  .section-label.admin { background: var(--admin); color: var(--lime); }
+  .section-label.later { background: var(--gray-100); color: var(--gray-400); }
+
+  /* CONTENT AREA */
+  .content { padding: 40px 60px; }
+  .content.admin-bg { background: #f0f4f7; }
+  .content.later-bg { background: var(--gray-100); }
+
+  /* GNB MAP */
+  .gnb-map {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .gnb-item {
+    padding: 8px 20px;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1.5px solid var(--green);
+    color: var(--green);
+    background: white;
+  }
+  .gnb-item.utility {
+    border-color: var(--gray-200);
+    color: var(--gray-600);
+    font-weight: 400;
+  }
+  .gnb-sep { color: var(--gray-400); font-size: 18px; }
+
+  /* SCREEN GRID */
+  .screen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .screen-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+
+  /* SCREEN CARD */
+  .screen-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .screen-card.admin-card { background: white; border-color: #c8dae5; }
+  .screen-card.later-card { background: white; opacity: 0.6; }
+
+  .card-header {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .admin-card .card-header { border-bottom-color: #c8dae5; }
+
+  .card-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+    flex-shrink: 0;
+  }
+  .card-num.green { color: var(--green); }
+  .card-num.admin-color { color: var(--admin); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--gray-900);
+  }
+  .card-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .badge-must { background: var(--lime); color: var(--green); }
+  .badge-admin { background: var(--admin-light); color: var(--admin); }
+  .badge-later { background: var(--gray-200); color: var(--gray-400); }
+
+  .card-body { padding: 16px 20px 18px; }
+
+  .feature-list { list-style: none; }
+  .feature-list li {
+    font-size: 13px;
+    color: var(--gray-600);
+    padding: 4px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .feature-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gray-400);
+    font-size: 10px;
+    top: 6px;
+  }
+  .feature-list li strong {
+    color: var(--gray-900);
+    font-weight: 600;
+  }
+
+  .card-connection {
+    padding: 10px 20px 14px;
+    border-top: 1px solid var(--gray-100);
+    font-size: 11px;
+    color: var(--gray-400);
+    letter-spacing: 0.03em;
+  }
+  .admin-card .card-connection { border-top-color: #e8f0f5; }
+  .card-connection span { color: var(--green); font-weight: 600; }
+  .admin-card .card-connection span { color: var(--admin); }
+
+  /* GROUP TITLE */
+  .group-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 16px;
+    margin-top: 32px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .group-title:first-child { margin-top: 0; }
+
+  /* FLOW DIAGRAM */
+  .flow-wrap {
+    background: var(--green);
+    border-radius: 2px;
+    padding: 32px 40px;
+    margin-bottom: 40px;
+  }
+  .flow-label { font-size: 11px; letter-spacing: 0.2em; color: var(--lime); text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
+  .flow-row { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .flow-node {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .flow-node.highlight { background: var(--lime); color: var(--green); }
+  .flow-arrow { color: rgba(255,255,255,0.3); font-size: 16px; padding: 0 8px; }
+
+  /* SUMMARY BAR */
+  .summary-bar {
+    background: var(--green);
+    color: white;
+    padding: 24px 60px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  .summary-item { text-align: center; }
+  .summary-num { font-size: 28px; font-weight: 700; color: var(--lime); }
+  .summary-desc { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; margin-top: 2px; }
+  .summary-div { width: 1px; background: rgba(255,255,255,0.15); height: 40px; }
+
+  /* DECISIONS */
+  .decision-box {
+    background: white;
+    border: 1.5px solid var(--lime);
+    border-radius: 2px;
+    padding: 20px 24px;
+    margin-top: 32px;
+  }
+  .decision-title { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+  .decision-list { list-style: none; }
+  .decision-list li { font-size: 13px; color: var(--gray-600); padding: 5px 0; padding-left: 16px; position: relative; }
+  .decision-list li::before { content: '!'; position: absolute; left: 0; color: var(--lime); font-weight: 900; background: var(--green); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; top: 7px; }
+
+  .footer {
+    padding: 24px 60px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 12px;
+    color: var(--gray-400);
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="brand">SOWN — 화면구조도</div>
+  <h1>Screen Architecture v1</h1>
+  <div class="meta">
+    <span>2026-05-13</span>
+    <span>고객 화면 11개 · 어드민 8개 · 총 19화면</span>
+    <span>Phase 1 기준</span>
+  </div>
+</div>
+
+<!-- SUMMARY BAR -->
+<div class="summary-bar">
+  <div class="summary-item">
+    <div class="summary-num">11</div>
+    <div class="summary-desc">고객 화면</div>
+  </div>
+  <div class="summary-div"></div>
+  <div class="summary-item">
+    <div class="summary-num">8</div>
+    <div class="summary-desc">어드민 화면</div>
+  </div>
+  <div class="summary-div"></div>
+  <div class="summary-item">
+    <div class="summary-num">19</div>
+    <div class="summary-desc">Phase 1 총계</div>
+  </div>
+  <div class="summary-div"></div>
+  <div class="summary-item">
+    <div class="summary-num">+2</div>
+    <div class="summary-desc">이후 추가 (Journal)</div>
+  </div>
+</div>
+
+<!-- GNB -->
+<div class="section-label customer">GNB 구조</div>
+<div class="content">
+  <div class="gnb-map">
+    <div class="gnb-item">Shop</div>
+    <div class="gnb-item">Class</div>
+    <div class="gnb-item">About</div>
+    <div class="gnb-item">Journal <span style="font-size:10px;opacity:.5">이후</span></div>
+    <div class="gnb-sep">·</div>
+    <div class="gnb-item utility">검색</div>
+    <div class="gnb-item utility">장바구니</div>
+    <div class="gnb-item utility">마이페이지</div>
+  </div>
+
+  <!-- 구매 플로우 -->
+  <div class="flow-wrap">
+    <div class="flow-label">핵심 구매 플로우</div>
+    <div class="flow-row">
+      <div class="flow-node">Home</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Shop 목록</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Product Detail</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node highlight">Cart</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node highlight">Checkout</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Order Complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- 고객 화면 -->
+<div class="section-label customer">고객 화면 — Phase 1 필수</div>
+<div class="content">
+
+  <div class="group-title">브랜드 · 탐색</div>
+  <div class="screen-grid">
+
+    <!-- 01 Home -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">01</span>
+        <span class="card-title">Home</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>히어로 섹션</strong> — 브랜드 슬로건 + 풀블리드 비주얼</li>
+          <li><strong>추천 상품</strong> — 큐레이션 picks 4~6개</li>
+          <li><strong>카테고리 진입</strong> — 장류 / 도구 / 술담그기</li>
+          <li><strong>브랜드 스토리</strong> — 발효·기다림 컨셉 한 줄</li>
+          <li><strong>Class 진입 CTA</strong> — 체험 클래스 소개</li>
+          <li><strong>신상품 / 시즌 배너</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Shop 목록</span> · <span>Product Detail</span> · <span>Class</span></div>
+    </div>
+
+    <!-- 02 Shop 목록 -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">02</span>
+        <span class="card-title">Shop 목록</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>카테고리 탭</strong> — 전체 / 장류 / 발효 도구·재료 / 술 담그기 / 선물 세트</li>
+          <li><strong>정렬</strong> — 신상 / 인기 / 가격순</li>
+          <li><strong>상품 그리드</strong> — 이미지 + 이름 + 가격 + 큐레이션 한 줄</li>
+          <li><strong>품절 표시</strong></li>
+          <li><strong>페이지네이션 or 무한스크롤</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Product Detail</span> · <span>검색 결과</span></div>
+    </div>
+
+    <!-- 03 Product Detail -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">03</span>
+        <span class="card-title">Product Detail</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>상품 이미지</strong> — 멀티 이미지 / 줌</li>
+          <li><strong>상품명 + 가격</strong></li>
+          <li><strong>큐레이션 노트</strong> — SOWN 에디터 설명</li>
+          <li><strong>수량 선택 + 장바구니 / 바로구매</strong></li>
+          <li><strong>상세 설명</strong> — 원산지·용량·보관법</li>
+          <li><strong>연관 상품 추천</strong></li>
+          <li><strong>배송 안내</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Cart</span> · <span>Checkout</span> · <span>Shop 목록</span></div>
+    </div>
+
+    <!-- 08 About -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">08</span>
+        <span class="card-title">About</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>브랜드 스토리</strong> — SOWN의 탄생 이유</li>
+          <li><strong>브랜드 철학</strong> — 발효 = 기다림의 미학</li>
+          <li><strong>큐레이션 기준</strong> — 어떻게 상품을 고르는가</li>
+          <li><strong>팀/창업자 소개</strong></li>
+          <li><strong>Shop CTA</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Home</span> · <span>Shop 목록</span></div>
+    </div>
+
+    <!-- 11 검색 결과 -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">11</span>
+        <span class="card-title">검색 결과</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>검색어 표시</strong> + 결과 수</li>
+          <li><strong>상품 결과 목록</strong> — Shop 목록과 동일 카드</li>
+          <li><strong>결과 없음 상태</strong> — 빈 상태 + 추천 상품</li>
+          <li><strong>카테고리 필터</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Product Detail</span> · <span>Shop 목록</span></div>
+    </div>
+
+  </div>
+
+  <div class="group-title">Class</div>
+  <div class="screen-grid">
+
+    <!-- 04 Class -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">04</span>
+        <span class="card-title">Class (랜딩)</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>클래스 소개</strong> — 장담그기 / 술담그기</li>
+          <li><strong>일정 안내</strong> — 다음 기수 예정일</li>
+          <li><strong>커리큘럼 개요</strong></li>
+          <li><strong>신청 CTA</strong> — Phase 1: 신청서 폼 or 카카오톡 연결</li>
+          <li><strong>후기</strong></li>
+          <li>⚠️ Phase 1 예약 시스템 없음 — Phase 2에서 개발</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Home</span> · 외부 신청 채널</div>
+    </div>
+
+  </div>
+
+  <div class="group-title">구매 플로우</div>
+  <div class="screen-grid">
+
+    <!-- 05 Cart -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">05</span>
+        <span class="card-title">Cart</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>담긴 상품 목록</strong> — 이미지 + 이름 + 가격</li>
+          <li><strong>수량 변경</strong> / 상품 삭제</li>
+          <li><strong>금액 요약</strong> — 상품금액 / 배송비 / 합계</li>
+          <li><strong>무료배송 기준 안내</strong></li>
+          <li><strong>결제하기 CTA</strong></li>
+          <li><strong>빈 장바구니 상태</strong> — 추천 상품</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Checkout</span> · <span>Product Detail</span></div>
+    </div>
+
+    <!-- 06 Checkout -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">06</span>
+        <span class="card-title">Checkout</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>주문 상품 요약</strong></li>
+          <li><strong>배송지 입력</strong> — 이름 / 연락처 / 주소 (우편번호 검색)</li>
+          <li><strong>배송 메모</strong></li>
+          <li><strong>결제 수단 선택</strong> — 카드 / 무통장 / 카카오페이 등</li>
+          <li><strong>최종 금액 확인</strong></li>
+          <li><strong>결제하기 버튼</strong> — PG 연동</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Order Complete</span> · <span>Cart</span></div>
+    </div>
+
+    <!-- 07 Order Complete -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">07</span>
+        <span class="card-title">Order Complete</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>주문 완료 메시지</strong></li>
+          <li><strong>주문 번호</strong></li>
+          <li><strong>주문 요약</strong> — 상품 / 금액 / 배송지</li>
+          <li><strong>마이페이지 이동</strong> — 주문 내역 확인</li>
+          <li><strong>쇼핑 계속하기</strong> CTA</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>마이페이지</span> · <span>Home</span></div>
+    </div>
+
+  </div>
+
+  <div class="group-title">계정 · 마이페이지</div>
+  <div class="screen-grid">
+
+    <!-- 09 회원가입/로그인 -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">09</span>
+        <span class="card-title">회원가입 / 로그인</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>이메일 로그인</strong></li>
+          <li><strong>소셜 로그인</strong> — 카카오 / 네이버 (검토)</li>
+          <li><strong>회원가입</strong> — 이메일 / 비밀번호 / 이름 / 연락처</li>
+          <li><strong>비밀번호 찾기</strong></li>
+          <li><strong>비회원 구매</strong> — 체크아웃에서 선택 가능</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>마이페이지</span> · <span>Checkout</span></div>
+    </div>
+
+    <!-- 10 마이페이지 -->
+    <div class="screen-card">
+      <div class="card-header">
+        <span class="card-num green">10</span>
+        <span class="card-title">마이페이지</span>
+        <span class="card-badge badge-must">필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>주문 내역</strong> — 날짜 / 상품 / 상태</li>
+          <li><strong>배송 조회</strong> — 운송장 번호 연동</li>
+          <li><strong>취소 / 반품 신청</strong></li>
+          <li><strong>개인정보 수정</strong> — 비밀번호 / 연락처 / 주소</li>
+          <li><strong>배송지 관리</strong> — 자주 쓰는 주소</li>
+          <li><strong>로그아웃</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>Order Complete</span> · <span>Product Detail</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 어드민 화면 -->
+<div class="section-label admin">어드민 화면 — 운영 필수</div>
+<div class="content admin-bg">
+
+  <div class="screen-grid">
+
+    <!-- 14 대시보드 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">14</span>
+        <span class="card-title">대시보드</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>오늘 매출</strong> / 주문 수 / 신규 회원</li>
+          <li><strong>처리 대기 주문</strong> 수 + 바로가기</li>
+          <li><strong>재고 부족 알림</strong></li>
+          <li><strong>기간별 매출 차트</strong> — 일/주/월</li>
+          <li><strong>최근 주문 목록</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>주문 관리</span> · <span>재고 관리</span> · <span>정산</span></div>
+    </div>
+
+    <!-- 15 상품 관리 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">15</span>
+        <span class="card-title">상품 관리</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>상품 목록</strong> — 카테고리 필터 / 검색</li>
+          <li><strong>상품 등록</strong> — 이름 / 가격 / 이미지 / 설명 / 큐레이션 노트</li>
+          <li><strong>상품 수정 / 삭제</strong></li>
+          <li><strong>카테고리 관리</strong></li>
+          <li><strong>노출 ON/OFF</strong> — 품절·숨김 처리</li>
+          <li><strong>대표 이미지 + 상세 이미지 업로드</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>재고 관리</span></div>
+    </div>
+
+    <!-- 16 주문 관리 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">16</span>
+        <span class="card-title">주문 관리</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>주문 목록</strong> — 날짜 / 주문자 / 금액 / 상태</li>
+          <li><strong>상태별 필터</strong> — 결제완료 / 준비중 / 배송중 / 완료 / 취소</li>
+          <li><strong>주문 상세</strong> — 상품 / 배송지 / 결제 정보</li>
+          <li><strong>주문 상태 변경</strong></li>
+          <li><strong>취소 / 환불 처리</strong></li>
+          <li><strong>주문 검색</strong> — 주문번호 / 이름 / 연락처</li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>배송 관리</span> · <span>CS/문의</span></div>
+    </div>
+
+    <!-- 17 배송 관리 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">17</span>
+        <span class="card-title">배송 관리</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>배송 전 주문 목록</strong> — 운송장 미입력</li>
+          <li><strong>운송장 번호 입력</strong> — 개별 / 엑셀 일괄 등록</li>
+          <li><strong>택배사 선택</strong></li>
+          <li><strong>배송 현황 확인</strong></li>
+          <li><strong>배송 완료 처리</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>주문 관리</span></div>
+    </div>
+
+    <!-- 18 회원 관리 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">18</span>
+        <span class="card-title">회원 관리</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>회원 목록</strong> — 가입일 / 이름 / 이메일 / 주문 수</li>
+          <li><strong>회원 상세</strong> — 주문 이력 / 개인정보</li>
+          <li><strong>회원 검색</strong></li>
+          <li><strong>계정 정지 / 탈퇴 처리</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>주문 관리</span></div>
+    </div>
+
+    <!-- 19 재고 관리 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">19</span>
+        <span class="card-title">재고 관리</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>상품별 재고 수량</strong></li>
+          <li><strong>재고 수동 입력</strong> — 입고 / 조정</li>
+          <li><strong>입출고 이력</strong></li>
+          <li><strong>재고 부족 알림 기준 설정</strong></li>
+          <li><strong>품절 자동 처리</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>상품 관리</span> · <span>대시보드</span></div>
+    </div>
+
+    <!-- 20 정산/매출 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">20</span>
+        <span class="card-title">정산 / 매출</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>기간별 매출 합계</strong> — 일 / 주 / 월 / 커스텀</li>
+          <li><strong>카테고리별 매출</strong></li>
+          <li><strong>상품별 판매량 순위</strong></li>
+          <li><strong>결제 수단별 통계</strong></li>
+          <li><strong>엑셀 다운로드</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>대시보드</span></div>
+    </div>
+
+    <!-- 21 CS/문의 -->
+    <div class="screen-card admin-card">
+      <div class="card-header">
+        <span class="card-num admin-color">21</span>
+        <span class="card-title">CS / 문의</span>
+        <span class="card-badge badge-admin">운영 필수</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li><strong>문의 목록</strong> — 날짜 / 유형 / 처리 상태</li>
+          <li><strong>문의 유형</strong> — 배송 / 교환반품 / 상품 / 기타</li>
+          <li><strong>답변 작성</strong></li>
+          <li><strong>처리 완료 표시</strong></li>
+          <li><strong>미처리 알림</strong></li>
+        </ul>
+      </div>
+      <div class="card-connection">연결: <span>주문 관리</span> · <span>회원 관리</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 이후 추가 -->
+<div class="section-label later">이후 추가 (Phase 2)</div>
+<div class="content later-bg">
+  <div class="screen-grid two-col">
+
+    <div class="screen-card later-card">
+      <div class="card-header">
+        <span class="card-num">12</span>
+        <span class="card-title">Journal 목록</span>
+        <span class="card-badge badge-later">이후 추가</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li>발효 이야기 · 레시피 · 큐레이션 아티클 목록</li>
+          <li>카테고리 태그 필터</li>
+          <li>그리드 레이아웃</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="screen-card later-card">
+      <div class="card-header">
+        <span class="card-num">13</span>
+        <span class="card-title">Journal 상세</span>
+        <span class="card-badge badge-later">이후 추가</span>
+      </div>
+      <div class="card-body">
+        <ul class="feature-list">
+          <li>아티클 본문 · 이미지</li>
+          <li>연관 상품 연결 CTA</li>
+          <li>다음 아티클</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="decision-box">
+    <div class="decision-title">이후 결정 항목</div>
+    <ul class="decision-list">
+      <li>쿠폰 / 프로모션 관리 — Phase 2 이후 추가</li>
+      <li>클래스 예약 시스템 — Phase 2에서 개발 (Phase 1은 랜딩만)</li>
+      <li>멤버십 / 구독 모델 — 도입 여부 결정 필요</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <div>SOWN — 화면구조도 v1 · 2026-05-13</div>
+  <div>총 19화면 (고객 11 + 어드민 8) · Phase 1 기준</div>
+</div>
+
+</body>
+</html>

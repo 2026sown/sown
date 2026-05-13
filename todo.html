@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOWN — 할 일 목록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #054f19;
+    --lime: #DAF15B;
+    --white: #ffffff;
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --text: #111111;
+    --muted: #6b6b6b;
+    --border: rgba(0,0,0,0.08);
+    --done-bg: #f0faf3;
+    --done-text: #054f19;
+    --wip-bg: #fffbeb;
+    --wip-text: #92400e;
+    --todo-bg: #f5f5f3;
+    --todo-text: #444;
+    --flag-bg: #fff1f0;
+    --flag-text: #b91c1c;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--green);
+    color: var(--white);
+    padding: 40px 48px 36px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: baseline; gap: 16px; }
+  .brand { font-size: 28px; font-weight: 600; letter-spacing: 0.08em; }
+  .brand-sub { font-size: 13px; color: rgba(255,255,255,0.6); letter-spacing: 0.05em; }
+  .header-date { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: var(--green);
+    padding: 0 48px 28px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .progress-label { color: rgba(255,255,255,0.7); font-size: 12px; white-space: nowrap; }
+  .bar-outer {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .bar-inner {
+    height: 100%;
+    background: var(--lime);
+    border-radius: 99px;
+    transition: width 0.8s ease;
+  }
+  .progress-pct { color: var(--lime); font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat {
+    flex: 1;
+    background: var(--card);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .stat-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .stat-dot.done { background: #16a34a; }
+  .stat-dot.wip  { background: #f59e0b; }
+  .stat-dot.todo { background: #d1d5db; }
+  .stat-dot.flag { background: #ef4444; }
+  .stat-num { font-size: 22px; font-weight: 600; color: var(--text); }
+  .stat-lbl { font-size: 12px; color: var(--muted); }
+
+  /* Main layout */
+  .main { padding: 32px 48px 80px; max-width: 1280px; margin: 0 auto; }
+
+  /* Phase header */
+  .phase-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 48px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .phase-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .phase-title:first-child { margin-top: 0; }
+
+  /* Category */
+  .category { margin-bottom: 32px; }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .category-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .category-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 2px 8px;
+  }
+
+  /* Item list */
+  .item-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: box-shadow 0.15s;
+  }
+  .item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+  .badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 1px;
+    white-space: nowrap;
+  }
+  .badge.done { background: var(--done-bg); color: var(--done-text); }
+  .badge.wip  { background: var(--wip-bg);  color: var(--wip-text);  }
+  .badge.todo { background: var(--todo-bg); color: var(--todo-text); }
+  .badge.flag { background: var(--flag-bg); color: var(--flag-text); }
+
+  .item-text { flex: 1; font-size: 13.5px; color: var(--text); }
+  .item-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Decision section */
+  .decision-box {
+    background: #fff8f0;
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 16px;
+  }
+  .decision-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c2410c;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+  }
+  .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .decision-item {
+    background: white;
+    border: 1px solid #fed7aa;
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .decision-q { font-size: 13px; font-weight: 500; color: #111; }
+  .decision-opts { font-size: 12px; color: #92400e; margin-top: 4px; }
+
+  /* Reference section */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .ref-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: box-shadow 0.15s;
+  }
+  .ref-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+  .ref-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .ref-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .ref-link {
+    font-size: 11px;
+    color: var(--green);
+    text-decoration: none;
+    border: 1px solid rgba(5,79,25,0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+  .ref-link:hover { background: rgba(5,79,25,0.06); }
+  .ref-tag {
+    display: inline-block;
+    font-size: 11px;
+    background: #f0faf3;
+    color: #054f19;
+    border-radius: 4px;
+    padding: 2px 7px;
+    margin-bottom: 10px;
+  }
+  .ref-row { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; line-height: 1.6; }
+  .ref-row strong { color: var(--text); font-weight: 500; }
+  .ref-insight {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: #054f19;
+    background: #f0faf3;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-top: 10px;
+  }
+  .ref-na {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* Position map */
+  .pos-map {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .pos-map-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+  .pos-map-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2.5 / 1;
+    background: #f9f9f7;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .axis-x {
+    position: absolute;
+    bottom: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.1);
+  }
+  .axis-y {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(0,0,0,0.1);
+  }
+  .axis-lbl {
+    position: absolute;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .dot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .dot-circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+  .dot-lbl { font-size: 10px; color: var(--text); white-space: nowrap; font-weight: 500; }
+
+  /* Footer note */
+  .footer-note {
+    margin-top: 48px;
+    padding: 20px 24px;
+    background: var(--green);
+    color: rgba(255,255,255,0.7);
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+  .footer-note span { color: var(--lime); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="brand">SOWN</div>
+    <div class="brand-sub">발효식품 D2C 이커머스 · 브랜딩</div>
+  </div>
+  <div class="header-date">마지막 업데이트 2026-04-23</div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-label">PHASE 1 진행률</div>
+  <div class="bar-outer">
+    <div class="bar-inner" id="progressBar"></div>
+  </div>
+  <div class="progress-pct" id="progressPct"></div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-dot done"></div>
+    <div>
+      <div class="stat-num" id="cntDone">0</div>
+      <div class="stat-lbl">완료</div>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-dot wip"></div>
+    <div>
+      <div class="stat-num" id="cntWip">0</div>
+      <div class="stat-lbl">진행 중</div>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-dot todo"></div>
+    <div>
+      <div class="stat-num" id="cntTodo">0</div>
+      <div class="stat-lbl">미착수</div>
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-dot flag"></div>
+    <div>
+      <div class="stat-num" id="cntFlag">0</div>
+      <div class="stat-lbl">결정 필요</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PHASE 1 -->
+  <div class="phase-title">Phase 1 — 브랜드 커머스 오픈</div>
+
+  <!-- 브랜드/전략 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">🏷️ 브랜드 / 전략</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">브랜드명 확정 — SOWN (소원)</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">브랜드 컬러 확정 — #054f19 / #DAF15B / #ffffff</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">폰트 확정 — BookkMyungjo / Suit / GMarketSans</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">브랜드 코어 확정 — "기다릴 줄 아는 편집자"</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">기획서 Draft 1.1 완성</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">경쟁사 포지셔닝 정리 완료</div></div></div>
+      <div class="item"><span class="badge wip">진행 중</span><div><div class="item-text">와이어프레임 v3 작업 중</div><div class="item-note">wireframes/wireframe_v3.html</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text"><strong>BEAT 최종 확정</strong> — 슬로건 도출</div><div class="item-note">현재 미정. 노바 작업 필요</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">슬로건 확정 (BEAT 완료 후)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">로고 파일 정리 — SVG / PNG / 다크버전 확보</div></div></div>
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">상표 출원 실행 — 29류 / 30류 / 35류 / 41류</div><div class="item-note">KIPRIS 선점 없음 확인됨. 출원 타이밍 결정 필요</div></div></div>
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">사업자 등록 업종 확정 — 세무사 확인 필요</div><div class="item-note">525101 전자상거래 + N75210 체험</div></div></div>
+    </div>
+  </div>
+
+  <!-- 디자인/개발 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">🎨 디자인 / 개발</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">디자인 시스템 v1 요약 완성</div><div class="item-note">docs/design-system-summary.md</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">와이어프레임 v1 / v2 / v3 초안</div><div class="item-note">wireframes/ 폴더</div></div></div>
+      <div class="item"><span class="badge done">완료</span><div><div class="item-text">사이트 제작 방식 결정 — 외주 진행</div></div></div>
+      <div class="item"><span class="badge wip">진행 중</span><div><div class="item-text"><strong>홈(Home) 화면 제작</strong></div><div class="item-note">외주사 진행 중</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">디자인 시스템 전체 완성본 작성</div><div class="item-note">컴포넌트 state 전부 확정값으로</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">UI 디자인 전체 — 13개 화면</div><div class="item-note">와이어프레임 확정 후 시작</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">개발 환경 셋업</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">홈(Home) 화면 개발</div><div class="item-note">풀블리드 히어로</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">About 화면 개발</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Shop 전체 목록 화면 개발</div><div class="item-note">필터 + 그리드</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Shop — 장류 / 발효 도구·재료 / 술 담그기 카테고리 필터 화면</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">상품 상세 화면 개발</div><div class="item-note">2-col split</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">장바구니 / 결제 / 결제 완료 화면 개발</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">회원가입 / 로그인 화면 개발</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Class 예약 랜딩 화면 개발</div><div class="item-note">Phase 1은 예약 랜딩만</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Journal 화면 개발</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">반응형 모바일 대응 — 전 화면</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">결제 시스템 연동 — PG사 선정</div><div class="item-note">토스페이먼츠 / 아임포트 등</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">배송 연동 — 택배사 계약</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">코드 렌즈 검수 (렌즈)</div><div class="item-note">개발 완료 후</div></div></div>
+    </div>
+  </div>
+
+  <!-- 카피/콘텐츠 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">✍️ 카피 / 콘텐츠</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">홈 히어로 헤드라인 + 서브카피</div><div class="item-note">슬로건 확정 후</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">About 페이지 브랜드 스토리 텍스트</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">각 카테고리 소개 카피 — 장류 / 발효도구 / 술담그기</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">초기 판매 상품 설명 카피 (SKU별)</div><div class="item-note">상품 확정 후</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">입문자 스타터 키트 세트 소개 카피</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">선물 패키지 소개 카피</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Class 랜딩 페이지 카피</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">이메일 마케팅 온보딩 시퀀스 카피</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">SNS 프로필 소개 카피</div><div class="item-note">인스타 / 유튜브</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">Journal 첫 글 (브랜드 소개 아티클)</div></div></div>
+    </div>
+  </div>
+
+  <!-- 상품/운영 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">📦 상품 / 운영</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text"><strong>SKU 리스트 확정</strong> — 판매 품목 전체 목록</div><div class="item-note">재고 매입 전 필수</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">장류 공급처 선정 — 된장 / 간장 / 고추장</div><div class="item-note">SOWN 자체 큐레이션</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">발효 도구 공급 파트너 선정 — 옹기 항아리</div><div class="item-note">파트너 검수 필요</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">발효 재료 공급 파트너 선정 — 누룩 / 메주콩</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">술 담그기 도구·재료 파트너 선정</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">파트너 계약 — 공급 단가 / 최소 발주량 협의</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">초기 재고 매입 예산 산출</div><div class="item-note">SKU 확정 후</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text"><strong>입문자 스타터 키트 세트 구성</strong> — 재료 + 도구 + 레시피</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text"><strong>선물 패키지 설계</strong> — 패키징 디자인 + 구성</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">상품 사진 촬영</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">상품별 큐레이션 설명 + 레시피 콘텐츠 제작</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">재고 관리 방식 결정 — 직접 보관 vs 풀필먼트</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">포장재 디자인 (박스 / 테이프 / 카드)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">반품 / CS 정책 수립</div></div></div>
+    </div>
+  </div>
+
+  <!-- 사업/수익 모델 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">💰 사업 / 수익 모델</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">클래스 운영 방식 결정 — 직영 / 파트너 중개 / 수수료</div><div class="item-note">Phase 1 오픈 후 데이터 기반 결정</div></div></div>
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">멤버십·구독 모델 도입 여부</div></div></div>
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">도매·B2B 판매 채널 검토</div></div></div>
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">글로벌 배송 도입 시점 결정</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">상품별 가격 정책 수립 — 마진율 계산</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">배송비 정책 수립 — 무료배송 기준 등</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">정산 주기 / 회계 기준 수립</div></div></div>
+    </div>
+  </div>
+
+  <!-- 마케팅/채널 -->
+  <div class="category">
+    <div class="category-header">
+      <div class="category-name">📣 마케팅 / 채널</div>
+    </div>
+    <div class="item-list">
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text"><strong>마케팅 채널 확정</strong> — 인스타 / 유튜브 / 네이버 / 쿠팡</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">인스타그램 계정 개설 — @sown.kr 등</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">인스타그램 피드 초기 9장 기획 + 제작</div><div class="item-note">오픈 전 선행 필요</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">인스타그램 프로필 셋업</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">네이버 스마트스토어 개설 여부 결정</div><div class="item-note">D2C 우선이나 병행 검토</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">오픈 전 사전 대기자 이메일 수집 (랜딩 페이지)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">오픈 기념 론칭 이벤트 기획</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">UNESCO 관련 시즌 콘텐츠 기획</div><div class="item-note">타이밍 자산 활용</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">1–3월 계절 유입 캠페인 기획 (장 담그기 시즌)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">마케팅 예산 산출</div><div class="item-note">채널 확정 후</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">인플루언서 / 콜라보 타겟 리스트업</div></div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-title">Phase 2 — 클래스 연계</div>
+  <div class="category">
+    <div class="item-list">
+      <div class="item"><span class="badge flag">결정 필요</span><div><div class="item-text">클래스 운영 방식 최종 결정</div><div class="item-note">Phase 1 오픈 후</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 장소 확보</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 도구 준비 (옹기 / 장독 등)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">장 담그기 체험 파트너 강사 섭외</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">술 담그기 체험 파트너 강사 섭외</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 예약 시스템 개발</div><div class="item-note">Phase 1에서 랜딩만 → Phase 2에서 실제 운영</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 → 커머스 유입 퍼널 설계</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 수강 후 재구매 유도 온보딩 플로우</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">클래스 가격 정책 수립</div></div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-title">Phase 3 — 유튜브 채널 (Track B)</div>
+  <div class="category">
+    <div class="item-list">
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">유튜브 채널 개설 — SOWN</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">채널 아트 / 썸네일 템플릿 디자인</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">콘텐츠 방향 확정 — 발효 현장 인터뷰 / 체험</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">촬영 장비 준비</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">첫 콘텐츠 기획 + 촬영 + 편집</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">유튜브 → SOWN 커머스 유입 링크 구조 설계</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">쇼츠 / 릴스 병행 전략</div></div></div>
+    </div>
+  </div>
+
+  <!-- 기타 -->
+  <div class="phase-title">기타 — 언제든 해야 할 것</div>
+  <div class="category">
+    <div class="item-list">
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">_brief.md / _config.json 프로젝트명 "steeping" → "sown" 수정</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">개인정보처리방침 / 이용약관 / 사업자정보 공개 페이지</div><div class="item-note">커머스 필수 (전자상거래법)</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">도메인 구매 — sown.kr 등</div></div></div>
+      <div class="item"><span class="badge todo">미착수</span><div><div class="item-text">호스팅 / 배포 환경 셋업</div><div class="item-note">Vercel 추천</div></div></div>
+    </div>
+  </div>
+
+  <!-- 결정 대기 항목 -->
+  <div class="phase-title">파트너 협의 필요 항목</div>
+  <div class="decision-box">
+    <div class="decision-title">⚠️ 아래 항목은 파트너와 협의 후 진행 가능합니다</div>
+    <div class="decision-grid">
+      <div class="decision-item">
+        <div class="decision-q">사이트 제작 방식</div>
+        <div class="decision-opts">✅ 외주 확정 / 홈페이지 제작 시작</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">기술 스택</div>
+        <div class="decision-opts">외주사 확인 필요</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">마케팅 채널 우선순위</div>
+        <div class="decision-opts">인스타그램 우선 vs 네이버 병행 vs 쿠팡</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">상표 출원 시점</div>
+        <div class="decision-opts">즉시 vs 오픈 직전</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">클래스 운영 방식</div>
+        <div class="decision-opts">직영 / 파트너 중개 / 수수료</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">재고 관리 방식</div>
+        <div class="decision-opts">자체 창고 vs 풀필먼트 서비스</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">글로벌 배송</div>
+        <div class="decision-opts">Phase 1 포함 vs Phase 2 이후</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-q">SKU 리스트</div>
+        <div class="decision-opts">판매 품목 전체 목록 확정 필요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 레퍼런스 분석 -->
+  <div class="phase-title">레퍼런스 분석</div>
+
+  <div class="ref-grid">
+
+    <div class="ref-card">
+      <div class="ref-top">
+        <div class="ref-name">Craft Brewer</div>
+        <a class="ref-link" href="https://craftbrewer.co.kr/" target="_blank">↗ 방문</a>
+      </div>
+      <span class="ref-tag">홈브루잉 쇼핑몰</span>
+      <div class="ref-row"><strong>가격대</strong> 1,500원 ~ 100만원대</div>
+      <div class="ref-row"><strong>구조</strong> 커머스 + 아카데미·공방·커뮤니티</div>
+      <div class="ref-row"><strong>디자인</strong> 모던 그리드, 감성 약함</div>
+      <div class="ref-insight">💡 SOWN이 대체할 수 있는 포지션. 전문성은 있으나 감성·큐레이션 없음</div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-top">
+        <div class="ref-name">Beer School</div>
+        <a class="ref-link" href="https://beerschool.co.kr/index.html" target="_blank">↗ 방문</a>
+      </div>
+      <span class="ref-tag">재료·장비 + 클래스</span>
+      <div class="ref-row"><strong>가격대</strong> 5,000원 ~ 220만원대</div>
+      <div class="ref-row"><strong>슬로건</strong> "즐거운 맥주만들기의 세상에 오신 것을 환영합니다"</div>
+      <div class="ref-row"><strong>디자인</strong> 흰 배경 그리드, 정보 전달 중심, 오래된 느낌</div>
+      <div class="ref-insight">💡 클래스 연계 구조 참고. 브랜딩은 반면교사</div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-top">
+        <div class="ref-name">_soolow (술로우)</div>
+        <a class="ref-link" href="https://link.inpock.co.kr/_soolow" target="_blank">↗ 방문</a>
+      </div>
+      <span class="ref-tag">전통주 클래스 · 라이프스타일</span>
+      <div class="ref-row"><strong>채널</strong> 인스타 @_soolow + 블로그 + 카카오 예약</div>
+      <div class="ref-row"><strong>컬러</strong> 베이지(#fffcf3) + 갈색(#9a823b)</div>
+      <div class="ref-row"><strong>구조</strong> 클래스 예약 + 굿즈 판매, 스토리텔링 중심</div>
+      <div class="ref-insight">💡 가장 가까운 레퍼런스. 단, 커머스 규모는 SOWN이 훨씬 큼</div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-top">
+        <div class="ref-name">하마하마브루잉</div>
+        <a class="ref-link" href="https://smartstore.naver.com/hamahamabrewing" target="_blank">↗ 방문</a>
+      </div>
+      <span class="ref-tag">스마트스토어</span>
+      <div class="ref-na">자동 분석 불가 (네이버 차단)<br>직접 접속 후 분석 필요</div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-top">
+        <div class="ref-name">어떤하루</div>
+        <a class="ref-link" href="https://smartstore.naver.com/eotteonharu" target="_blank">↗ 방문</a>
+      </div>
+      <span class="ref-tag">스마트스토어</span>
+      <div class="ref-na">자동 분석 불가 (네이버 차단)<br>직접 접속 후 분석 필요</div>
+    </div>
+
+  </div>
+
+  <!-- 포지션 맵 -->
+  <div class="pos-map">
+    <div class="pos-map-title">경쟁 포지션 맵</div>
+    <div class="pos-map-wrap">
+      <div class="axis-x"></div>
+      <div class="axis-y"></div>
+      <!-- 축 라벨 -->
+      <div class="axis-lbl" style="top:4px; left:50%; transform:translateX(-50%)">감성 높음</div>
+      <div class="axis-lbl" style="bottom:4px; left:50%; transform:translateX(-50%)">감성 낮음</div>
+      <div class="axis-lbl" style="right:8px; top:50%; transform:translateY(-50%)">커머스 큼</div>
+      <div class="axis-lbl" style="left:8px; top:50%; transform:translateY(-50%)">커머스 작음</div>
+      <!-- 점들 -->
+      <div class="dot" style="left:72%; top:20%">
+        <div class="dot-circle" style="width:36px;height:36px;background:#DAF15B;color:#054f19;font-size:11px;">SOWN</div>
+        <div class="dot-lbl" style="color:#054f19;font-weight:700;">★ 목표</div>
+      </div>
+      <div class="dot" style="left:28%; top:25%">
+        <div class="dot-circle" style="width:28px;height:28px;background:#9a823b;">S</div>
+        <div class="dot-lbl">술로우</div>
+      </div>
+      <div class="dot" style="left:68%; top:75%">
+        <div class="dot-circle" style="width:28px;height:28px;background:#6b7280;">CB</div>
+        <div class="dot-lbl">Craft Brewer</div>
+      </div>
+      <div class="dot" style="left:52%; top:80%">
+        <div class="dot-circle" style="width:24px;height:24px;background:#9ca3af;font-size:9px;">BS</div>
+        <div class="dot-lbl">Beer School</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <span>SOWN</span> — 씨앗을 뿌리듯, 발효를 시작한다. &nbsp;·&nbsp; Phase 1 목표: 커머스 오픈 / 운영 인력 2인 / 브랜딩·디자인 자체 제작
+  </div>
+
+</div>
+
+<script>
+  // Count items
+  const done = document.querySelectorAll('.badge.done').length;
+  const wip  = document.querySelectorAll('.badge.wip').length;
+  const todo = document.querySelectorAll('.badge.todo').length;
+  const flag = document.querySelectorAll('.badge.flag').length;
+  const total = done + wip + todo + flag;
+
+  document.getElementById('cntDone').textContent = done;
+  document.getElementById('cntWip').textContent  = wip;
+  document.getElementById('cntTodo').textContent = todo;
+  document.getElementById('cntFlag').textContent = flag;
+
+  // Phase 1 only (exclude phase2/3 items — approximate)
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+</script>
+
+</body>
+</html>

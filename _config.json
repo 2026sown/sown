@@ -1,0 +1,48 @@
+{
+  "project": "steeping",
+  "brand": "SOWN",
+  "brand_ko": "소원",
+  "description": "프로젝트 방향성 2트랙                                                                                                                                                                                                                 \n  - 트랙 A — 발효식품(장·술 등) D2C 이커머스                                                                                                                                                                                            \n  - 트랙 B — 발효 관련 현장 인터뷰·체험 유튜브 채널\n\n기본적으로 발효는 기다림의 미학이란 말 처럼 기다림을 통해서 최적의 맛을 뽑아내는 형태, 가장 원초적이면서도 가장 인간적인 행위 라고 볼 수 있음 \n그래서 커머스자체가 발표상품 편집샵 느낌으로 가면 좋을것같음 \n각각의 큐레이팅을 넣어서 잘 설명해주면 좋을 것 같음",
+  "type": "branding",
+  "style": "commerce_direct",
+  "purpose": "ecommerce",
+  "supanova": {
+    "design_variance": 5,
+    "motion_intensity": 9,
+    "visual_density": 2
+  },
+  "mood_keywords": [
+    "깔끔한",
+    "정제된",
+    "고급스러운",
+    "선물하고싶은"
+  ],
+  "colors": {
+    "primary": "#054f19",
+    "secondary": "#DAF15B",
+    "accent": "#ffffff"
+  },
+  "avoid": [
+    "기업적인",
+    "스타트업",
+    "단조로움"
+  ],
+  "beat": {
+    "who_they_are": "장을 담그거나 , 전통주를 담는걸 좋아하는 사람들",
+    "who_we_are": "발효에관한 제품을 파는 큐레이팅 편집샵",
+    "how_they_feel": "직접 술을 담그거나 장을 담글때 어떻게 해야할지 모른다.",
+    "what_to_do": "직접 선별한 큐레이팅 편집샵, 장담그기 체험, 술담그기 체험을 중간에서 연계하는 플랫폼",
+    "why_we_are": "커머스와 체험이 공존하는 커뮤니티형 플랫폼 커머스"
+  },
+  "style_references": [
+    "style_01.png",
+    "style_02.png",
+    "style_03.png",
+    "style_04.png",
+    "style_05.png",
+    "style_06.png",
+    "style_07.png"
+  ],
+  "mood_images": [],
+  "created_at": "2026-04-20"
+}

@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meju — 저충실도 와이어프레임 v1</title>
+<style>
+  /* ─────────────────────────────────────
+     WIREFRAME BASE
+  ───────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --w-bg:      #F5F5F5;
+    --w-subtle:  #E0E0E0;
+    --w-mid:     #BDBDBD;
+    --w-dim:     #9E9E9E;
+    --w-dark:    #757575;
+    --w-ink:     #333333;
+    --w-border:  rgba(0,0,0,0.12);
+    --container: 1200px;
+    --pad-x:     clamp(20px, 5vw, 72px);
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  }
+
+  body { background: var(--w-bg); color: var(--w-ink); }
+
+  /* ── 탭 네비 (화면 전환) ── */
+  .tab-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: var(--w-ink); display: flex; gap: 2px; padding: 0;
+  }
+  .tab-btn {
+    flex: 1; padding: 10px 4px; background: #555; color: #ccc;
+    border: none; cursor: pointer; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; transition: background 0.15s;
+  }
+  .tab-btn:hover { background: #777; }
+  .tab-btn.active { background: var(--w-bg); color: var(--w-ink); font-weight: 700; }
+
+  /* ── 화면 패널 ── */
+  .screen { display: none; margin-top: 40px; }
+  .screen.active { display: block; }
+
+  /* ── 어노테이션 공통 ── */
+  .anno {
+    display: inline-block; background: var(--w-ink); color: #fff;
+    font-size: 10px; letter-spacing: 0.06em; padding: 2px 7px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .anno-section {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(51,51,51,0.82); color: #fff;
+    font-size: 10px; letter-spacing: 0.08em; padding: 3px 8px;
+    text-transform: uppercase; pointer-events: none; z-index: 10;
+  }
+
+  /* ── 회색 이미지 박스 ── */
+  .img-box {
+    background: var(--w-subtle); border: 1px dashed var(--w-mid);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--w-dim); font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; text-align: center; position: relative;
+  }
+
+  /* ── 공통 GNB ── */
+  .gnb {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px var(--pad-x);
+  }
+  .gnb-logo {
+    font-size: 18px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #fff;
+  }
+  .gnb-logo.dark { color: var(--w-ink); }
+  .gnb-menu { display: flex; gap: 28px; }
+  .gnb-menu a {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); text-decoration: none;
+  }
+  .gnb-menu.dark a { color: var(--w-dark); }
+  .gnb-cart {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px;
+  }
+  .gnb-cart.dark { color: var(--w-dark); }
+  .cart-badge {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--w-dim); display: inline-flex;
+    align-items: center; justify-content: center; font-size: 9px; color: #fff;
+  }
+
+  /* ── 섹션 공통 ── */
+  section { position: relative; }
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 var(--pad-x); }
+
+  /* ── 구분선 ── */
+  hr.divider { border: none; border-top: 1px solid var(--w-border); margin: 0; }
+
+  /* ── 버튼 ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 28px; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; border: 1px solid var(--w-ink);
+    background: transparent; cursor: pointer;
+  }
+  .btn-fill { background: var(--w-ink); color: #fff; }
+  .btn-white { border-color: rgba(255,255,255,0.6); color: #fff; }
+  .btn-arrow::after { content: ' →'; }
+
+  /* ── 태그/칩 ── */
+  .chip {
+    display: inline-block; padding: 5px 14px;
+    border: 1px solid var(--w-mid); font-size: 11px;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--w-dark);
+    cursor: pointer; background: transparent;
+  }
+  .chip.active { background: var(--w-ink); color: #fff; border-color: var(--w-ink); }
+
+  /* ── 상품 카드 ── */
+  .product-card { cursor: pointer; }
+  .product-card .card-img { background: var(--w-subtle); border: 1px dashed var(--w-mid); }
+  .product-card .card-body { padding: 14px 0 0; }
+  .card-cat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--w-dim); }
+  .card-name { font-size: 14px; margin: 4px 0 2px; color: var(--w-ink); }
+  .card-sub { font-size: 12px; color: var(--w-dark); line-height: 1.5; }
+  .card-price { font-size: 14px; font-weight: 600; margin-top: 8px; }
+
+  /* ── 클래스 카드 ── */
+  .class-card .card-img { background: var(--w-subtle); border: 1px dashed var(--w-mid); }
+  .class-card .card-body { padding: 16px 0 0; }
+  .class-badge {
+    display: inline-block; padding: 3px 10px;
+    background: var(--w-mid); font-size: 10px;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--w-ink);
+    margin-bottom: 8px;
+  }
+
+  /* ── 텍스트 스타일 ── */
+  .label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--w-dim); }
+  .h-hero { font-size: clamp(36px, 5vw, 64px); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; }
+  .h-section { font-size: clamp(28px, 3.5vw, 48px); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; }
+  .h-sub { font-size: clamp(18px, 2vw, 24px); font-weight: 400; }
+  .body-text { font-size: 14px; line-height: 1.85; color: var(--w-dark); }
+
+  /* ── 파선 구분 ── */
+  .dashed-row {
+    border-top: 1px dashed var(--w-mid);
+    padding-top: 16px; margin-top: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  /* ── 별점 자리 ── */
+  .stars { color: var(--w-mid); font-size: 14px; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     탭 네비게이션
+═════════════════════════════════════════ -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showScreen('home')">① Home</button>
+  <button class="tab-btn" onclick="showScreen('shop')">② Shop</button>
+  <button class="tab-btn" onclick="showScreen('product')">③ 상품 상세</button>
+  <button class="tab-btn" onclick="showScreen('about')">④ About</button>
+  <button class="tab-btn" onclick="showScreen('class')">⑤ Class</button>
+</nav>
+
+
+<!-- ════════════════════════════════════════
+     ① HOME
+═════════════════════════════════════════ -->
+<div id="screen-home" class="screen active">
+
+  <!-- HERO — 풀블리드 이미지 + 좌하단 텍스트 [style_02, style_07 패턴] -->
+  <section style="position:relative; height: 92vh; overflow: hidden;">
+    <span class="anno-section">[H-03] 풀블리드 히어로 — 좌하단 텍스트 / style_02·07 패턴</span>
+
+    <!-- GNB -->
+    <nav class="gnb">
+      <div class="gnb-logo">Meju</div>
+      <div class="gnb-menu">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Shop</a>
+        <a href="#">Class</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="gnb-cart">
+        장바구니 <span class="cart-badge">0</span>
+      </div>
+    </nav>
+
+    <!-- 풀블리드 이미지 -->
+    <div class="img-box" style="width:100%; height:100%;">
+      <span>풀블리드 이미지<br>발효 항아리·장독대<br>16:9 or 21:9</span>
+    </div>
+
+    <!-- 좌하단 텍스트 오버레이 -->
+    <div style="position:absolute; bottom: 56px; left: var(--pad-x); z-index: 10;">
+      <p class="label" style="color:rgba(255,255,255,0.6); margin-bottom: 14px;">발효 편집샵 — Fermentation Curated</p>
+      <h1 class="h-hero" style="color:#fff; max-width: 620px;">
+        매주,<br>당신의 시간만큼.
+      </h1>
+      <div style="margin-top: 28px; display: flex; gap: 12px;">
+        <button class="btn btn-white btn-arrow">Shop Now</button>
+        <button class="btn btn-white">클래스 보기</button>
+      </div>
+    </div>
+
+    <!-- 우하단 서브 태그라인 -->
+    <div style="position:absolute; bottom: 56px; right: var(--pad-x); z-index: 10; text-align: right;">
+      <p style="color:rgba(255,255,255,0.6); font-size: 12px; letter-spacing: 0.08em;">
+        장류 · 발효 도구·재료<br>술 담그기 도구·재료
+      </p>
+    </div>
+
+    <!-- 스크롤 힌트 -->
+    <div style="position:absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index:10; color:rgba(255,255,255,0.45); font-size:10px; letter-spacing:0.12em; text-transform:uppercase;">
+      Scroll ↓
+    </div>
+  </section>
+
+  <!-- 카테고리 퀵링크 -->
+  <section style="padding: 48px var(--pad-x);">
+    <span class="anno">[퀵링크] 카테고리 바로가기 — 3열</span>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 16px;">
+
+      <!-- 장류 -->
+      <div style="position:relative; cursor:pointer;">
+        <div class="img-box" style="height: 280px;">
+          <span>장류 이미지<br>된장·간장·고추장</span>
+        </div>
+        <div style="padding: 16px; background: #fff; border: 1px solid var(--w-border); border-top: none;">
+          <p class="label">Category 01</p>
+          <p style="font-size: 18px; margin-top: 4px;">장류</p>
+          <p class="body-text" style="margin-top: 4px; font-size: 12px;">된장 · 간장 · 고추장</p>
+        </div>
+      </div>
+
+      <!-- 발효 도구·재료 -->
+      <div style="position:relative; cursor:pointer;">
+        <div class="img-box" style="height: 280px;">
+          <span>발효 도구 이미지<br>항아리·누룩·메주콩</span>
+        </div>
+        <div style="padding: 16px; background: #fff; border: 1px solid var(--w-border); border-top: none;">
+          <p class="label">Category 02</p>
+          <p style="font-size: 18px; margin-top: 4px;">발효 도구·재료</p>
+          <p class="body-text" style="margin-top: 4px; font-size: 12px;">항아리 · 누룩 · 메주콩</p>
+        </div>
+      </div>
+
+      <!-- 술 담그기 -->
+      <div style="position:relative; cursor:pointer;">
+        <div class="img-box" style="height: 280px;">
+          <span>술 담그기 이미지<br>도구·재료</span>
+        </div>
+        <div style="padding: 16px; background: #fff; border: 1px solid var(--w-border); border-top: none;">
+          <p class="label">Category 03</p>
+          <p style="font-size: 18px; margin-top: 4px;">술 담그기 도구·재료</p>
+          <p class="body-text" style="margin-top: 4px; font-size: 12px;">막걸리 · 약주 · 청주</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 베스트 상품 그리드 -->
+  <section style="padding: 72px var(--pad-x);">
+    <span class="anno">[SP / 베스트] 큐레이션 상품 — 4열 그리드</span>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; margin-bottom: 36px;">
+      <div>
+        <p class="label">Curated Best</p>
+        <h2 class="h-section" style="margin-top: 8px;">편집장의 선택</h2>
+      </div>
+      <button class="btn btn-arrow">전체 보기</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+      <!-- 카드 1 -->
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 320px; aspect-ratio: 3/4;">
+          <span>상품 이미지<br>3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">장류 · Best</p>
+          <p class="card-name">3년 숙성 재래식 된장</p>
+          <p class="card-sub">직접 고른 메주콩으로<br>항아리에서 3년 기다린 된장</p>
+          <p class="card-price">38,000원</p>
+        </div>
+      </div>
+      <!-- 카드 2 -->
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 320px; aspect-ratio: 3/4;">
+          <span>상품 이미지<br>3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">발효 재료 · New</p>
+          <p class="card-name">입문용 누룩 세트</p>
+          <p class="card-sub">밀누룩 + 쌀누룩 +<br>사용 가이드 북릿 포함</p>
+          <p class="card-price">24,000원</p>
+        </div>
+      </div>
+      <!-- 카드 3 -->
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 320px; aspect-ratio: 3/4;">
+          <span>상품 이미지<br>3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">장류 · Best</p>
+          <p class="card-name">햇고추장 (비빔용)</p>
+          <p class="card-sub">올해 수확 청양고추<br>찹쌀 발효 고추장</p>
+          <p class="card-price">22,000원</p>
+        </div>
+      </div>
+      <!-- 카드 4 -->
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 320px; aspect-ratio: 3/4;">
+          <span>상품 이미지<br>3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">술담그기 도구</p>
+          <p class="card-name">막걸리 시작 키트</p>
+          <p class="card-sub">입문자용 1L 발효용기 +<br>쌀누룩 + 설명서</p>
+          <p class="card-price">45,000원</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 브랜드 스토리 섹션 — 텍스트 좌 / 이미지 우 -->
+  <section style="padding: 96px var(--pad-x);">
+    <span class="anno">[F-01] 브랜드 스토리 — 텍스트 좌 / 이미지 우 교차</span>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; margin-top: 20px;">
+      <div>
+        <p class="label" style="margin-bottom: 16px;">Our Story</p>
+        <h2 class="h-section">발효는<br>기다림의 미학입니다.</h2>
+        <p class="body-text" style="margin-top: 24px; max-width: 440px;">
+          Meju는 가장 원초적이고 인간적인 행위인 발효를 연구합니다.
+          직접 선별한 장류와 도구를 큐레이션하여 당신의 발효 여정을 안내합니다.
+        </p>
+        <button class="btn btn-arrow" style="margin-top: 32px;">About Meju</button>
+      </div>
+      <div class="img-box" style="height: 520px; aspect-ratio: 4/3;">
+        <span>브랜드 이미지<br>4:3 가로형<br>발효·장독 풍경</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 클래스 배너 -->
+  <section style="padding: 72px var(--pad-x); background: var(--w-subtle);">
+    <span class="anno">[CTA-04] 클래스 배너 — 좌텍스트 / 우버튼</span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+      <div>
+        <p class="label" style="margin-bottom: 12px;">Meju Class</p>
+        <h2 class="h-sub">장 담그기 · 술 담그기 체험 클래스</h2>
+        <p class="body-text" style="margin-top: 12px;">전문 장인과 함께 직접 손으로 배우는 발효 클래스</p>
+      </div>
+      <button class="btn btn-fill btn-arrow">클래스 신청</button>
+    </div>
+  </section>
+
+  <!-- FOOTER — style_01 패턴 (좌 내비 + 우 뉴스레터) -->
+  <footer style="background: var(--w-ink); color: #ccc; padding: 64px var(--pad-x) 32px;">
+    <span class="anno" style="background: #555;">
+      [Footer] style_01 패턴 — 좌 메뉴 4열 / 우 뉴스레터
+    </span>
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-top: 24px;">
+      <!-- 브랜드 -->
+      <div>
+        <p style="font-size: 22px; font-weight: 700; letter-spacing: 0.1em; color: #fff; margin-bottom: 16px;">Meju</p>
+        <p style="font-size: 12px; line-height: 1.8; max-width: 240px;">
+          발효 편집샵 Meju.<br>
+          장류 · 발효 도구·재료 ·<br>
+          술 담그기 도구·재료.
+        </p>
+      </div>
+      <!-- Shop -->
+      <div>
+        <p style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 14px;">Shop</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:12px;">
+          <li>장류</li><li>발효 도구·재료</li><li>술 담그기 도구·재료</li><li>Gift Set</li>
+        </ul>
+      </div>
+      <!-- Brand -->
+      <div>
+        <p style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 14px;">Brand</p>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:12px;">
+          <li>About</li><li>Class</li><li>Journal</li><li>Contact</li>
+        </ul>
+      </div>
+      <!-- 뉴스레터 -->
+      <div>
+        <p style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 14px;">Newsletter</p>
+        <p style="font-size: 12px; line-height: 1.7; margin-bottom: 16px;">발효 이야기와 신제품 소식을<br>가장 먼저 받아보세요.</p>
+        <div style="display:flex; gap: 0;">
+          <input type="text" placeholder="이메일 주소" style="flex:1; padding: 10px 12px; background: #555; border: none; color: #fff; font-size: 12px;">
+          <button style="padding: 10px 16px; background: #fff; border: none; font-size: 11px; cursor:pointer; letter-spacing:0.08em; text-transform:uppercase;">구독</button>
+        </div>
+      </div>
+    </div>
+    <hr style="border-color: #444; margin: 36px 0 20px;">
+    <div style="display:flex; justify-content:space-between; font-size:11px; color:#666;">
+      <span>©2026 Meju. All rights reserved.</span>
+      <span>개인정보처리방침 · 이용약관</span>
+      <span>Instagram · LinkedIn</span>
+    </div>
+  </footer>
+
+</div><!-- /screen-home -->
+
+
+<!-- ════════════════════════════════════════
+     ② SHOP
+═════════════════════════════════════════ -->
+<div id="screen-shop" class="screen">
+
+  <!-- 상단 헤더 (라이트 GNB) -->
+  <header style="position:relative; padding: 20px var(--pad-x); border-bottom: 1px solid var(--w-border); display:flex; align-items:center; justify-content:space-between; background:#fff;">
+    <div class="gnb-logo dark">Meju</div>
+    <div class="gnb-menu dark">
+      <a href="#" style="color:var(--w-dark);">Home</a>
+      <a href="#" style="color:var(--w-dark);">About</a>
+      <a href="#" style="color:var(--w-ink); font-weight:700;">Shop</a>
+      <a href="#" style="color:var(--w-dark);">Class</a>
+      <a href="#" style="color:var(--w-dark);">Contact</a>
+    </div>
+    <div style="color:var(--w-dark); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+      장바구니 <span class="cart-badge">2</span>
+    </div>
+  </header>
+
+  <div style="padding: 48px var(--pad-x) 96px;">
+
+    <!-- 페이지 제목 -->
+    <div style="margin-bottom: 40px;">
+      <span class="anno">[Shop] 페이지 헤더</span>
+      <h1 class="h-section" style="margin-top: 12px;">Shop</h1>
+      <p class="body-text" style="margin-top: 8px;">Meju가 직접 고른 발효 제품들</p>
+    </div>
+
+    <!-- 카테고리 필터 + 정렬 -->
+    <div style="margin-bottom: 8px;">
+      <span class="anno">[필터] 카테고리 탭 + 정렬 드롭다운</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--w-border);">
+      <!-- 카테고리 필터 탭 -->
+      <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+        <button class="chip active">전체</button>
+        <button class="chip">장류</button>
+        <button class="chip">발효 도구·재료</button>
+        <button class="chip">술 담그기 도구·재료</button>
+        <button class="chip">Gift Set</button>
+      </div>
+      <!-- 정렬 -->
+      <div style="display:flex; align-items:center; gap: 8px;">
+        <p class="label">정렬:</p>
+        <div style="border: 1px solid var(--w-mid); padding: 8px 16px; font-size: 12px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+          인기순 <span>▾</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 상품 수량 표시 -->
+    <p class="label" style="margin-bottom: 24px;">총 24개 상품</p>
+
+    <!-- 상품 그리드 — 3열 -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px 24px;">
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">장류</p>
+          <p class="card-name">3년 숙성 재래식 된장</p>
+          <p class="card-sub">항아리에서 3년 기다린<br>전통 방식의 된장</p>
+          <p class="card-price">38,000원</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">장류</p>
+          <p class="card-name">햇고추장</p>
+          <p class="card-sub">찹쌀 + 청양 고추로<br>담근 발효 고추장</p>
+          <p class="card-price">22,000원</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">장류</p>
+          <p class="card-name">조선간장 (국간장)</p>
+          <p class="card-sub">메주 발효 전통 국간장<br>500ml</p>
+          <p class="card-price">18,000원</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">발효 재료</p>
+          <p class="card-name">입문용 누룩 세트</p>
+          <p class="card-sub">밀누룩 + 쌀누룩 +<br>사용 가이드 북릿</p>
+          <p class="card-price">24,000원</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">발효 도구</p>
+          <p class="card-name">소형 옹기 항아리 2L</p>
+          <p class="card-sub">장 담그기 / 발효 전용<br>전통 옹기</p>
+          <p class="card-price">56,000원</p>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="card-img img-box" style="height: 380px;">
+          <span>상품 이미지 3:4</span>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">술 담그기 도구</p>
+          <p class="card-name">막걸리 시작 키트</p>
+          <p class="card-sub">발효용기 + 쌀누룩 +<br>스텝바이스텝 가이드</p>
+          <p class="card-price">45,000원</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 더보기 버튼 -->
+    <div style="text-align:center; margin-top: 56px;">
+      <button class="btn btn-arrow">더 보기 (18)</button>
+    </div>
+
+  </div>
+</div><!-- /screen-shop -->
+
+
+<!-- ════════════════════════════════════════
+     ③ 상품 상세
+═════════════════════════════════════════ -->
+<div id="screen-product" class="screen">
+
+  <!-- GNB (라이트) -->
+  <header style="padding: 20px var(--pad-x); border-bottom: 1px solid var(--w-border); display:flex; align-items:center; justify-content:space-between; background:#fff;">
+    <div class="gnb-logo dark">Meju</div>
+    <div class="gnb-menu dark">
+      <a href="#" style="color:var(--w-dark);">Home</a>
+      <a href="#" style="color:var(--w-dark);">About</a>
+      <a href="#" style="color:var(--w-dark);">Shop</a>
+      <a href="#" style="color:var(--w-dark);">Class</a>
+    </div>
+    <div style="color:var(--w-dark); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+      장바구니 <span class="cart-badge">2</span>
+    </div>
+  </header>
+
+  <!-- 브레드크럼 -->
+  <div style="padding: 16px var(--pad-x); border-bottom: 1px solid var(--w-border); background: #fff;">
+    <p style="font-size: 11px; color: var(--w-dim); letter-spacing: 0.06em;">
+      Home &nbsp;/&nbsp; Shop &nbsp;/&nbsp; 장류 &nbsp;/&nbsp; <strong style="color:var(--w-ink);">3년 숙성 재래식 된장</strong>
+    </p>
+  </div>
+
+  <div style="padding: 56px var(--pad-x) 96px;">
+    <span class="anno">[상품 상세] 이미지 갤러리 좌 / 정보·구매 우 — 2열 분할</span>
+
+    <div style="display: grid; grid-template-columns: 55% 45%; gap: 64px; margin-top: 24px;">
+
+      <!-- 좌: 이미지 갤러리 -->
+      <div>
+        <span class="anno">[갤러리] 메인 이미지 + 썸네일 행</span>
+        <div class="img-box" style="height: 560px; margin-top: 12px;">
+          <span>메인 상품 이미지<br>1:1 or 4:3<br>클릭 시 확대</span>
+        </div>
+        <!-- 썸네일 -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px;">
+          <div class="img-box" style="height: 80px; cursor:pointer; border: 2px solid var(--w-ink);">
+            <span style="font-size:9px;">선택됨</span>
+          </div>
+          <div class="img-box" style="height: 80px; cursor:pointer;"><span style="font-size:9px;">IMG 2</span></div>
+          <div class="img-box" style="height: 80px; cursor:pointer;"><span style="font-size:9px;">IMG 3</span></div>
+          <div class="img-box" style="height: 80px; cursor:pointer;"><span style="font-size:9px;">IMG 4</span></div>
+        </div>
+      </div>
+
+      <!-- 우: 상품 정보 + 구매 -->
+      <div style="padding-top: 12px;">
+        <span class="anno">[상품 정보] 카테고리 · 이름 · 큐레이션 설명 · 구매</span>
+
+        <p class="label" style="margin-top: 16px;">장류 · Best Seller</p>
+        <h1 style="font-size: clamp(24px, 2.8vw, 38px); font-weight: 300; line-height: 1.2; margin-top: 10px; letter-spacing: -0.02em;">
+          3년 숙성 재래식 된장
+        </h1>
+
+        <!-- 큐레이션 설명 — Meju 핵심 차별화 -->
+        <div style="margin-top: 24px; padding: 20px 24px; background: var(--w-subtle); border-left: 3px solid var(--w-dim);">
+          <p class="label" style="margin-bottom: 8px;">Meju's Note — 큐레이션 이유</p>
+          <p class="body-text">
+            충청도 전통 장인이 직접 쑨 메주로 3년 간 항아리 숙성.
+            화학 첨가물 없이 오직 시간만이 만들어낸 깊은 감칠맛.
+            Meju가 직접 맛보고 선정한 된장입니다.
+          </p>
+        </div>
+
+        <!-- 가격 -->
+        <div style="margin-top: 28px; display:flex; align-items:baseline; gap: 12px;">
+          <p style="font-size: 28px; font-weight: 600;">38,000원</p>
+          <p style="font-size: 14px; color: var(--w-dim); text-decoration: line-through;">42,000원</p>
+          <p style="font-size: 12px; color: var(--w-dark); background: var(--w-subtle); padding: 3px 8px;">10% 할인</p>
+        </div>
+
+        <!-- 용량 선택 -->
+        <div style="margin-top: 24px;">
+          <p class="label" style="margin-bottom: 10px;">용량 선택</p>
+          <div style="display:flex; gap:8px;">
+            <button class="chip active">500g</button>
+            <button class="chip">1kg</button>
+            <button class="chip">2kg (기업용)</button>
+          </div>
+        </div>
+
+        <!-- 수량 -->
+        <div style="margin-top: 24px;">
+          <p class="label" style="margin-bottom: 10px;">수량</p>
+          <div style="display:flex; align-items:center; gap: 0; border: 1px solid var(--w-mid); width: fit-content;">
+            <button style="width:40px; height:40px; background:var(--w-subtle); border:none; cursor:pointer; font-size:16px;">−</button>
+            <span style="width:48px; height:40px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; border-left: 1px solid var(--w-mid); border-right: 1px solid var(--w-mid);">1</span>
+            <button style="width:40px; height:40px; background:var(--w-subtle); border:none; cursor:pointer; font-size:16px;">+</button>
+          </div>
+        </div>
+
+        <!-- 구매 버튼 -->
+        <div style="margin-top: 28px; display:flex; flex-direction:column; gap: 10px;">
+          <button class="btn btn-fill" style="width: 100%; justify-content:center; padding: 16px; font-size: 13px;">
+            바로 구매하기
+          </button>
+          <button class="btn" style="width: 100%; justify-content:center; padding: 16px; font-size: 13px;">
+            장바구니 담기
+          </button>
+        </div>
+
+        <!-- 배송 안내 -->
+        <div class="dashed-row" style="margin-top: 24px;">
+          <span class="label">배송</span>
+          <span style="font-size: 12px; color: var(--w-dark);">2~3일 이내 발송 · 3만원 이상 무료</span>
+        </div>
+        <div class="dashed-row">
+          <span class="label">포장</span>
+          <span style="font-size: 12px; color: var(--w-dark);">친환경 종이 포장 · 선물 포장 가능</span>
+        </div>
+        <div class="dashed-row">
+          <span class="label">원산지</span>
+          <span style="font-size: 12px; color: var(--w-dark);">충청북도 충주 · 국내산</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 (상세정보 / 리뷰) -->
+    <div style="margin-top: 80px; border-bottom: 2px solid var(--w-ink);">
+      <span class="anno">[탭] 상세정보 / 사용방법 / 리뷰</span>
+      <div style="display:flex; gap: 0; margin-top: 16px;">
+        <div style="padding: 12px 28px; border-bottom: 2px solid var(--w-ink); font-size: 13px; font-weight: 600; margin-bottom: -2px; cursor:pointer;">상세 정보</div>
+        <div style="padding: 12px 28px; font-size: 13px; color: var(--w-dim); cursor:pointer;">사용 방법</div>
+        <div style="padding: 12px 28px; font-size: 13px; color: var(--w-dim); cursor:pointer;">리뷰 (24)</div>
+      </div>
+    </div>
+
+    <!-- 리뷰 섹션 -->
+    <div style="padding: 48px 0;">
+      <span class="anno">[리뷰] 별점 요약 + 리뷰 카드 목록</span>
+      <!-- 별점 요약 -->
+      <div style="display:flex; align-items:center; gap: 32px; padding: 28px 32px; background: var(--w-subtle); margin-bottom: 32px;">
+        <div style="text-align:center;">
+          <p style="font-size: 48px; font-weight: 300;">4.8</p>
+          <p class="stars">★★★★★</p>
+          <p class="label" style="margin-top: 6px;">24개 리뷰</p>
+        </div>
+        <div style="flex: 1;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:12px;">
+              <span style="width:24px; text-align:right;">5</span>
+              <div style="flex:1; height:6px; background:var(--w-mid);"><div style="width:80%; height:100%; background:var(--w-ink);"></div></div>
+              <span style="width:24px;">80%</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:12px;">
+              <span style="width:24px; text-align:right;">4</span>
+              <div style="flex:1; height:6px; background:var(--w-mid);"><div style="width:15%; height:100%; background:var(--w-ink);"></div></div>
+              <span style="width:24px;">15%</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:12px;">
+              <span style="width:24px; text-align:right;">3</span>
+              <div style="flex:1; height:6px; background:var(--w-mid);"><div style="width:5%; height:100%; background:var(--w-ink);"></div></div>
+              <span style="width:24px;">5%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 리뷰 카드 목록 -->
+      <div style="display:flex; flex-direction:column; gap: 24px;">
+        <div style="padding: 24px; border: 1px solid var(--w-border);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+            <div>
+              <p class="stars">★★★★★</p>
+              <p style="font-size: 14px; font-weight: 600; margin-top: 6px;">김소연 · 장류 입문 3년차</p>
+            </div>
+            <p class="label">2026.04.10</p>
+          </div>
+          <p class="body-text">처음 장 담그기를 시작할 때 이 된장을 기준으로 잡았어요. 시중 된장과 비교가 안 될 만큼 깊은 맛이에요. Meju의 큐레이션 노트 덕분에 왜 이 된장인지 이해하고 구매했어요.</p>
+        </div>
+        <div style="padding: 24px; border: 1px solid var(--w-border);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+            <div>
+              <p class="stars">★★★★☆</p>
+              <p style="font-size: 14px; font-weight: 600; margin-top: 6px;">박준혁 · 양조 취미</p>
+            </div>
+            <p class="label">2026.03.28</p>
+          </div>
+          <p class="body-text">선물용으로 구매했는데 포장도 깔끔하고 맛도 훌륭했습니다. 받은 분이 너무 좋아하셔서 재구매 예정이에요.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /screen-product -->
+
+
+<!-- ════════════════════════════════════════
+     ④ ABOUT
+═════════════════════════════════════════ -->
+<div id="screen-about" class="screen">
+
+  <!-- HERO — 풀블리드 + 좌하단 텍스트 [style_02, style_07 패턴] -->
+  <section style="position:relative; height: 88vh; overflow:hidden;">
+    <span class="anno-section">[H-03] About 히어로 — 풀블리드 + 좌하단 / style_02·07</span>
+
+    <nav class="gnb">
+      <div class="gnb-logo">Meju</div>
+      <div class="gnb-menu">
+        <a href="#">Home</a>
+        <a href="#" style="font-weight:700;">About</a>
+        <a href="#">Shop</a>
+        <a href="#">Class</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="gnb-cart">장바구니 <span class="cart-badge">0</span></div>
+    </nav>
+
+    <div class="img-box" style="width:100%; height:100%;">
+      <span>풀블리드 이미지 — About 히어로<br>장독대 풍경 or 발효 클로즈업<br>16:9 / 21:9</span>
+    </div>
+
+    <div style="position:absolute; bottom: 60px; left: var(--pad-x); z-index:10;">
+      <p class="label" style="color:rgba(255,255,255,0.55); margin-bottom: 12px;">About Meju</p>
+      <h1 class="h-hero" style="color:#fff; max-width: 580px;">
+        발효는 가장 원초적이고<br>인간적인 행위입니다.
+      </h1>
+    </div>
+  </section>
+
+  <!-- 브랜드 스토리 — 이미지+텍스트 교차 [F-01] -->
+  <section style="padding: 96px var(--pad-x);">
+    <span class="anno">[F-01] 브랜드 스토리 — 이미지+텍스트 교차 2세트</span>
+
+    <!-- 세트 1: 텍스트 좌 / 이미지 우 -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items:center; margin-top: 24px;">
+      <div>
+        <p class="label" style="margin-bottom: 16px;">Our Origin</p>
+        <h2 class="h-section">Meju는 어떻게<br>시작되었는가</h2>
+        <p class="body-text" style="margin-top: 24px; max-width: 420px;">
+          발효는 기다림입니다. 우리는 빠른 세상에서 느리게 만든 것들의 가치를 믿습니다.
+          직접 발효 생산자를 찾아다니며 선별한 제품만을 전합니다.
+        </p>
+      </div>
+      <div class="img-box" style="height: 480px;">
+        <span>브랜드 이미지 1<br>4:3 가로형</span>
+      </div>
+    </div>
+
+    <!-- 세트 2: 이미지 좌 / 텍스트 우 (reverse) -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items:center; margin-top: 80px;">
+      <div class="img-box" style="height: 480px;">
+        <span>브랜드 이미지 2<br>4:3 가로형<br>장인 손 클로즈업</span>
+      </div>
+      <div>
+        <p class="label" style="margin-bottom: 16px;">Our Curation</p>
+        <h2 class="h-section">큐레이션이란<br>무엇인가</h2>
+        <p class="body-text" style="margin-top: 24px; max-width: 420px;">
+          Meju에 오르는 모든 상품은 최소 3번의 테이스팅을 거칩니다.
+          생산 방식, 원재료, 숙성 환경을 직접 확인하고 우리가 먼저 먹어봅니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 비대칭 오프셋 이미지 스택 섹션 — [style_03 패턴] -->
+  <section style="padding: 96px var(--pad-x); background: var(--w-subtle); overflow:hidden; position:relative;">
+    <span class="anno">[style_03 패턴] 비대칭 오프셋 이미지 스택 — 3장 겹침 + 텍스트</span>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items:center; margin-top: 24px;">
+
+      <!-- 좌: 비대칭 오프셋 이미지 스택 -->
+      <div style="position:relative; height: 520px;">
+        <!-- 이미지 1 — 배경 (좌상단) -->
+        <div class="img-box" style="position:absolute; top:0; left:0; width:65%; height:56%; z-index:1;">
+          <span style="font-size:9px;">이미지 1<br>발효 재료</span>
+        </div>
+        <!-- 이미지 2 — 중앙 (겹침, z-index 높음) -->
+        <div class="img-box" style="position:absolute; top:18%; left:18%; width:65%; height:56%; z-index:2; box-shadow: 0 8px 32px rgba(0,0,0,0.12);">
+          <span style="font-size:9px;">이미지 2<br>장 담그기 과정</span>
+        </div>
+        <!-- 이미지 3 — 우하단 -->
+        <div class="img-box" style="position:absolute; top:36%; left:36%; width:60%; height:52%; z-index:1; background: var(--w-mid);">
+          <span style="font-size:9px;">이미지 3<br>완성된 장류</span>
+        </div>
+      </div>
+
+      <!-- 우: 텍스트 -->
+      <div>
+        <p class="label" style="margin-bottom: 16px;">The Process</p>
+        <h2 class="h-section">기다림이<br>맛이 됩니다.</h2>
+        <p class="body-text" style="margin-top: 24px; max-width: 400px;">
+          메주를 쑤고, 항아리에 넣고, 시간에 맡깁니다.
+          인간이 개입하는 것은 처음과 끝뿐입니다.
+          그 사이의 모든 것은 자연이 합니다.
+        </p>
+        <button class="btn btn-arrow" style="margin-top: 32px;">발효 과정 보기</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 철학 섹션 — [style_04 패턴] 대형 텍스트 + 중앙 이미지 오프셋 -->
+  <section style="padding: 96px var(--pad-x); position:relative; overflow:hidden;">
+    <span class="anno">[style_04 패턴] 대형 텍스트 + 이미지 오프셋 — 철학 섹션</span>
+
+    <div style="position:relative; margin-top: 24px; min-height: 560px;">
+
+      <!-- 대형 좌측 텍스트 -->
+      <div style="position:absolute; top: 50%; left: 0; transform: translateY(-50%); z-index:1; max-width: 520px;">
+        <p class="label" style="margin-bottom: 20px;">Our Philosophy</p>
+        <h2 style="font-size: clamp(36px, 4.5vw, 64px); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em;">
+          매일이<br>메주가<br>됩니다.
+        </h2>
+      </div>
+
+      <!-- 중앙 이미지 오프셋 배치 -->
+      <div class="img-box" style="position:absolute; top: 0; left: 35%; width: 38%; height: 480px; z-index:2;">
+        <span>철학 이미지<br>발효 시간의 흔적<br>세로형 or 정방형</span>
+      </div>
+
+      <!-- 우측 서브텍스트 -->
+      <div style="position:absolute; top: 50%; right: 0; transform: translateY(-50%); z-index:3; max-width: 220px; text-align:right;">
+        <p class="body-text" style="font-size: 13px; line-height: 1.8;">
+          커머스와 체험이 공존하는<br>
+          커뮤니티형 발효 플랫폼.
+        </p>
+        <button class="btn btn-arrow" style="margin-top: 20px; font-size: 11px;">Our Class</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 수치 섹션 (소셜 증거) -->
+  <section style="padding: 72px var(--pad-x); background: var(--w-ink);">
+    <span class="anno" style="background:#555;">[F-07] 소셜 증거 — 다크 배경 대형 숫자</span>
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 24px; text-align:center;">
+      <div>
+        <p style="font-size: clamp(36px,4vw,56px); font-weight:200; color:#fff; letter-spacing:-0.02em;">200+</p>
+        <p style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-top:8px;">큐레이션 상품</p>
+      </div>
+      <div>
+        <p style="font-size: clamp(36px,4vw,56px); font-weight:200; color:#fff; letter-spacing:-0.02em;">3년</p>
+        <p style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-top:8px;">평균 숙성 기간</p>
+      </div>
+      <div>
+        <p style="font-size: clamp(36px,4vw,56px); font-weight:200; color:#fff; letter-spacing:-0.02em;">30+</p>
+        <p style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-top:8px;">제휴 생산 장인</p>
+      </div>
+      <div>
+        <p style="font-size: clamp(36px,4vw,56px); font-weight:200; color:#fff; letter-spacing:-0.02em;">4.9</p>
+        <p style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#888; margin-top:8px;">평균 리뷰 별점</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /screen-about -->
+
+
+<!-- ════════════════════════════════════════
+     ⑤ CLASS
+═════════════════════════════════════════ -->
+<div id="screen-class" class="screen">
+
+  <!-- GNB (라이트) -->
+  <header style="padding: 20px var(--pad-x); border-bottom: 1px solid var(--w-border); display:flex; align-items:center; justify-content:space-between; background:#fff;">
+    <div class="gnb-logo dark">Meju</div>
+    <div class="gnb-menu dark">
+      <a href="#" style="color:var(--w-dark);">Home</a>
+      <a href="#" style="color:var(--w-dark);">About</a>
+      <a href="#" style="color:var(--w-dark);">Shop</a>
+      <a href="#" style="color:var(--w-ink); font-weight:700;">Class</a>
+      <a href="#" style="color:var(--w-dark);">Contact</a>
+    </div>
+    <div style="color:var(--w-dark); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+      장바구니 <span class="cart-badge">0</span>
+    </div>
+  </header>
+
+  <div style="padding: 56px var(--pad-x) 96px;">
+
+    <!-- 페이지 헤더 -->
+    <div style="margin-bottom: 12px;">
+      <span class="anno">[Class] 페이지 헤더 + 필터</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 40px;">
+      <div>
+        <p class="label" style="margin-bottom: 10px;">Meju Class</p>
+        <h1 class="h-section">장인과 함께하는<br>발효 클래스</h1>
+        <p class="body-text" style="margin-top: 12px; max-width: 480px;">
+          장 담그기와 술 담그기를 직접 체험합니다.
+          Meju가 선별한 장인과 함께 발효의 시작부터 완성까지.
+        </p>
+      </div>
+    </div>
+
+    <!-- 클래스 필터 -->
+    <div style="display:flex; gap: 8px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--w-border);">
+      <button class="chip active">전체 클래스</button>
+      <button class="chip">장 담그기</button>
+      <button class="chip">술 담그기</button>
+      <button class="chip">입문</button>
+      <button class="chip">심화</button>
+    </div>
+
+    <!-- 클래스 카드 목록 — 2열 그리드 -->
+    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 32px;">
+
+      <!-- 클래스 카드 1 -->
+      <div class="class-card">
+        <span class="anno">[Class Card] 2열 — 이미지 + 배지 + 정보</span>
+        <div class="card-img img-box" style="height: 320px;">
+          <span>클래스 이미지<br>16:9 or 4:3<br>장 담그기 현장</span>
+        </div>
+        <div class="card-body">
+          <span class="class-badge">장 담그기 · 입문</span>
+          <h3 style="font-size: 20px; font-weight: 400; line-height: 1.3;">처음 만드는 된장 —<br>메주 쑤기부터 숙성까지</h3>
+          <p class="body-text" style="margin-top: 10px;">충청북도 충주 장인의 농가에서 직접 메주를 쑤고 항아리에 담는 과정을 경험합니다.</p>
+          <div class="dashed-row" style="border-color: var(--w-border);">
+            <div style="display:flex; gap:20px;">
+              <div>
+                <p class="label">일정</p>
+                <p style="font-size:13px; margin-top:4px;">2026.05.10 (토)</p>
+              </div>
+              <div>
+                <p class="label">인원</p>
+                <p style="font-size:13px; margin-top:4px;">최대 8명</p>
+              </div>
+              <div>
+                <p class="label">시간</p>
+                <p style="font-size:13px; margin-top:4px;">5시간</p>
+              </div>
+            </div>
+            <p style="font-size: 18px; font-weight: 600;">85,000원</p>
+          </div>
+          <button class="btn btn-fill btn-arrow" style="margin-top: 16px; width:100%; justify-content:center;">신청하기</button>
+        </div>
+      </div>
+
+      <!-- 클래스 카드 2 -->
+      <div class="class-card">
+        <div class="card-img img-box" style="height: 320px;">
+          <span>클래스 이미지<br>16:9 or 4:3<br>술 담그기 현장</span>
+        </div>
+        <div class="card-body">
+          <span class="class-badge">술 담그기 · 입문</span>
+          <h3 style="font-size: 20px; font-weight: 400; line-height: 1.3;">내 손으로 만드는 막걸리 —<br>누룩부터 발효까지</h3>
+          <p class="body-text" style="margin-top: 10px;">전통 막걸리를 직접 빚습니다. 누룩 고르는 법, 발효 온도·시간 관리, 거르기까지 한 번에 배웁니다.</p>
+          <div class="dashed-row" style="border-color: var(--w-border);">
+            <div style="display:flex; gap:20px;">
+              <div>
+                <p class="label">일정</p>
+                <p style="font-size:13px; margin-top:4px;">2026.05.17 (토)</p>
+              </div>
+              <div>
+                <p class="label">인원</p>
+                <p style="font-size:13px; margin-top:4px;">최대 6명</p>
+              </div>
+              <div>
+                <p class="label">시간</p>
+                <p style="font-size:13px; margin-top:4px;">4시간</p>
+              </div>
+            </div>
+            <p style="font-size: 18px; font-weight: 600;">75,000원</p>
+          </div>
+          <button class="btn btn-fill btn-arrow" style="margin-top: 16px; width:100%; justify-content:center;">신청하기</button>
+        </div>
+      </div>
+
+      <!-- 클래스 카드 3 -->
+      <div class="class-card">
+        <div class="card-img img-box" style="height: 320px;">
+          <span>클래스 이미지<br>장 담그기 심화</span>
+        </div>
+        <div class="card-body">
+          <span class="class-badge">장 담그기 · 심화</span>
+          <h3 style="font-size: 20px; font-weight: 400; line-height: 1.3;">간장 담그기 심화 —<br>조선간장의 모든 것</h3>
+          <p class="body-text" style="margin-top: 10px;">3년 숙성 간장 장인에게 배우는 깊이 있는 간장 담그기. 메주 선별법부터 소금 비율까지.</p>
+          <div class="dashed-row" style="border-color: var(--w-border);">
+            <div style="display:flex; gap:20px;">
+              <div>
+                <p class="label">일정</p>
+                <p style="font-size:13px; margin-top:4px;">2026.06.07 (토)</p>
+              </div>
+              <div>
+                <p class="label">인원</p>
+                <p style="font-size:13px; margin-top:4px;">최대 6명</p>
+              </div>
+              <div>
+                <p class="label">시간</p>
+                <p style="font-size:13px; margin-top:4px;">6시간</p>
+              </div>
+            </div>
+            <p style="font-size: 18px; font-weight: 600;">120,000원</p>
+          </div>
+          <button class="btn btn-fill btn-arrow" style="margin-top: 16px; width:100%; justify-content:center;">신청하기</button>
+        </div>
+      </div>
+
+      <!-- 클래스 카드 4 -->
+      <div class="class-card">
+        <div class="card-img img-box" style="height: 320px;">
+          <span>클래스 이미지<br>전통주 심화</span>
+        </div>
+        <div class="card-body">
+          <span class="class-badge">술 담그기 · 심화</span>
+          <h3 style="font-size: 20px; font-weight: 400; line-height: 1.3;">약주·청주 담그기 —<br>전통주 심화 과정</h3>
+          <p class="body-text" style="margin-top: 10px;">입문 수료자 대상 심화 과정. 쌀 품종 선별, 발효 환경 세팅, 여과·숙성까지 전 과정 마스터.</p>
+          <div class="dashed-row" style="border-color: var(--w-border);">
+            <div style="display:flex; gap:20px;">
+              <div>
+                <p class="label">일정</p>
+                <p style="font-size:13px; margin-top:4px;">2026.06.21 (토)</p>
+              </div>
+              <div>
+                <p class="label">인원</p>
+                <p style="font-size:13px; margin-top:4px;">최대 4명</p>
+              </div>
+              <div>
+                <p class="label">시간</p>
+                <p style="font-size:13px; margin-top:4px;">7시간</p>
+              </div>
+            </div>
+            <p style="font-size: 18px; font-weight: 600;">150,000원</p>
+          </div>
+          <button class="btn btn-fill btn-arrow" style="margin-top: 16px; width:100%; justify-content:center;">신청하기</button>
+        </div>
+      </div>
+
+    </div><!-- /클래스 그리드 -->
+
+    <!-- 클래스 안내 배너 -->
+    <div style="margin-top: 64px; padding: 40px 48px; background: var(--w-subtle); display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <p class="label" style="margin-bottom: 10px;">단체·기업 클래스</p>
+        <h3 class="h-sub">맞춤 클래스도 가능합니다.</h3>
+        <p class="body-text" style="margin-top: 8px;">10인 이상 단체 · 기업 워크샵 · 팀빌딩 문의</p>
+      </div>
+      <button class="btn btn-arrow">문의하기</button>
+    </div>
+
+  </div>
+</div><!-- /screen-class -->
+
+
+<!-- ════════════════════════════════════════
+     스크립트 — 탭 전환
+═════════════════════════════════════════ -->
+<script>
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('screen-' + name).classList.add('active');
+  var map = { home:0, shop:1, product:2, about:3, class:4 };
+  document.querySelectorAll('.tab-btn')[map[name]].classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>

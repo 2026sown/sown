@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meju — 사업 기획서 2026</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_02@1.0/BookkMyungjo-Bold.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.css" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --cream-dark: #EDE7D8;
+    --green: #054f19;
+    --green-dark: #033610;
+    --lime: #DAF15B;
+    --text: #111A13;
+    --text-muted: #4A5C4D;
+    --border: rgba(5,79,25,0.12);
+    --f-serif: 'BookkMyungjo', 'Noto Serif KR', serif;
+    --f-sans: 'SUIT', 'Noto Sans KR', sans-serif;
+    --f-label: 'GmarketSans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: var(--cream); }
+
+  body {
+    font-family: var(--f-sans);
+    color: var(--text);
+    background: var(--cream);
+    font-size: 15px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── PAGE CONTAINER ─── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 60px;
+  }
+
+  /* ─── COVER ─── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 80px 60px 60px;
+    background: var(--green);
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  .cover-brand {
+    font-family: var(--f-serif);
+    font-size: clamp(80px, 14vw, 180px);
+    color: var(--lime);
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cover-tagline {
+    font-family: var(--f-serif);
+    font-size: clamp(18px, 2.5vw, 28px);
+    color: rgba(245,240,232,0.6);
+    margin-top: 24px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cover-circle {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(218,241,91,0.12);
+    right: -120px;
+    bottom: -200px;
+    z-index: 1;
+  }
+
+  .cover-circle-2 {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    border: 1px solid rgba(218,241,91,0.08);
+    right: 60px;
+    top: -80px;
+    z-index: 1;
+  }
+
+  .cover-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cover-meta-item {
+    color: rgba(245,240,232,0.5);
+    font-family: var(--f-label);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .cover-meta-item strong {
+    display: block;
+    color: rgba(245,240,232,0.9);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .cover-doc-type {
+    font-family: var(--f-label);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 16px;
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .section-num {
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: var(--f-serif);
+    font-size: clamp(32px, 5vw, 56px);
+    color: var(--green);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 48px;
+  }
+
+  .section-title.white { color: var(--cream); }
+
+  /* ─── DIVIDER ─── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  hr.lime {
+    border-color: var(--lime);
+    margin: 0 0 40px;
+  }
+
+  /* ─── TEXT ─── */
+  p {
+    color: var(--text-muted);
+    line-height: 1.9;
+    margin-bottom: 16px;
+  }
+
+  .lead {
+    font-family: var(--f-serif);
+    font-size: clamp(18px, 2.2vw, 24px);
+    color: var(--text);
+    line-height: 1.55;
+    margin-bottom: 32px;
+  }
+
+  .callout {
+    background: var(--green);
+    color: var(--lime);
+    font-family: var(--f-serif);
+    font-size: clamp(20px, 2.8vw, 30px);
+    line-height: 1.45;
+    padding: 48px 56px;
+    margin: 48px 0;
+    position: relative;
+  }
+
+  .callout::before {
+    content: '"';
+    font-family: var(--f-serif);
+    font-size: 120px;
+    color: rgba(218,241,91,0.15);
+    position: absolute;
+    top: -20px;
+    left: 40px;
+    line-height: 1;
+  }
+
+  /* ─── HIGHLIGHT BOX ─── */
+  .highlight {
+    border-left: 3px solid var(--lime);
+    padding: 20px 28px;
+    background: rgba(218,241,91,0.08);
+    margin: 32px 0;
+  }
+
+  .highlight p { margin: 0; color: var(--text); }
+
+  /* ─── 2-COL GRID ─── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin: 32px 0;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    border: 1px solid var(--border);
+    padding: 32px;
+    background: white;
+  }
+
+  .card-num {
+    font-family: var(--f-serif);
+    font-size: 48px;
+    color: var(--lime);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .card-label {
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-family: var(--f-serif);
+    font-size: 18px;
+    color: var(--green);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .card p { font-size: 14px; margin: 0; }
+
+  /* ─── DARK SECTION ─── */
+  .dark-section {
+    background: var(--green);
+    padding: 72px 60px;
+    margin: 0 -60px;
+    page-break-inside: avoid;
+  }
+
+  .dark-section .section-num { color: rgba(218,241,91,0.5); }
+  .dark-section .section-title { color: var(--lime); }
+  .dark-section p { color: rgba(245,240,232,0.65); }
+  .dark-section .lead { color: rgba(245,240,232,0.9); }
+  .dark-section hr { border-color: rgba(218,241,91,0.15); }
+
+  /* ─── TABLE ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: var(--green);
+    color: var(--lime);
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 14px 20px;
+    color: var(--text-muted);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  tbody td:first-child {
+    color: var(--text);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  tbody tr:nth-child(even) td { background: rgba(245,240,232,0.5); }
+
+  .td-meju { color: var(--green) !important; font-weight: 700 !important; }
+
+  /* ─── PERSONA ─── */
+  .persona {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 32px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    background: white;
+  }
+
+  .persona-avatar {
+    width: 100px;
+    height: 100px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-serif);
+    font-size: 36px;
+    color: var(--lime);
+    flex-shrink: 0;
+  }
+
+  .persona-name {
+    font-family: var(--f-serif);
+    font-size: 22px;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+
+  .persona-role {
+    font-family: var(--f-label);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .persona-tag {
+    display: inline-block;
+    background: var(--lime);
+    color: var(--green);
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  /* ─── ROADMAP ─── */
+  .roadmap-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: -32px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .roadmap-item:last-child::before { display: none; }
+
+  .roadmap-dot {
+    width: 40px;
+    height: 40px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lime);
+    font-family: var(--f-label);
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .roadmap-dot.active { background: var(--lime); color: var(--green); }
+
+  .roadmap-content { padding-top: 8px; }
+
+  .roadmap-phase {
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .roadmap-title {
+    font-family: var(--f-serif);
+    font-size: 20px;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+
+  .roadmap-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .roadmap-list li {
+    font-size: 14px;
+    color: var(--text-muted);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .roadmap-list li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--lime);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .roadmap-list li.done { color: var(--green); }
+  .roadmap-list li.done::before { background: var(--green); }
+
+  /* ─── STAT BOX ─── */
+  .stat-box {
+    text-align: center;
+    padding: 32px 24px;
+    border: 1px solid rgba(218,241,91,0.25);
+  }
+
+  .stat-num {
+    font-family: var(--f-serif);
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--lime);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-desc {
+    font-size: 13px;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.5;
+  }
+
+  /* ─── FOOTER ─── */
+  .doc-footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .doc-footer-brand {
+    font-family: var(--f-serif);
+    font-size: 24px;
+    color: var(--green);
+  }
+
+  .doc-footer-meta {
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ─── PAGE BREAK ─── */
+  .pb { page-break-after: always; }
+  .pbi { page-break-inside: avoid; }
+
+  /* ─── PRINT ─── */
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--cream); }
+    .cover { min-height: 100vh; }
+    .dark-section { -webkit-print-color-adjust: exact; }
+    .page { padding: 60px 50px; }
+  }
+
+  /* ─── SECTION SPACER ─── */
+  .section {
+    padding: 80px 0;
+    page-break-inside: avoid;
+  }
+
+  .section + .section {
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── INLINE HIGHLIGHT ─── */
+  mark {
+    background: var(--lime);
+    color: var(--green);
+    padding: 0 4px;
+    font-family: var(--f-serif);
+  }
+
+  /* ─── LIST ─── */
+  ul.styled {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.styled li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  ul.styled li::before {
+    content: '—';
+    color: var(--green);
+    flex-shrink: 0;
+    font-family: var(--f-serif);
+  }
+
+  /* ─── TOC ─── */
+  .toc { padding: 60px 0; }
+
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc-num {
+    font-family: var(--f-label);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    min-width: 28px;
+  }
+
+  .toc-title {
+    font-family: var(--f-serif);
+    font-size: 17px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .toc-dot {
+    flex: 1;
+    border-bottom: 1px dotted var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     COVER
+══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-circle"></div>
+  <div class="cover-circle-2"></div>
+
+  <div>
+    <div class="cover-doc-type">사업 기획서 · Business Plan · Draft 1.0</div>
+  </div>
+
+  <div>
+    <div class="cover-brand">Meju</div>
+    <div class="cover-tagline">
+      매일이 메주가 됩니다.<br>
+      매주, 당신의 시간만큼.
+    </div>
+  </div>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <strong>카테고리</strong>
+      발효식품 D2C 커머스 + 체험 플랫폼
+    </div>
+    <div class="cover-meta-item">
+      <strong>단계</strong>
+      Phase 1 — 브랜드 커머스 오픈 준비
+    </div>
+    <div class="cover-meta-item">
+      <strong>작성일</strong>
+      2026. 04. 20
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TABLE OF CONTENTS
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="toc">
+    <div class="section-num">Contents</div>
+    <div class="section-title" style="margin-bottom:40px;">목차</div>
+
+    <div class="toc-item">
+      <span class="toc-num">01</span>
+      <span class="toc-title">문제 정의</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">02</span>
+      <span class="toc-title">솔루션 — Meju란 무엇인가</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">03</span>
+      <span class="toc-title">시장 기회</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">04</span>
+      <span class="toc-title">타겟 & 페르소나</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">05</span>
+      <span class="toc-title">서비스 구조</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">06</span>
+      <span class="toc-title">수익 모델</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">07</span>
+      <span class="toc-title">로드맵</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">08</span>
+      <span class="toc-title">기대 효과</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">09</span>
+      <span class="toc-title">투자 비용 개요</span>
+      <span class="toc-dot"></span>
+    </div>
+    <div class="toc-item">
+      <span class="toc-num">10</span>
+      <span class="toc-title">브랜드 철학</span>
+      <span class="toc-dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     01. 문제 정의
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">01 / Problem</div>
+    <div class="section-title">문제 정의</div>
+
+    <p class="lead">
+      국내 발효식품 시장은 재료·도구·체험이 완전히 파편화되어 있다.<br>
+      입문자가 "처음부터 끝까지" 믿고 따라갈 수 있는 편집자가 없다.
+    </p>
+
+    <hr>
+
+    <div class="section-num" style="margin-bottom:20px;">지금 시장에 없는 것</div>
+
+    <div class="grid-2">
+      <div class="card pbi">
+        <div class="card-label">공백 01</div>
+        <div class="card-title">원스톱 발효 편집샵</div>
+        <p>완제품 + 재료 + 도구 + 체험을 한 곳에서 제공하는 D2C 브랜드. 국내 선례 없음.</p>
+      </div>
+      <div class="card pbi">
+        <div class="card-label">공백 02</div>
+        <div class="card-title">감성 브랜딩 발효 커머스</div>
+        <p>정제된 브랜드 아이덴티티로 발효를 선물·라이프스타일 경험으로 포지셔닝한 사례. 국내 미개척.</p>
+      </div>
+      <div class="card pbi">
+        <div class="card-label">공백 03</div>
+        <div class="card-title">입문자 온보딩 구조</div>
+        <p>첫 구매자가 "이것부터 시작하세요"를 안내받는 발효 커머스. 미개척.</p>
+      </div>
+      <div class="card pbi">
+        <div class="card-label">공백 04</div>
+        <div class="card-title">선물 경험 포지셔닝</div>
+        <p>발효를 선물 카테고리로 포지셔닝한 D2C 브랜드. 현재 홈쇼핑 위주로만 형성.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="margin-bottom:20px;">타겟의 페인포인트</div>
+
+    <ul class="styled">
+      <li><strong>어디서 시작해야 할지 모른다</strong> — 재료 선택지가 파편화되어 있고 첫 진입점이 없다</li>
+      <li><strong>선택지를 신뢰할 수 없다</strong> — 품질 기준 불명확, 큐레이션 맥락 없음</li>
+      <li><strong>혼자 하기 두렵다</strong> — 실패 시 시간·재료 손해. 확인 방법 없음</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     02. 솔루션
+══════════════════════════════════════ -->
+<div class="dark-section pb" style="padding-top:80px; padding-bottom:80px;">
+  <div style="max-width:900px; margin:0 auto; padding: 0 60px;">
+    <div class="section-num">02 / Solution</div>
+    <div class="section-title">솔루션 — Meju란 무엇인가</div>
+
+    <p class="lead" style="color:rgba(245,240,232,0.85);">
+      발효식품의 큐레이션 편집샵.<br>
+      "이것부터 시작하세요"라고 말하는 편집자.
+    </p>
+
+    <hr>
+
+    <div class="grid-3">
+      <div class="stat-box pbi">
+        <div class="stat-num">큐레이션</div>
+        <div class="stat-desc">직접 선별한 재료·도구·완제품을 맥락과 함께 제공</div>
+      </div>
+      <div class="stat-box pbi">
+        <div class="stat-num">체험</div>
+        <div class="stat-desc">장 담그기·술 담그기 클래스 연계로 문턱을 낮춤</div>
+      </div>
+      <div class="stat-box pbi">
+        <div class="stat-num">선물</div>
+        <div class="stat-desc">정제된 패키지로 발효를 선물 경험으로 재정의</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="color:rgba(218,241,91,0.6); margin-bottom:20px;">경쟁사 대비 포지셔닝</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>기존 식품 쇼핑몰</th>
+          <th>커뮤니티 직거래</th>
+          <th style="background:#DAF15B; color:#054f19;">Meju</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>완제품 판매</td>
+          <td>O</td>
+          <td>O</td>
+          <td class="td-meju" style="color:#054f19 !important;">O</td>
+        </tr>
+        <tr>
+          <td>재료·도구 큐레이션</td>
+          <td>일부</td>
+          <td>X</td>
+          <td class="td-meju" style="color:#054f19 !important;">O</td>
+        </tr>
+        <tr>
+          <td>체험 클래스 연계</td>
+          <td>X</td>
+          <td>X</td>
+          <td class="td-meju" style="color:#054f19 !important;">O</td>
+        </tr>
+        <tr>
+          <td>입문자 온보딩</td>
+          <td>X</td>
+          <td>X</td>
+          <td class="td-meju" style="color:#054f19 !important;">O</td>
+        </tr>
+        <tr>
+          <td>브랜드 감성</td>
+          <td>없음</td>
+          <td>없음</td>
+          <td class="td-meju" style="color:#054f19 !important;">정제·고급</td>
+        </tr>
+        <tr>
+          <td>선물 경험</td>
+          <td>X</td>
+          <td>X</td>
+          <td class="td-meju" style="color:#054f19 !important;">O</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     03. 시장 기회
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">03 / Market</div>
+    <div class="section-title">시장 기회</div>
+
+    <div class="highlight pbi">
+      <p><strong>2024년 12월 — UNESCO 장 담그기 문화 인류무형문화유산 등재.</strong><br>
+      발효 브랜드가 감성으로 포지셔닝될 수 있는 최초의 타이밍.</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:40px;">
+      <div class="card pbi">
+        <div class="card-num">7%</div>
+        <div class="card-label">글로벌 발효식품 CAGR</div>
+        <p style="font-size:13px;">2024년 기준 1,265억 달러 규모.<br><em style="font-size:11px; color:#999;">출처: GM Insights 2024</em></p>
+      </div>
+      <div class="card pbi">
+        <div class="card-num">64,000</div>
+        <div class="card-label">전통주 평균 구매 단가 (원)</div>
+        <p style="font-size:13px;">MZ세대 주도, 재구매율 40%.<br><em style="font-size:11px; color:#999;">출처: 세레스 리서치</em></p>
+      </div>
+      <div class="card pbi">
+        <div class="card-num">0</div>
+        <div class="card-label">동일 포지셔닝 경쟁사</div>
+        <p style="font-size:13px;">감성 D2C 발효 편집샵 포맷 국내 선례 없음.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="margin-bottom:20px;">법적 구조 — 리스크 없는 진입</div>
+    <table>
+      <thead>
+        <tr>
+          <th>품목</th>
+          <th>온라인 직판 가능 여부</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>장류 (된장·간장·고추장)</td>
+          <td style="color:#054f19; font-weight:700;">가능</td>
+          <td>식품판매업 신고 필요</td>
+        </tr>
+        <tr>
+          <td>발효 도구·재료 (항아리·누룩·메주콩)</td>
+          <td style="color:#054f19; font-weight:700;">가능</td>
+          <td>일반 전자상거래</td>
+        </tr>
+        <tr>
+          <td>술 담그기 도구·재료</td>
+          <td style="color:#054f19; font-weight:700;">가능</td>
+          <td>완제품 주류 직판만 불가</td>
+        </tr>
+        <tr>
+          <td>술 완제품 직판</td>
+          <td style="color:#c0392b; font-weight:700;">불가</td>
+          <td>주류면허 필요 → 도구·재료로 대체</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight pbi">
+      <p><strong>사업자 업종 구성:</strong> 전자상거래 소매업 (525101) + 교육서비스업 (809003, 체험 클래스) + 통신판매업 신고 + 식품판매업 신고</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     04. 타겟 & 페르소나
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">04 / Target</div>
+    <div class="section-title">타겟 & 페르소나</div>
+
+    <p class="lead">
+      장을 담그거나 전통주를 담그는 것에 관심을 갖기 시작한 사람들.<br>
+      시작하고 싶은데 어떻게 해야 할지 모르는 입문자.
+    </p>
+
+    <hr>
+
+    <div class="persona pbi">
+      <div class="persona-avatar">김</div>
+      <div>
+        <div class="persona-name">김소연</div>
+        <div class="persona-role">38세 · 교사 · 장류 입문자</div>
+        <span class="persona-tag">아이 건강</span>
+        <span class="persona-tag">직접 만들기</span>
+        <span class="persona-tag">신뢰 우선</span>
+        <table style="margin-top:16px; font-size:13px;">
+          <tbody>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600; white-space:nowrap;">동기</td><td style="padding:6px 0; color:#4A5C4D;">아이 건강을 위해 직접 만든 된장을 먹이고 싶다</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600;">진입</td><td style="padding:6px 0; color:#4A5C4D;">인스타그램 탐색 → 신뢰 가는 정보 찾아 이동</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600;">구매</td><td style="padding:6px 0; color:#4A5C4D;">입문 된장 세트 구매 → 재료+도구+레시피 한 번에</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#054f19; font-weight:700;">"</td><td style="padding:6px 0; color:#054f19; font-family:var(--f-serif);">믿을 수 있는 첫 세트가 있으면 당장 시작한다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="persona pbi">
+      <div class="persona-avatar" style="background:var(--lime); color:var(--green);">박</div>
+      <div>
+        <div class="persona-name">박준혁</div>
+        <div class="persona-role">31세 · UX디자이너 · 양조 취미</div>
+        <span class="persona-tag">발효 프로젝트</span>
+        <span class="persona-tag">감도 높은 편집</span>
+        <span class="persona-tag">선물 패키지</span>
+        <table style="margin-top:16px; font-size:13px;">
+          <tbody>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600; white-space:nowrap;">동기</td><td style="padding:6px 0; color:#4A5C4D;">발효를 개인 프로젝트이자 취향으로 접근</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600;">진입</td><td style="padding:6px 0; color:#4A5C4D;">유튜브 발효 콘텐츠 탐색 → 재료 구매처 검색</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#4A5C4D; font-weight:600;">구매</td><td style="padding:6px 0; color:#4A5C4D;">막걸리·청주 담그기 도구 세트 구매</td></tr>
+            <tr><td style="padding:6px 12px 6px 0; color:#054f19; font-weight:700;">"</td><td style="padding:6px 0; color:#054f19; font-family:var(--f-serif);">감도 높은 편집과 선물할 수 있는 패키지가 필요하다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     05. 서비스 구조
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">05 / Structure</div>
+    <div class="section-title">서비스 구조</div>
+
+    <div class="highlight pbi">
+      <p><strong>GNB 구성:</strong> Home &nbsp;/&nbsp; About &nbsp;/&nbsp; Shop &nbsp;/&nbsp; Class &nbsp;/&nbsp; Contact</p>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="margin-bottom:20px;">판매 품목</div>
+
+    <div class="grid-3">
+      <div class="card pbi">
+        <div class="card-label">카테고리 A</div>
+        <div class="card-title">장류 직판</div>
+        <ul class="styled" style="margin:0;">
+          <li>된장</li>
+          <li>간장</li>
+          <li>고추장</li>
+        </ul>
+      </div>
+      <div class="card pbi">
+        <div class="card-label">카테고리 B</div>
+        <div class="card-title">발효 도구·재료</div>
+        <ul class="styled" style="margin:0;">
+          <li>항아리</li>
+          <li>누룩</li>
+          <li>메주콩</li>
+        </ul>
+      </div>
+      <div class="card pbi">
+        <div class="card-label">카테고리 C</div>
+        <div class="card-title">술 담그기 도구·재료</div>
+        <p style="font-size:13px; color:#999; margin-top:8px;">술 완제품 직판 불가<br>→ 도구·재료로 대체</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="margin-bottom:20px;">Phase 1 핵심 화면 (13개)</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>화면</th>
+          <th>설명</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>홈</td><td>브랜드 히어로 + 큐레이션 진입</td></tr>
+        <tr><td>About</td><td>브랜드 철학 + 스토리</td></tr>
+        <tr><td>Shop (전체)</td><td>전체 상품 목록 + 필터</td></tr>
+        <tr><td>Shop (카테고리별)</td><td>장류 / 발효도구 / 술담그기 (3개)</td></tr>
+        <tr><td>상품 상세</td><td>큐레이션 맥락 + 구매</td></tr>
+        <tr><td>장바구니</td><td>수량 조정 + 결제 진입</td></tr>
+        <tr><td>결제 / 결제완료</td><td>주문 플로우 (2개)</td></tr>
+        <tr><td>회원가입 / 로그인</td><td>계정 플로우 (2개)</td></tr>
+        <tr><td>Class</td><td>체험 클래스 소개 + 연계</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     06. 수익 모델
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">06 / Revenue</div>
+    <div class="section-title">수익 모델</div>
+
+    <p class="lead">확정된 수익원과 Phase 2 이후 확장 가능한 모델로 구분.</p>
+
+    <hr>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-num" style="margin-bottom:16px;">Phase 1 — 확정</div>
+        <ul class="styled">
+          <li>장류 직판 (된장·간장·고추장)</li>
+          <li>발효 도구·재료 판매</li>
+          <li>입문자 스타터 키트 세트</li>
+          <li>선물 패키지</li>
+          <li>체험 클래스 연계</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-num" style="margin-bottom:16px;">Phase 2+ — 미정</div>
+        <ul class="styled">
+          <li>클래스 운영 방식 (직영 / 파트너 / 수수료)</li>
+          <li>멤버십·구독 모델</li>
+          <li>도매·B2B</li>
+          <li>글로벌 배송</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout pbi">
+      커머스 구매 → 클래스 유입 → 재구매.<br>
+      클래스 수강 → 커머스 전환 → 커뮤니티.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     07. 로드맵
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">07 / Roadmap</div>
+    <div class="section-title">로드맵</div>
+
+    <div class="roadmap-item pbi">
+      <div class="roadmap-dot active">P1</div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase">현재 진행 중</div>
+        <div class="roadmap-title">Phase 1 — 브랜드 커머스 오픈</div>
+        <ul class="roadmap-list">
+          <li class="done">브랜드 아이덴티티 확정</li>
+          <li class="done">사이트 설계 시작</li>
+          <li>사이트 제작 완료</li>
+          <li>판매 품목 큐레이션 및 입고</li>
+          <li>입문자 큐레이션 세트 구성</li>
+          <li>선물 패키지 설계</li>
+          <li>통신판매업 신고 + 식품판매업 신고</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="roadmap-item pbi">
+      <div class="roadmap-dot">P2</div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase">다음 단계</div>
+        <div class="roadmap-title">Phase 2 — 클래스 연계</div>
+        <ul class="roadmap-list">
+          <li>장 담그기 체험 클래스</li>
+          <li>술 담그기 체험 클래스</li>
+          <li>클래스 → 커머스 유입 퍼널 설계</li>
+          <li>파트너 클래스 연계 또는 직영 결정</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="roadmap-item pbi">
+      <div class="roadmap-dot">P3</div>
+      <div class="roadmap-content">
+        <div class="roadmap-phase">트랙 B</div>
+        <div class="roadmap-title">Phase 3 — 유튜브 채널</div>
+        <ul class="roadmap-list">
+          <li>발효 현장 인터뷰·체험 콘텐츠</li>
+          <li>유튜브 → Meju 커머스 유입</li>
+          <li>발효 장인·농가 스토리텔링</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     08. 기대 효과
+══════════════════════════════════════ -->
+<div class="dark-section pb" style="padding-top:80px; padding-bottom:80px;">
+  <div style="max-width:900px; margin:0 auto; padding: 0 60px;">
+    <div class="section-num">08 / Impact</div>
+    <div class="section-title">기대 효과</div>
+
+    <div class="grid-3" style="margin-bottom:48px;">
+      <div class="stat-box pbi">
+        <div class="stat-num">6–12mo</div>
+        <div class="stat-desc">동일 포지셔닝 경쟁사 진입 시<br>Meju 선점 우위 기간</div>
+      </div>
+      <div class="stat-box pbi">
+        <div class="stat-num">1–3월</div>
+        <div class="stat-desc">장 담그기 계절 집중 입문자<br>유입 핵심 기간</div>
+      </div>
+      <div class="stat-box pbi">
+        <div class="stat-num">0</div>
+        <div class="stat-desc">입문자 키트 풀세트 기준<br>쿠팡·네이버·컬리 공백 SKU</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-num" style="color:rgba(218,241,91,0.6); margin-bottom:20px;">공백 시장 선점 근거</div>
+
+    <ul class="styled" style="border-color: rgba(218,241,91,0.15);">
+      <li style="border-color: rgba(218,241,91,0.15); color:rgba(245,240,232,0.7);">입문자 키트: 쿠팡·네이버·컬리 검색 시 풀세트 키트 공백 확인</li>
+      <li style="border-color: rgba(218,241,91,0.15); color:rgba(245,240,232,0.7);">선물 시장: 홈쇼핑 위주로만 형성 — D2C 브랜딩 선물세트 부재</li>
+      <li style="border-color: rgba(218,241,91,0.15); color:rgba(245,240,232,0.7);">UNESCO 등재 이후 미디어 노출 급증 → 브랜드 선구축 우위</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     09. 투자 비용
+══════════════════════════════════════ -->
+<div class="page pb">
+  <div class="section">
+    <div class="section-num">09 / Investment</div>
+    <div class="section-title">투자 비용 개요 (Phase 1)</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>상태</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>사이트 제작</td>
+          <td>자체 제작 진행</td>
+          <td>외주 비용 없음</td>
+        </tr>
+        <tr>
+          <td>초기 재고 매입</td>
+          <td>미정</td>
+          <td>SKU 확정 후 산출</td>
+        </tr>
+        <tr>
+          <td>브랜딩·디자인</td>
+          <td style="color:#054f19; font-weight:700;">자체 진행 확정</td>
+          <td>외주 비용 없음</td>
+        </tr>
+        <tr>
+          <td>마케팅 예산</td>
+          <td>미정</td>
+          <td>채널 확정 후 산출</td>
+        </tr>
+        <tr>
+          <td>클래스 장소·도구</td>
+          <td>미정</td>
+          <td>Phase 2 확정 후</td>
+        </tr>
+        <tr>
+          <td>운영 인력</td>
+          <td style="color:#054f19; font-weight:700;">2인 확정</td>
+          <td>Phase 1 기준</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight pbi" style="margin-top:32px;">
+      <p>브랜딩·디자인은 자체 제작으로 진행. Phase 1 최소 비용 구조로 리스크 없이 시작.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     10. 브랜드 철학
+══════════════════════════════════════ -->
+<div class="page">
+  <div class="section">
+    <div class="section-num">10 / Philosophy</div>
+    <div class="section-title">브랜드 철학</div>
+
+    <div class="callout pbi">
+      발효는 기다림의 미학이다.<br>
+      기다림을 통해 최적의 맛을 뽑아내는 것.<br>
+      가장 원초적이면서도 가장 인간적인 행위.
+    </div>
+
+    <p class="lead" style="margin-top:40px;">
+      Meju는 그 기다림의 입구를 만든다.<br>
+      재료에 맥락을 담고, 체험으로 문턱을 없앤다.<br>
+      기다릴 줄 아는 편집자.
+    </p>
+
+    <hr>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-num" style="margin-bottom:12px;">브랜드 코어</div>
+        <p style="font-family:var(--f-serif); font-size:20px; color:var(--green); line-height:1.5;">기다릴 줄 아는 편집자</p>
+      </div>
+      <div>
+        <div class="section-num" style="margin-bottom:12px;">슬로건</div>
+        <p style="font-family:var(--f-serif); font-size:18px; color:var(--text); line-height:1.7;">
+          매일이 메주가 됩니다.<br>
+          매주, 당신의 시간만큼.
+        </p>
+      </div>
+    </div>
+
+    <hr>
+
+    <table>
+      <thead>
+        <tr>
+          <th>BEAT</th>
+          <th>내용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>B — Business Definition</td>
+          <td>발효의 시작점을 큐레이션하는 편집샵</td>
+        </tr>
+        <tr>
+          <td>E — Experiential Problem</td>
+          <td>시작하고 싶지만 어디서 어떻게 해야 할지 모른다</td>
+        </tr>
+        <tr>
+          <td>A — Actual Solution</td>
+          <td>재료+도구+레시피+체험을 한 흐름으로 — "이것부터"</td>
+        </tr>
+        <tr>
+          <td>T — Thrilling Concept</td>
+          <td>매주, 당신의 시간만큼</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="doc-footer">
+    <div class="doc-footer-brand">Meju</div>
+    <div class="doc-footer-meta">
+      Draft 1.0 &nbsp;·&nbsp; 2026-04-20<br>
+      tomob AI 팀 제작
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

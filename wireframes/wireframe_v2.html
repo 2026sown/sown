@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meju — Wireframe v2 (레퍼런스 반영)</title>
+<style>
+  /* ── WIREFRAME BASE ── */
+  :root {
+    --bg:       #F2F0EC;
+    --bg-mid:   #E4E0D8;
+    --bg-dark:  #2A2A2A;
+    --line:     #BCBAB4;
+    --line-mid: #8E8C86;
+    --text:     #2A2A2A;
+    --text-mid: #6B6966;
+    --text-lt:  #AEACA8;
+    --img:      #D0CEC8;
+    --img-dk:   #A8A6A0;
+    --accent:   #3A3A3A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #C8C6C0;
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  /* ── SCREEN WRAPPER ── */
+  .screen {
+    background: var(--bg);
+    max-width: 1280px;
+    margin: 0 auto 80px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screen-label {
+    background: #2A2A2A;
+    color: #F2F0EC;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .screen-sub {
+    font-size: 10px;
+    color: #6B6966;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SHARED COMPONENTS ── */
+  .gnb {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 60px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .gnb-logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 2px;
+  }
+
+  .gnb-links {
+    display: flex;
+    gap: 40px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+  }
+
+  .gnb-links span { border-bottom: 1px dashed var(--line); }
+
+  .gnb-dark { background: var(--bg-dark); }
+  .gnb-dark .gnb-logo { color: #F2F0EC; border-color: #F2F0EC; }
+  .gnb-dark .gnb-links { color: rgba(242,240,236,0.5); }
+  .gnb-dark .gnb-links span { border-color: rgba(242,240,236,0.2); }
+
+  /* ── IMAGE PLACEHOLDER ── */
+  .img {
+    background: var(--img);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .img::after {
+    content: attr(data-label);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--img-dk);
+    text-transform: uppercase;
+  }
+
+  .img-dk { background: var(--img-dk); }
+  .img-dk::after { color: var(--img); }
+
+  /* ── TEXT PLACEHOLDER ── */
+  .ph { height: 10px; background: var(--img); border-radius: 2px; margin-bottom: 8px; }
+  .ph-sm { height: 8px; width: 60%; }
+  .ph-lg { height: 14px; background: var(--line-mid); }
+  .ph-xs { height: 7px; width: 40%; }
+
+  /* ── BUTTON ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1.5px solid var(--text);
+    padding: 14px 28px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .btn-fill { background: var(--text); color: var(--bg); }
+  .btn-fill-lt { background: var(--bg); color: var(--text); }
+  .btn::after { content: '→'; font-size: 14px; }
+
+  /* ── ANNOTATION ── */
+  .note {
+    position: absolute;
+    right: 0;
+    background: rgba(58,58,58,0.08);
+    border-left: 2px solid #6B6966;
+    padding: 6px 12px;
+    font-size: 10px;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    z-index: 20;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 0 60px;
+  }
+
+  /* ─────────────────────────────────────────
+     HOME — HERO (Savor-style: fullbleed dark + 대형 세리프 좌하단)
+  ───────────────────────────────────────── */
+  .hero-fullbleed {
+    position: relative;
+    height: 100vh;
+    min-height: 680px;
+    overflow: hidden;
+  }
+
+  .hero-fullbleed .hero-img {
+    position: absolute;
+    inset: 0;
+    background: var(--img-dk);
+  }
+
+  .hero-fullbleed .hero-img::after {
+    content: 'HERO IMAGE — 풀블리드 (발효·장독·손 등)';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: rgba(242,240,236,0.3);
+    text-transform: uppercase;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 60px 72px;
+    z-index: 5;
+  }
+
+  .hero-display {
+    font-size: clamp(72px, 10vw, 140px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: rgba(242,240,236,0.92);
+    margin-bottom: 40px;
+  }
+
+  .hero-display span {
+    display: block;
+  }
+
+  .hero-display span:nth-child(2) {
+    padding-left: 15vw;
+  }
+
+  .hero-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .hero-caption-text {
+    font-size: 14px;
+    color: rgba(242,240,236,0.6);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+
+  .hero-caption-text .ph { background: rgba(242,240,236,0.2); }
+
+  /* ─────────────────────────────────────────
+     MARQUEE (Social Bar)
+  ───────────────────────────────────────── */
+  .marquee {
+    background: var(--text);
+    padding: 14px 60px;
+    display: flex;
+    gap: 60px;
+    overflow: hidden;
+    align-items: center;
+  }
+
+  .marquee-item {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(242,240,236,0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .marquee-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(242,240,236,0.3);
+    flex-shrink: 0;
+  }
+
+  /* ─────────────────────────────────────────
+     STAGGER SECTION (Savor-style: 이미지 오프셋 폭포)
+  ───────────────────────────────────────── */
+  .stagger-section {
+    padding: 120px 60px;
+    position: relative;
+  }
+
+  .stagger-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 80px;
+  }
+
+  .stagger-images {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+  }
+
+  .stagger-img-1 {
+    width: 52%;
+    height: 380px;
+    margin-left: 20%;
+  }
+
+  .stagger-img-2 {
+    width: 44%;
+    height: 320px;
+    margin-left: 36%;
+    margin-top: -60px;
+  }
+
+  .stagger-img-3 {
+    width: 40%;
+    height: 280px;
+    margin-left: 24%;
+    margin-top: -40px;
+  }
+
+  .stagger-text {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: 280px;
+  }
+
+  /* ─────────────────────────────────────────
+     ASYMMETRIC FEATURE (Savor-style: 텍스트 좌하단 + 이미지 중앙 + 설명 우측)
+  ───────────────────────────────────────── */
+  .asym-section {
+    padding: 120px 60px;
+    position: relative;
+    min-height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 480px 260px;
+    grid-template-rows: auto;
+    gap: 0 40px;
+    align-items: end;
+  }
+
+  .asym-text {
+    align-self: end;
+    padding-bottom: 40px;
+  }
+
+  .asym-display {
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .asym-img {
+    align-self: stretch;
+    min-height: 480px;
+  }
+
+  .asym-caption {
+    align-self: center;
+    padding: 40px 0;
+  }
+
+  /* ─────────────────────────────────────────
+     PRODUCT GRID
+  ───────────────────────────────────────── */
+  .product-grid {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--line);
+  }
+
+  .product-card {
+    background: var(--bg);
+    padding: 0;
+    position: relative;
+  }
+
+  .product-card-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+  }
+
+  .product-card-info {
+    padding: 20px 24px 28px;
+  }
+
+  .product-card-tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 8px;
+  }
+
+  .product-card-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .product-card-price {
+    font-size: 14px;
+    color: var(--text-mid);
+    border-top: 1px dashed var(--line);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  /* ─────────────────────────────────────────
+     DARK SECTION (Savor-style: 다크 풀블리드 철학)
+  ───────────────────────────────────────── */
+  .dark-section {
+    background: var(--bg-dark);
+    padding: 140px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark-display {
+    font-size: clamp(48px, 8vw, 120px);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: rgba(242,240,236,0.9);
+    position: relative;
+    z-index: 2;
+  }
+
+  .dark-display .indent { padding-left: 20%; }
+
+  /* ─────────────────────────────────────────
+     FOOTER
+  ───────────────────────────────────────── */
+  .footer {
+    padding: 60px 60px 48px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr auto;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .footer-brand {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .footer-col-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 16px;
+  }
+
+  .footer-col-items { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col-item { height: 8px; background: var(--img); border-radius: 2px; }
+  .footer-col-item:nth-child(2) { width: 70%; }
+  .footer-col-item:nth-child(3) { width: 85%; }
+  .footer-col-item:nth-child(4) { width: 55%; }
+
+  /* ── HORIZONTAL RULE WIREFRAME ── */
+  .wf-rule {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 60px 40px;
+    padding-top: 40px;
+  }
+
+  .wf-rule::before {
+    content: '';
+    height: 1px;
+    width: 32px;
+    background: var(--line);
+  }
+
+  .wf-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── SECTION HEADER ROW ── */
+  .section-row {
+    padding: 80px 60px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 48px;
+  }
+
+  .section-heading {
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .section-more {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+  }
+
+  /* ── PROCESS ── */
+  .process-row {
+    padding: 0 60px 80px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+  }
+
+  .process-item {
+    background: var(--bg);
+    padding: 40px 32px;
+  }
+
+  .process-num {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--img);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .process-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  /* ── CURATOR CALLOUT ── */
+  .curator {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .curator-quote {
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  /* ── PRODUCT DETAIL ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+  }
+
+  .detail-img-stack {
+    background: var(--bg-mid);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: sticky;
+    top: 0;
+  }
+
+  .detail-main-img {
+    flex: 2;
+    background: var(--img);
+  }
+
+  .detail-main-img::after {
+    content: 'MAIN IMAGE';
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--img-dk);
+  }
+
+  .detail-thumb-row {
+    display: flex;
+    gap: 2px;
+    height: 120px;
+  }
+
+  .detail-thumb {
+    flex: 1;
+    background: var(--img-dk);
+  }
+
+  .detail-info {
+    padding: 80px 60px;
+    overflow-y: auto;
+  }
+
+  .detail-tag {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 16px;
+  }
+
+  .detail-name {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .detail-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .detail-desc {
+    color: var(--text-mid);
+    line-height: 1.8;
+    margin-bottom: 40px;
+    font-size: 14px;
+  }
+
+  .detail-curator {
+    background: var(--bg-mid);
+    padding: 28px;
+    margin-bottom: 40px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .detail-curator-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 8px;
+  }
+
+  /* ── ABOUT PAGE ── */
+  .about-hero {
+    padding: 120px 60px 0;
+    position: relative;
+  }
+
+  .about-display {
+    font-size: clamp(52px, 8vw, 110px);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .about-img-float {
+    position: relative;
+    margin: -40px 0 0 30%;
+    width: 52%;
+    height: 480px;
+    z-index: 5;
+  }
+
+  .about-text-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    padding: 80px 60px;
+  }
+
+  /* ── CLASS PAGE ── */
+  .class-header {
+    padding: 100px 60px 0;
+  }
+
+  .class-display {
+    font-size: clamp(44px, 7vw, 96px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin-bottom: 60px;
+  }
+
+  .class-grid {
+    padding: 0 60px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+  }
+
+  .class-card {
+    background: var(--bg);
+  }
+
+  .class-card-img {
+    width: 100%;
+    height: 360px;
+  }
+
+  .class-card-info {
+    padding: 32px;
+  }
+
+  .class-card-type {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-lt);
+    margin-bottom: 12px;
+  }
+
+  .class-card-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── ANNOTATION SIDEBAR ── */
+  .annotation {
+    position: absolute;
+    right: 24px;
+    background: rgba(255,255,255,0.7);
+    border: 1px dashed var(--line-mid);
+    padding: 6px 10px;
+    font-size: 10px;
+    color: var(--text-mid);
+    letter-spacing: 0.05em;
+    max-width: 180px;
+    line-height: 1.5;
+    z-index: 20;
+  }
+
+  .annotation::before {
+    content: '✦ ';
+    color: var(--text-lt);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+  [ 01 ] HOME PAGE
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>01 / HOME — 홈페이지</span>
+    <span class="screen-sub">레퍼런스: Savor — 풀블리드 히어로 + 오프셋 이미지 캐스케이드</span>
+  </div>
+
+  <!-- GNB (dark on hero) -->
+  <div style="background: var(--bg-dark);">
+    <div class="gnb gnb-dark">
+      <div class="gnb-logo">Meju</div>
+      <div class="gnb-links">
+        <span>Home</span>
+        <span>About</span>
+        <span>Shop</span>
+        <span>Class</span>
+        <span>Contact</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO: fullbleed dark + 대형 세리프 좌하단 (ref: style_02) -->
+  <div class="hero-fullbleed" style="position:relative;">
+    <div class="hero-img"></div>
+    <div class="hero-overlay">
+      <div class="hero-display">
+        <span>매일이</span>
+        <span>메주가</span>
+        <span style="padding-left:18vw;">됩니다.</span>
+      </div>
+      <div class="hero-caption">
+        <div class="hero-caption-text">
+          <div class="ph" style="background:rgba(242,240,236,0.2);"></div>
+          <div class="ph ph-sm" style="background:rgba(242,240,236,0.15);"></div>
+          <div style="margin-top:20px;">
+            <div class="btn btn-fill-lt" style="font-size:11px; padding:12px 24px;">Shop 바로가기</div>
+          </div>
+        </div>
+        <div style="font-size:11px; letter-spacing:0.2em; color:rgba(242,240,236,0.3);">
+          SCROLL ↓
+        </div>
+      </div>
+    </div>
+    <div class="annotation" style="top:40px; right:60px;">IX-03 텍스트 라인 리빌 + IX-06 패럴랙스</div>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <span class="marquee-item">발효의 시작점</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">장류 직판</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">발효 도구·재료</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">술 담그기 키트</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">체험 클래스 연계</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">큐레이션 편집샵</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">선물 패키지</span>
+    <span class="marquee-dot"></span>
+    <span class="marquee-item">기다림의 편집자</span>
+    <span class="marquee-dot"></span>
+  </div>
+
+  <!-- STAGGER IMAGE SECTION (ref: style_03 — 오프셋 폭포) -->
+  <div class="stagger-section" style="position:relative;">
+    <div class="stagger-label">— Shop / 큐레이션</div>
+    <div class="stagger-text" style="position:absolute; top:120px; left:60px; width:220px; z-index:10;">
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">이것부터 시작하세요</div>
+      <div class="ph-lg ph" style="margin-bottom:10px;"></div>
+      <div class="ph ph-sm"></div>
+      <div class="ph ph-xs" style="margin-top:4px;"></div>
+      <div style="margin-top:24px;">
+        <div class="btn" style="font-size:11px; padding:10px 20px;">Shop 둘러보기</div>
+      </div>
+    </div>
+    <div class="stagger-images">
+      <div class="stagger-img-1 img" data-label="PRODUCT IMAGE 01 — 된장 세트"></div>
+      <div class="stagger-img-2 img" data-label="PRODUCT IMAGE 02 — 항아리"></div>
+      <div class="stagger-img-3 img" data-label="PRODUCT IMAGE 03 — 양조 키트"></div>
+    </div>
+    <div class="annotation" style="top:200px; right:60px;">오프셋 폭포 레이아웃 (ref: Savor style_03)<br>이미지 3장 비대칭 cascade</div>
+  </div>
+
+  <!-- ASYMMETRIC TEXT + IMAGE (ref: style_04) -->
+  <div style="background: var(--bg-mid); position:relative;">
+    <div class="asym-section">
+      <div class="asym-text">
+        <div style="font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">About / 브랜드 코어</div>
+        <div class="asym-display">
+          기다릴 줄<br>아는<br>편집자.
+        </div>
+      </div>
+      <div class="asym-img img" data-label="BRAND IMAGE — 발효 작업 장면"></div>
+      <div class="asym-caption">
+        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">브랜드 철학</div>
+        <div class="ph" style="margin-bottom:8px;"></div>
+        <div class="ph ph-sm" style="margin-bottom:8px;"></div>
+        <div class="ph ph-xs"></div>
+        <div style="margin-top:24px;">
+          <div class="btn" style="font-size:11px; padding:10px 20px;">About 보기</div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation" style="top:40px; right:60px;">비대칭 3컬럼 (ref: Savor style_04)<br>텍스트 좌하단 오버랩</div>
+  </div>
+
+  <!-- PRODUCT SECTION HEADER -->
+  <div class="section-row" style="background:var(--bg);">
+    <div class="section-heading">장류 큐레이션</div>
+    <div class="section-more">전체 보기 →</div>
+  </div>
+
+  <!-- PRODUCT GRID (3열) -->
+  <div class="product-grid" style="padding-top:0;">
+    <div class="product-card">
+      <div class="product-card-img img" data-label="된장"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">된장 · DOENJANG</div>
+        <div class="product-card-name">입문자 된장 세트</div>
+        <div class="product-card-price">
+          <div class="ph" style="width:80px; height:8px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-card-img img" data-label="간장"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">간장 · GANJANG</div>
+        <div class="product-card-name">전통 양조간장</div>
+        <div class="product-card-price">
+          <div class="ph" style="width:80px; height:8px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-card-img img" data-label="선물 세트"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">선물 · GIFT SET</div>
+        <div class="product-card-name">Meju 선물 패키지</div>
+        <div class="product-card-price">
+          <div class="ph" style="width:80px; height:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DARK SECTION: 브랜드 철학 (ref: style_05) -->
+  <div class="dark-section" style="position:relative;">
+    <div class="dark-display">
+      <div>발효는</div>
+      <div class="indent">기다림의</div>
+      <div>미학이다.</div>
+    </div>
+    <div style="margin-top:56px; display:flex; gap:60px; align-items:flex-end;">
+      <div>
+        <div class="ph" style="background:rgba(242,240,236,0.15); margin-bottom:8px;"></div>
+        <div class="ph ph-sm" style="background:rgba(242,240,236,0.1);"></div>
+      </div>
+      <div class="btn btn-fill-lt" style="font-size:11px; padding:12px 28px; flex-shrink:0; background:rgba(242,240,236,0.08); border-color:rgba(242,240,236,0.3); color:rgba(242,240,236,0.7);">About Meju</div>
+    </div>
+    <div class="annotation" style="top:40px; right:60px; background:rgba(0,0,0,0.3); color:rgba(242,240,236,0.5); border-color:rgba(242,240,236,0.2);">대형 세리프 출혈 (ref: Savor style_01)<br>--bg-dark 섹션</div>
+  </div>
+
+  <!-- PROCESS -->
+  <div style="background: var(--bg);">
+    <div class="section-row">
+      <div class="section-heading">발효 시작하기</div>
+    </div>
+    <div class="process-row" style="padding:0 60px 80px;">
+      <div class="process-item">
+        <div class="process-num">01</div>
+        <div class="process-title">제품 선택</div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+      <div class="process-item">
+        <div class="process-num">02</div>
+        <div class="process-title">재료 세트 수령</div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+      <div class="process-item">
+        <div class="process-num">03</div>
+        <div class="process-title">레시피 따라 담그기</div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+      <div class="process-item">
+        <div class="process-num">04</div>
+        <div class="process-title">기다림 → 완성</div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="background: var(--bg-mid);">
+    <div class="footer">
+      <div>
+        <div class="footer-brand">Meju</div>
+        <div style="margin-top:16px; font-size:11px; color:var(--text-lt); line-height:1.7;">
+          매주, 당신의<br>시간만큼.
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-label">Shop</div>
+        <div class="footer-col-items">
+          <div class="footer-col-item"></div>
+          <div class="footer-col-item"></div>
+          <div class="footer-col-item"></div>
+          <div class="footer-col-item"></div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-label">Info</div>
+        <div class="footer-col-items">
+          <div class="footer-col-item"></div>
+          <div class="footer-col-item"></div>
+          <div class="footer-col-item"></div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">Newsletter</div>
+        <div style="border: 1px solid var(--line); padding: 10px 16px; display:flex; gap:12px; font-size:12px; color:var(--text-lt);">
+          <span>이메일 주소</span>
+          <span style="color:var(--text);">→</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 20px 60px 28px; display:flex; justify-content:space-between; border-top:1px solid var(--line);">
+      <div style="font-size:10px; color:var(--text-lt); letter-spacing:0.1em;">©Meju 2026</div>
+      <div style="font-size:10px; color:var(--text-lt); display:flex; gap:24px;">
+        <span>개인정보처리방침</span>
+        <span>이용약관</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  [ 02 ] ABOUT PAGE
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>02 / ABOUT — 브랜드 스토리</span>
+    <span class="screen-sub">레퍼런스: Savor style_04 — 비대칭 텍스트+이미지 오프셋</span>
+  </div>
+
+  <div class="gnb">
+    <div class="gnb-logo">Meju</div>
+    <div class="gnb-links">
+      <span>Home</span>
+      <span style="color:var(--text); font-weight:600; border-color:var(--text);">About</span>
+      <span>Shop</span>
+      <span>Class</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <!-- ABOUT HERO: 대형 텍스트 + floating 이미지 (ref: style_04) -->
+  <div class="about-hero" style="position:relative; padding-bottom:0;">
+    <div class="about-display">
+      기다릴 줄<br>아는<br>편집자.
+    </div>
+    <div class="annotation" style="top:120px; right:60px;">대형 세리프 텍스트 좌측<br>이미지 우측 중앙 float (ref: style_04)</div>
+  </div>
+
+  <!-- 이미지 오프셋 float (ref: style_04 중앙 이미지) -->
+  <div style="position:relative; margin: -80px 0 0; padding: 0 60px 80px;">
+    <div style="display:grid; grid-template-columns: 1fr 480px 260px; gap:40px; align-items:start;">
+      <div></div>
+      <div class="img" style="height:560px;" data-label="BRAND IMAGE — 발효 현장"></div>
+      <div style="padding-top:80px;">
+        <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">BRAND STORY</div>
+        <div class="ph" style="margin-bottom:8px;"></div>
+        <div class="ph" style="margin-bottom:8px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BRAND TEXT BLOCK -->
+  <div class="about-text-block">
+    <div>
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">BEAT — 브랜드 정의</div>
+      <div style="font-size:20px; font-weight:700; color:var(--text); margin-bottom:20px; line-height:1.3;">발효의 시작점을<br>큐레이션하는 편집샵</div>
+      <div class="ph" style="margin-bottom:6px;"></div>
+      <div class="ph" style="margin-bottom:6px;"></div>
+      <div class="ph ph-sm"></div>
+    </div>
+    <div>
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">WHY MEJU</div>
+      <div class="ph" style="margin-bottom:6px;"></div>
+      <div class="ph" style="margin-bottom:6px;"></div>
+      <div class="ph ph-sm" style="margin-bottom:24px;"></div>
+      <div class="ph" style="margin-bottom:6px;"></div>
+      <div class="ph ph-sm"></div>
+    </div>
+  </div>
+
+  <!-- STAGGER IMAGE (브랜드 가치) -->
+  <div style="background:var(--bg-mid);">
+    <div class="stagger-section" style="position:relative; padding-top:80px;">
+      <div class="stagger-label">— 브랜드 가치 / 3가지</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; background:var(--line);">
+        <div style="background:var(--bg); padding:40px 32px;">
+          <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">01</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:16px;">큐레이션</div>
+          <div class="ph" style="margin-bottom:6px;"></div>
+          <div class="ph ph-sm"></div>
+        </div>
+        <div style="background:var(--bg-mid); padding:40px 32px;">
+          <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">02</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:16px;">맥락</div>
+          <div class="ph" style="margin-bottom:6px;"></div>
+          <div class="ph ph-sm"></div>
+        </div>
+        <div style="background:var(--bg); padding:40px 32px;">
+          <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">03</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:16px;">기다림</div>
+          <div class="ph" style="margin-bottom:6px;"></div>
+          <div class="ph ph-sm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  [ 03 ] SHOP PAGE
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>03 / SHOP — 쇼핑 목록</span>
+    <span class="screen-sub">카테고리 필터 + 3열 그리드</span>
+  </div>
+
+  <div class="gnb">
+    <div class="gnb-logo">Meju</div>
+    <div class="gnb-links">
+      <span>Home</span>
+      <span>About</span>
+      <span style="color:var(--text); font-weight:600; border-color:var(--text);">Shop</span>
+      <span>Class</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <!-- SHOP HEADER -->
+  <div style="padding: 80px 60px 40px; position:relative;">
+    <div style="font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">— Shop</div>
+    <div style="font-size:clamp(40px,7vw,88px); font-weight:700; letter-spacing:-0.025em; color:var(--text); line-height:0.95; margin-bottom:48px;">발효의<br>시작점.</div>
+    <!-- 카테고리 필터 -->
+    <div style="display:flex; gap:2px;">
+      <div style="background:var(--text); color:var(--bg); padding:10px 24px; font-size:11px; letter-spacing:0.15em; text-transform:uppercase;">전체</div>
+      <div style="border:1px solid var(--line); padding:10px 24px; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-mid);">장류</div>
+      <div style="border:1px solid var(--line); padding:10px 24px; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-mid);">발효 도구·재료</div>
+      <div style="border:1px solid var(--line); padding:10px 24px; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-mid);">술 담그기</div>
+      <div style="border:1px solid var(--line); padding:10px 24px; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-mid);">선물 세트</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT GRID 6개 -->
+  <div class="product-grid" style="padding:0 60px 80px; gap:2px; background:transparent; grid-template-columns:repeat(3,1fr);">
+    <div class="product-card" style="border:1px solid var(--line);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="된장 세트"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">장류 · 된장</div>
+        <div class="product-card-name">입문자 된장 세트</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+    <div class="product-card" style="border:1px solid var(--line);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="간장"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">장류 · 간장</div>
+        <div class="product-card-name">전통 양조간장</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+    <div class="product-card" style="border:1px solid var(--line);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="항아리"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">도구 · 항아리</div>
+        <div class="product-card-name">옹기 항아리 5L</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+    <div class="product-card" style="border:1px solid var(--line);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="누룩"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">재료 · 누룩</div>
+        <div class="product-card-name">전통 입국 누룩</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+    <div class="product-card" style="border:1px solid var(--line);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="양조 키트"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">술 담그기 · 키트</div>
+        <div class="product-card-name">막걸리 입문 세트</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+    <div class="product-card" style="border:1px solid var(--line); background:var(--bg-mid);">
+      <div class="product-card-img img" style="aspect-ratio:3/4;" data-label="선물 패키지"></div>
+      <div class="product-card-info">
+        <div class="product-card-tag">선물 · Gift Set</div>
+        <div class="product-card-name">Meju 선물 패키지</div>
+        <div class="product-card-price"><div class="ph" style="width:80px; height:8px;"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  [ 04 ] PRODUCT DETAIL
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>04 / 상품 상세 — 입문자 된장 세트</span>
+    <span class="screen-sub">좌: 이미지 sticky / 우: 정보 스크롤 + 큐레이터 코멘트</span>
+  </div>
+
+  <div class="gnb">
+    <div class="gnb-logo">Meju</div>
+    <div class="gnb-links">
+      <span>Home</span>
+      <span>About</span>
+      <span style="color:var(--text); font-weight:600; border-color:var(--text);">Shop</span>
+      <span>Class</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <!-- breadcrumb -->
+  <div style="padding: 16px 60px; font-size:11px; color:var(--text-lt); letter-spacing:0.1em; border-bottom:1px solid var(--line);">
+    Shop &nbsp;/&nbsp; 장류 &nbsp;/&nbsp; 입문자 된장 세트
+  </div>
+
+  <div class="detail-grid" style="min-height:auto;">
+    <!-- LEFT: 이미지 -->
+    <div style="background:var(--bg-mid);">
+      <div class="img" style="width:100%; aspect-ratio:3/4;" data-label="MAIN — 된장 세트 이미지"></div>
+      <div style="display:flex; gap:2px; padding:2px;">
+        <div class="img" style="flex:1; height:100px;" data-label=""></div>
+        <div class="img" style="flex:1; height:100px;" data-label=""></div>
+        <div class="img" style="flex:1; height:100px;" data-label=""></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 정보 -->
+    <div class="detail-info">
+      <div class="detail-tag">된장 · DOENJANG / 입문자 추천</div>
+      <div class="detail-name">입문자<br>된장 세트</div>
+      <div class="detail-price">
+        <div class="ph" style="width:120px; height:10px;"></div>
+      </div>
+
+      <!-- 큐레이터 코멘트 (Meju 핵심 차별화) -->
+      <div class="detail-curator">
+        <div class="detail-curator-label">Meju 큐레이터 코멘트</div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph" style="margin-bottom:6px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+
+      <div class="detail-desc">
+        <div class="ph" style="margin-bottom:8px;"></div>
+        <div class="ph" style="margin-bottom:8px;"></div>
+        <div class="ph ph-sm"></div>
+      </div>
+
+      <!-- 옵션 선택 -->
+      <div style="margin-bottom:24px;">
+        <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">옵션 선택</div>
+        <div style="border:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="font-size:13px; color:var(--text);">기본 세트 (500g × 3)</span>
+          <span style="font-size:10px; color:var(--text-lt);">✓</span>
+        </div>
+        <div style="border:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between; background:var(--bg-mid);">
+          <span style="font-size:13px; color:var(--text-mid);">선물 패키지 (+ 박스)</span>
+        </div>
+      </div>
+
+      <!-- 수량 + 구매 -->
+      <div style="display:grid; grid-template-columns:120px 1fr; gap:12px; margin-bottom:32px;">
+        <div style="border:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between;">
+          <span>−</span>
+          <span>1</span>
+          <span>+</span>
+        </div>
+        <div class="btn btn-fill" style="justify-content:center; font-size:12px;">장바구니 담기</div>
+      </div>
+
+      <!-- 구성 목록 -->
+      <div style="border-top:1px solid var(--line); padding-top:24px;">
+        <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">세트 구성</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-mid); border-bottom:1px dashed var(--line); padding-bottom:10px;">
+            <span>된장 500g</span><span>×1</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-mid); border-bottom:1px dashed var(--line); padding-bottom:10px;">
+            <span>메주콩 300g</span><span>×1</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-mid);">
+            <span>입문 레시피 카드</span><span>×1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  [ 05 ] CLASS PAGE
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>05 / CLASS — 체험 클래스</span>
+    <span class="screen-sub">장 담그기 + 술 담그기 클래스 연계 페이지</span>
+  </div>
+
+  <div class="gnb">
+    <div class="gnb-logo">Meju</div>
+    <div class="gnb-links">
+      <span>Home</span>
+      <span>About</span>
+      <span>Shop</span>
+      <span style="color:var(--text); font-weight:600; border-color:var(--text);">Class</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <!-- CLASS HERO: 대형 타이포 -->
+  <div class="class-header" style="position:relative;">
+    <div style="font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--text-lt); margin-bottom:16px;">— Class</div>
+    <div class="class-display">
+      직접 담그는<br>경험.
+    </div>
+    <div class="annotation" style="top:100px; right:60px;">대형 세리프 타이포<br>이미지 없이 텍스트만</div>
+  </div>
+
+  <!-- DIVIDER + 설명 -->
+  <div style="padding: 0 60px 60px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start;">
+    <div style="border-top:1px solid var(--line); padding-top:32px;">
+      <div class="ph" style="margin-bottom:8px;"></div>
+      <div class="ph" style="margin-bottom:8px;"></div>
+      <div class="ph ph-sm"></div>
+    </div>
+    <div style="border-top:1px solid var(--line); padding-top:32px;">
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:12px;">클래스 구성</div>
+      <div style="font-size:20px; font-weight:700; color:var(--text); line-height:1.3;">장 담그기 + 술 담그기<br>두 가지 클래스 운영</div>
+    </div>
+  </div>
+
+  <!-- CLASS GRID -->
+  <div class="class-grid">
+    <div class="class-card">
+      <div class="class-card-img img" data-label="장 담그기 클래스"></div>
+      <div class="class-card-info">
+        <div class="class-card-type">장 담그기 · JANG CLASS</div>
+        <div class="class-card-name">된장·간장 담그기<br>입문 클래스</div>
+        <div class="ph" style="margin-bottom:6px; width:160px;"></div>
+        <div style="margin-top:24px;">
+          <div class="btn" style="font-size:11px; padding:10px 20px;">신청하기</div>
+        </div>
+      </div>
+    </div>
+    <div class="class-card">
+      <div class="class-card-img img" data-label="술 담그기 클래스"></div>
+      <div class="class-card-info">
+        <div class="class-card-type">술 담그기 · BREWING CLASS</div>
+        <div class="class-card-name">막걸리·청주<br>입문 브루잉</div>
+        <div class="ph" style="margin-bottom:6px; width:160px;"></div>
+        <div style="margin-top:24px;">
+          <div class="btn" style="font-size:11px; padding:10px 20px;">신청하기</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLASS → SHOP 연계 CTA -->
+  <div style="background:var(--bg-dark); padding:100px 60px; position:relative;">
+    <div style="font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(242,240,236,0.3); margin-bottom:20px;">— 클래스 이후</div>
+    <div style="font-size:clamp(32px,5vw,64px); font-weight:700; color:rgba(242,240,236,0.9); line-height:1.1; letter-spacing:-0.02em; margin-bottom:40px;">
+      클래스에서 배운 재료,<br>바로 주문하세요.
+    </div>
+    <div class="btn btn-fill-lt" style="font-size:11px; padding:14px 32px; background:rgba(242,240,236,0.1); border-color:rgba(242,240,236,0.3); color:rgba(242,240,236,0.7);">Shop 바로가기</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  [ 06 ] CART / CHECKOUT
+══════════════════════════════════════════════ -->
+<div class="screen">
+  <div class="screen-label">
+    <span>06 / 장바구니 → 결제</span>
+    <span class="screen-sub">심플 2컬럼 레이아웃</span>
+  </div>
+
+  <div class="gnb">
+    <div class="gnb-logo">Meju</div>
+    <div class="gnb-links">
+      <span>Home</span>
+      <span>About</span>
+      <span style="color:var(--text); font-weight:600;">Shop</span>
+      <span>Class</span>
+      <span>Contact</span>
+    </div>
+  </div>
+
+  <div style="padding: 60px 60px 80px; display:grid; grid-template-columns:1fr 380px; gap:60px; align-items:start;">
+    <!-- 장바구니 목록 -->
+    <div>
+      <div style="font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--text-lt); margin-bottom:24px;">Cart (2)</div>
+      <!-- 아이템 1 -->
+      <div style="display:grid; grid-template-columns:120px 1fr; gap:20px; padding:24px 0; border-bottom:1px solid var(--line);">
+        <div class="img" style="width:120px; height:120px;" data-label=""></div>
+        <div>
+          <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-lt); margin-bottom:6px;">된장 · 입문 세트</div>
+          <div style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px;">입문자 된장 세트</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="border:1px solid var(--line); padding:8px 16px; display:flex; gap:16px; font-size:13px;">
+              <span>−</span><span>1</span><span>+</span>
+            </div>
+            <div class="ph" style="width:80px; height:10px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 아이템 2 -->
+      <div style="display:grid; grid-template-columns:120px 1fr; gap:20px; padding:24px 0; border-bottom:1px solid var(--line);">
+        <div class="img" style="width:120px; height:120px;" data-label=""></div>
+        <div>
+          <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-lt); margin-bottom:6px;">도구 · 항아리</div>
+          <div style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:16px;">옹기 항아리 5L</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="border:1px solid var(--line); padding:8px 16px; display:flex; gap:16px; font-size:13px;">
+              <span>−</span><span>1</span><span>+</span>
+            </div>
+            <div class="ph" style="width:80px; height:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 주문 요약 -->
+    <div style="border:1px solid var(--line); padding:40px;">
+      <div style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-lt); margin-bottom:24px;">Order Summary</div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+        <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-mid);">
+          <span>상품 합계</span><div class="ph" style="width:60px; height:8px;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-mid);">
+          <span>배송비</span><span>무료</span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; color:var(--text); margin-bottom:32px;">
+        <span>총 결제금액</span><div class="ph" style="width:80px; height:12px;"></div>
+      </div>
+      <div class="btn btn-fill" style="width:100%; justify-content:center; font-size:12px; padding:16px;">결제하기</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── END NOTE ── -->
+<div style="text-align:center; padding:40px; color:#6B6966; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; background:#C8C6C0;">
+  Meju — Wireframe v2 &nbsp;·&nbsp; 레퍼런스 반영 (Savor 레이아웃 패턴) &nbsp;·&nbsp; 2026-04-20
+</div>
+
+</body>
+</html>

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SOWN 위탁판매 입점 제안서</title>
+<style>
+/* ── 폰트 로드 ── */
+@font-face {
+  font-family: 'BookkMyungjo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/BookkMyungjo-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Suit';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: block;
+}
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  font-weight: 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: block;
+}
+
+/* ── SOWN 디자인 시스템 토큰 ── */
+:root {
+  --bg:           #F5F0E8;
+  --bg-subtle:    #EDE7D8;
+  --bg-dark:      #054f19;
+  --text:         #111A13;
+  --text-muted:   #4A5C4D;
+  --green:        #054f19;
+  --green-dark:   #033610;
+  --lime:         #DAF15B;
+  --lime-dark:    #B8CC3A;
+  --border:       rgba(17,26,19,0.1);
+  --border-dark:  rgba(255,255,255,0.1);
+  --f-serif:      'BookkMyungjo', 'Apple Myungjo', serif;
+  --f-sans:       'Suit', 'Apple SD Gothic Neo', sans-serif;
+  --f-label:      'GMarketSans', 'Apple SD Gothic Neo', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--f-sans);
+  background: #D9D3C8;
+}
+
+/* ── 페이지 ── */
+.page {
+  width: 297mm;
+  height: 210mm;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  margin: 0 auto 4mm;
+  display: flex;
+  flex-direction: column;
+}
+
+@page { size: A4 landscape; margin: 0; }
+
+@media print {
+  body { background: none; }
+  .page { margin: 0; page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: avoid; }
+}
+
+/* ── 공통 헤더/푸터 ── */
+.ph {
+  display: flex;
+  justify-content: space-between;
+  padding: 8mm 13mm 0;
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pf {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 13mm 7mm;
+  font-family: var(--f-label);
+  font-size: 6pt;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+.pf-dark { color: rgba(255,255,255,0.3); }
+.ph-dark { color: rgba(255,255,255,0.35); }
+
+/* ── 공통 라벨 ── */
+.lbl {
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 5mm;
+}
+.lbl-light { color: var(--lime); }
+.lbl-muted { color: rgba(255,255,255,0.4); }
+
+/* ══════════════════════════
+   P1 · COVER
+══════════════════════════ */
+.p-cover {
+  display: grid;
+  grid-template-columns: 52% 48%;
+}
+
+.cover-l {
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 13mm;
+}
+
+.cover-logo {
+  font-family: var(--f-serif);
+  font-size: 80pt;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.cover-logo-dot { color: var(--lime); }
+
+.cover-tagline {
+  font-family: var(--f-sans);
+  font-size: 9pt;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4mm;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.cover-r {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+}
+
+.cover-r-top {
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cover-subject {
+  font-family: var(--f-serif);
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+  margin-top: auto;
+}
+
+.cover-meta {
+  margin-top: 7mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-row {
+  display: flex;
+  gap: 5mm;
+  border-top: 0.3mm solid var(--border);
+  padding: 3mm 0;
+}
+
+.cover-key {
+  font-family: var(--f-label);
+  font-size: 7pt;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 14mm;
+}
+
+.cover-val {
+  font-family: var(--f-sans);
+  font-size: 7.5pt;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.cover-r-btm {
+  margin-top: auto;
+  font-family: var(--f-label);
+  font-size: 6pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ══════════════════════════
+   P2 · 브랜드 소개
+══════════════════════════ */
+.p-brand {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.brand-l {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+  border-right: 0.3mm solid var(--border);
+}
+
+.brand-headline {
+  font-family: var(--f-serif);
+  font-size: 32pt;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.brand-headline em {
+  color: var(--green);
+  font-style: normal;
+}
+
+.brand-desc {
+  font-family: var(--f-sans);
+  font-size: 9pt;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin-top: 5mm;
+  font-weight: 400;
+}
+
+.brand-quote {
+  margin-top: 6mm;
+  padding: 4mm 5mm;
+  border-left: 2mm solid var(--lime);
+  background: rgba(218,241,91,0.12);
+}
+
+.brand-quote p {
+  font-family: var(--f-serif);
+  font-size: 10pt;
+  color: var(--green);
+  line-height: 1.65;
+}
+
+.brand-r {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+  justify-content: center;
+}
+
+.fact-row {
+  display: flex;
+  gap: 5mm;
+  border-top: 0.3mm solid var(--border);
+  padding: 3mm 0;
+}
+
+.fact-key {
+  font-family: var(--f-label);
+  font-size: 7pt;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 16mm;
+}
+
+.fact-val {
+  font-family: var(--f-sans);
+  font-size: 8pt;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+/* ══════════════════════════
+   P3 · 몰 소개
+══════════════════════════ */
+.p-mall {
+  display: grid;
+  grid-template-columns: 46% 54%;
+}
+
+.mall-l {
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+}
+
+.mall-headline {
+  font-family: var(--f-serif);
+  font-size: 28pt;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.mall-headline em {
+  color: var(--lime);
+  font-style: normal;
+}
+
+.mall-sub {
+  font-family: var(--f-sans);
+  font-size: 8.5pt;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.85;
+  margin-top: 5mm;
+  font-weight: 300;
+}
+
+.mall-r {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+  gap: 0;
+}
+
+.img-ph {
+  background: var(--bg-subtle);
+  border: 0.3mm dashed rgba(17,26,19,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-ph span {
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.mall-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5mm;
+}
+
+.mall-item {
+  display: flex;
+  gap: 4mm;
+  border-top: 0.3mm solid var(--border);
+  padding: 2.5mm 0;
+  align-items: flex-start;
+}
+
+.mall-num {
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  font-weight: 700;
+  color: var(--green);
+  min-width: 4mm;
+  padding-top: 0.5mm;
+}
+
+.mall-text {
+  font-family: var(--f-sans);
+  font-size: 8.5pt;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════
+   P4 · 혜택 인트로
+══════════════════════════ */
+.benefit-intro-headline {
+  font-family: var(--f-serif);
+  font-size: 40pt;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.benefit-intro-headline em {
+  color: var(--green);
+  font-style: normal;
+}
+
+.benefit-intro-sub {
+  font-family: var(--f-sans);
+  font-size: 9.5pt;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin-top: 5mm;
+  max-width: 115mm;
+}
+
+.benefit-tags {
+  display: flex;
+  gap: 2.5mm;
+  flex-wrap: wrap;
+  margin-top: 7mm;
+}
+
+.btag {
+  padding: 2mm 4.5mm;
+  border: 0.4mm solid var(--green);
+  font-family: var(--f-label);
+  font-size: 7pt;
+  font-weight: 500;
+  color: var(--green);
+  letter-spacing: 0.04em;
+}
+
+.big-num {
+  font-family: var(--f-serif);
+  font-size: 130pt;
+  font-weight: 700;
+  color: var(--green);
+  opacity: 0.06;
+  position: absolute;
+  right: 10mm;
+  bottom: 5mm;
+  line-height: 1;
+}
+
+/* ══════════════════════════
+   P5 · 혜택 01 콘텐츠
+══════════════════════════ */
+.p-benefit {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.b-l {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 13mm;
+  position: relative;
+}
+
+.b-num-bg {
+  font-family: var(--f-serif);
+  font-size: 120pt;
+  font-weight: 700;
+  color: var(--green);
+  opacity: 0.05;
+  position: absolute;
+  left: 6mm;
+  bottom: 4mm;
+  line-height: 1;
+}
+
+.b-title {
+  font-family: var(--f-serif);
+  font-size: 26pt;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.b-title em {
+  color: var(--green);
+  font-style: normal;
+}
+
+.b-body {
+  font-family: var(--f-sans);
+  font-size: 9pt;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin-top: 5mm;
+}
+
+.b-point {
+  margin-top: 5mm;
+  padding: 3.5mm 4.5mm;
+  background: rgba(5,79,25,0.07);
+  border-left: 1.5mm solid var(--green);
+  font-family: var(--f-sans);
+  font-size: 8.5pt;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.b-r {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+  gap: 4mm;
+}
+
+/* 다크 버전 */
+.p-benefit-dark { background: var(--bg-dark); }
+.p-benefit-dark .b-title { color: #fff; }
+.p-benefit-dark .b-title em { color: var(--lime); }
+.p-benefit-dark .b-body { color: rgba(255,255,255,0.55); }
+.p-benefit-dark .b-point {
+  background: rgba(218,241,91,0.1);
+  border-left-color: var(--lime);
+  color: #fff;
+}
+.p-benefit-dark .lbl { color: var(--lime); }
+.p-benefit-dark .img-ph {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.12);
+}
+.p-benefit-dark .img-ph span { color: rgba(255,255,255,0.3); }
+.p-benefit-dark .b-l { border-right-color: rgba(255,255,255,0.08); }
+
+/* ══════════════════════════
+   P8 · 위탁판매 구조
+══════════════════════════ */
+.pb { flex: 1; padding: 0 13mm; display: flex; flex-direction: column; justify-content: center; }
+
+.structure-headline {
+  font-family: var(--f-serif);
+  font-size: 26pt;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 6mm;
+}
+
+.flow {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 7mm;
+}
+
+.flow-item {
+  flex: 1;
+  background: var(--bg-dark);
+  color: #fff;
+  text-align: center;
+  padding: 3.5mm 2mm;
+  position: relative;
+}
+
+.flow-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -3.5mm;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 3.5mm solid var(--bg-dark);
+  border-top: 5mm solid transparent;
+  border-bottom: 5mm solid transparent;
+  z-index: 1;
+}
+
+.flow-n {
+  font-family: var(--f-label);
+  font-size: 6pt;
+  font-weight: 700;
+  color: var(--lime);
+  letter-spacing: 0.1em;
+  margin-bottom: 1mm;
+}
+
+.flow-t {
+  font-family: var(--f-sans);
+  font-size: 7.5pt;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.str-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3mm;
+}
+
+.str-item {
+  border-top: 0.5mm solid var(--green);
+  padding-top: 2.5mm;
+}
+
+.str-key {
+  font-family: var(--f-label);
+  font-size: 6.5pt;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 1.5mm;
+  letter-spacing: 0.04em;
+}
+
+.str-val {
+  font-family: var(--f-sans);
+  font-size: 8pt;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════
+   P9 · CLOSING
+══════════════════════════ */
+.p-closing {
+  background: var(--bg-dark);
+  display: grid;
+  grid-template-columns: 55% 45%;
+}
+
+.closing-l {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+}
+
+.closing-headline {
+  font-family: var(--f-serif);
+  font-size: 30pt;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.closing-headline em {
+  color: var(--lime);
+  font-style: normal;
+}
+
+.closing-sub {
+  font-family: var(--f-sans);
+  font-size: 9pt;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.85;
+  margin-top: 5mm;
+  font-weight: 300;
+}
+
+.closing-r {
+  display: flex;
+  flex-direction: column;
+  padding: 13mm;
+  border-left: 0.3mm solid rgba(255,255,255,0.1);
+}
+
+.contact-row {
+  border-top: 0.3mm solid rgba(255,255,255,0.1);
+  padding: 3.5mm 0;
+  display: flex;
+  gap: 5mm;
+}
+
+.contact-key {
+  font-family: var(--f-label);
+  font-size: 7pt;
+  font-weight: 500;
+  color: rgba(255,255,255,0.35);
+  min-width: 18mm;
+}
+
+.contact-val {
+  font-family: var(--f-sans);
+  font-size: 8pt;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+}
+
+.closing-note {
+  margin-top: 7mm;
+  padding: 4mm;
+  background: rgba(218,241,91,0.07);
+  border: 0.3mm solid rgba(218,241,91,0.18);
+  font-family: var(--f-sans);
+  font-size: 7.5pt;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+
+<!-- P1 · COVER -->
+<div class="page p-cover">
+  <div class="cover-l">
+    <div class="cover-logo">SOWN<span class="cover-logo-dot">.</span></div>
+    <div class="cover-tagline">씨앗을 뿌리듯, 발효를 시작한다.<br>sow · 소원 — to sow, a wish</div>
+  </div>
+  <div class="cover-r">
+    <div class="cover-r-top">위탁판매 입점 제안서 · Proposal</div>
+    <div style="margin-top: auto;">
+      <div class="lbl" style="margin-bottom: 3mm;">Plan Subject</div>
+      <div class="cover-subject">발효 편집샵<br>위탁판매 파트너<br>입점 제안</div>
+      <div class="cover-meta">
+        <div class="cover-row">
+          <span class="cover-key">브랜드</span>
+          <span class="cover-val">SOWN (소원)</span>
+        </div>
+        <div class="cover-row">
+          <span class="cover-key">카테고리</span>
+          <span class="cover-val">발효식품 D2C 커머스 + 체험 플랫폼</span>
+        </div>
+        <div class="cover-row">
+          <span class="cover-key">대상</span>
+          <span class="cover-val">술담금주·발효식품 생산 및 판매자</span>
+        </div>
+        <div class="cover-row">
+          <span class="cover-key">버전</span>
+          <span class="cover-val">Draft 1.0 · 2026.05</span>
+        </div>
+      </div>
+    </div>
+    <div class="cover-r-btm" style="margin-top: auto;">Prepared by · SOWN</div>
+  </div>
+</div>
+
+<!-- P2 · 브랜드 소개 -->
+<div class="page p-brand">
+  <div class="brand-l">
+    <div class="ph" style="padding: 8mm 0 0; margin-bottom: 5mm;">
+      <span>01 · 브랜드 소개</span><span>02 / 09</span>
+    </div>
+    <div class="lbl">Brand Summary</div>
+    <div class="brand-headline">발효의 첫<br>씨앗을 뿌리는<br><em>브랜드.</em></div>
+    <div class="brand-desc">재료·도구·체험을 하나의 편집 흐름으로 묶어,<br>발효 입문자의 첫 진입점을 만든다.</div>
+    <div class="brand-quote">
+      <p>"씨앗을 뿌리듯 발효를 시작하고,<br>그 시간이 소원이 된다."</p>
+    </div>
+    <div class="pf" style="padding: 5mm 0 0; margin-top: auto;">
+      <span>SOWN · 위탁판매 입점 제안서</span>
+    </div>
+  </div>
+  <div class="brand-r">
+    <div style="margin-top: 8mm;"></div>
+    <div class="lbl">Fact Sheet</div>
+    <div class="fact-row"><span class="fact-key">브랜드</span><span class="fact-val">SOWN (소원)</span></div>
+    <div class="fact-row"><span class="fact-key">카테고리</span><span class="fact-val">발효식품 D2C 커머스 + 체험 플랫폼</span></div>
+    <div class="fact-row"><span class="fact-key">브랜드 코어</span><span class="fact-val">기다릴 줄 아는 편집자</span></div>
+    <div class="fact-row"><span class="fact-key">판매 품목</span><span class="fact-val">장류 / 발효 도구·재료 / 술담금 도구·재료</span></div>
+    <div class="fact-row"><span class="fact-key">사업 형태</span><span class="fact-val">D2C 이커머스 + 체험 클래스 연계</span></div>
+    <div class="fact-row"><span class="fact-key">단계</span><span class="fact-val">Phase 1 · 커머스 오픈 준비</span></div>
+  </div>
+</div>
+
+<!-- P3 · 몰 소개 -->
+<div class="page p-mall">
+  <div class="mall-l">
+    <div class="ph ph-dark" style="padding: 8mm 0 0; margin-bottom: 5mm;">
+      <span>02 · SOWN 몰 소개</span><span>03 / 09</span>
+    </div>
+    <div class="lbl lbl-light">The Platform</div>
+    <div class="mall-headline">오픈마켓이<br>아닙니다.<br><em>편집샵입니다.</em></div>
+    <div class="mall-sub">일반 스마트스토어·오픈마켓과 다릅니다.<br>발효에 관심 있는 고객이 처음 찾아오는<br>감성 큐레이션 편집샵입니다.</div>
+    <div class="pf pf-dark" style="padding: 5mm 0 0; margin-top: auto;">
+      <span>SOWN · 위탁판매 입점 제안서</span>
+    </div>
+  </div>
+  <div class="mall-r">
+    <div class="img-ph" style="flex: 1; max-height: 44mm;">
+      <span>IMAGE · 몰 스크린샷</span>
+    </div>
+    <div class="mall-list" style="margin-top: 5mm;">
+      <div class="mall-item"><span class="mall-num">01</span><span class="mall-text">장류·술담금 입문자 타겟 집중 — 구매 의도 높은 고객</span></div>
+      <div class="mall-item"><span class="mall-num">02</span><span class="mall-text">상품마다 큐레이션 스토리와 사용 맥락 제공</span></div>
+      <div class="mall-item"><span class="mall-num">03</span><span class="mall-text">감성 브랜딩 기반 — 고가 구매 결정에 유리한 환경</span></div>
+      <div class="mall-item"><span class="mall-num">04</span><span class="mall-text">선물·기획전 중심 운영 — 객단가 높은 구매 유도</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- P4 · 혜택 인트로 -->
+<div class="page" style="position: relative;">
+  <div class="ph"><span>03 · 파트너 혜택</span><span>04 / 09</span></div>
+  <div class="pb">
+    <div class="lbl">Partner Benefits</div>
+    <div class="benefit-intro-headline">입점하면<br><em>이것을</em><br>드립니다.</div>
+    <div class="benefit-intro-sub">SOWN은 단순한 판매 채널이 아닙니다.<br>파트너의 제품에 콘텐츠·광고·브랜드를 더해 함께 성장하는 구조입니다.</div>
+    <div class="benefit-tags">
+      <div class="btag">제품 홍보 콘텐츠 발행</div>
+      <div class="btag">메타·네이버 광고 유입</div>
+      <div class="btag">리뷰 콘텐츠 활용 가능</div>
+      <div class="btag">유튜브 인터뷰 콘텐츠</div>
+      <div class="btag">브랜드 감성 편승</div>
+    </div>
+  </div>
+  <div class="big-num">5</div>
+  <div class="pf"><span>SOWN · 위탁판매 입점 제안서</span></div>
+</div>
+
+<!-- P5 · 혜택 01 콘텐츠 -->
+<div class="page p-benefit" style="position: relative;">
+  <div class="b-l" style="border-right: 0.3mm solid var(--border);">
+    <div class="b-num-bg">01</div>
+    <div class="lbl">Benefit 01</div>
+    <div class="b-title">제품 홍보<br><em>콘텐츠</em><br>발행</div>
+    <div class="b-body">입점 제품마다 SOWN이 직접 콘텐츠를 제작합니다.<br>단순 상세페이지가 아닙니다. 제품의 생산 배경,<br>재료 철학, 사용법을 담은 브랜드 스토리텔링 콘텐츠로<br>인스타그램에 발행합니다.</div>
+    <div class="b-point">파트너는 별도 마케팅 비용 없이<br>콘텐츠 자산을 얻습니다.</div>
+  </div>
+  <div class="b-r">
+    <div class="img-ph" style="flex: 2;"><span>IMAGE · 콘텐츠 예시</span></div>
+    <div class="img-ph" style="height: 28mm;"><span>IMAGE · 인스타그램 피드</span></div>
+  </div>
+  <div class="ph" style="position: absolute; top: 0; left: 0; right: 0;"><span>03 · 파트너 혜택</span><span>05 / 09</span></div>
+  <div class="pf" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0 13mm 7mm;"><span>SOWN · 위탁판매 입점 제안서</span></div>
+</div>
+
+<!-- P6 · 혜택 02+03 -->
+<div class="page p-benefit p-benefit-dark" style="position: relative;">
+  <div class="b-l" style="border-right: 0.3mm solid rgba(255,255,255,0.08);">
+    <div class="lbl lbl-light">Benefit 02</div>
+    <div class="b-title">메타·네이버<br><em>광고</em><br>유입</div>
+    <div class="b-body">SOWN이 자체 광고를 운영해<br>발효 관심 고객을 직접 유입합니다.<br><br>· 메타 광고 — 발효·전통주 관심층 타겟팅<br>· 네이버 광고 — 장담그기·술담금 키워드 유입</div>
+    <div class="b-point">입점 상품은 광고 혜택을<br>별도 비용 없이 공유받습니다.</div>
+  </div>
+  <div class="b-l">
+    <div class="lbl lbl-light">Benefit 03</div>
+    <div class="b-title">리뷰·홍보<br>콘텐츠<br><em>활용 가능</em></div>
+    <div class="b-body">SOWN이 제작한 제품 소개·리뷰 콘텐츠를<br>파트너가 자사 SNS·스토어·채널에도<br>자유롭게 활용할 수 있습니다.</div>
+    <div class="b-point">별도 제작 비용 없이<br>퀄리티 높은 콘텐츠 자산 확보.</div>
+  </div>
+  <div class="ph ph-dark" style="position: absolute; top: 0; left: 0; right: 0;"><span>03 · 파트너 혜택</span><span>06 / 09</span></div>
+  <div class="pf pf-dark" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0 13mm 7mm;"><span>SOWN · 위탁판매 입점 제안서</span></div>
+</div>
+
+<!-- P7 · 혜택 04+05 -->
+<div class="page p-benefit" style="position: relative;">
+  <div class="b-l" style="border-right: 0.3mm solid var(--border);">
+    <div class="lbl">Benefit 04</div>
+    <div class="b-title">유튜브<br>인터뷰<br><em>콘텐츠</em></div>
+    <div class="b-body">SOWN은 발효 현장을 직접 찾아가는<br>유튜브 인터뷰 채널을 준비 중입니다.<br><br>장을 담그는 사람, 술을 빚는 사람 —<br>그 현장과 이야기를 콘텐츠로 만듭니다.</div>
+    <div class="b-point">입점 파트너는 인터뷰 참여<br>우선 제안 대상입니다. (예정)</div>
+  </div>
+  <div class="b-l">
+    <div class="lbl">Benefit 05</div>
+    <div class="b-title">SOWN<br>브랜드<br><em>감성 편승</em></div>
+    <div class="b-body">SOWN은 감성·고급 포지셔닝의 발효 편집샵입니다.<br>입점한다는 것은 단순 판매가 아닙니다.<br><br>SOWN의 브랜드 이미지 위에서 제품이 소개되며,<br>기존 오픈마켓과 다른 고객층과 만납니다.</div>
+    <div class="b-point">국내 선례 없는 발효 편집샵,<br>그 첫 파트너가 되십시오.</div>
+  </div>
+  <div class="ph" style="position: absolute; top: 0; left: 0; right: 0;"><span>03 · 파트너 혜택</span><span>07 / 09</span></div>
+  <div class="pf" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0 13mm 7mm;"><span>SOWN · 위탁판매 입점 제안서</span></div>
+</div>
+
+<!-- P8 · 위탁판매 구조 -->
+<div class="page">
+  <div class="ph"><span>04 · 위탁판매 구조</span><span>08 / 09</span></div>
+  <div class="pb">
+    <div class="lbl">How It Works</div>
+    <div class="structure-headline">단순합니다.<br>만드시면 저희가 팝니다.</div>
+    <div class="flow">
+      <div class="flow-item"><div class="flow-n">01</div><div class="flow-t">입점 문의<br>·상담</div></div>
+      <div class="flow-item"><div class="flow-n">02</div><div class="flow-t">제품 검토<br>·계약</div></div>
+      <div class="flow-item"><div class="flow-n">03</div><div class="flow-t">SOWN 등록<br>·콘텐츠 제작</div></div>
+      <div class="flow-item"><div class="flow-n">04</div><div class="flow-t">판매 시작<br>·광고 집행</div></div>
+      <div class="flow-item"><div class="flow-n">05</div><div class="flow-t">월별 정산<br>·데이터 공유</div></div>
+    </div>
+    <div class="str-grid">
+      <div class="str-item"><div class="str-key">판매·마케팅·CS</div><div class="str-val">SOWN 전담</div></div>
+      <div class="str-item"><div class="str-key">재고 관리</div><div class="str-val">파트너 보관 기본</div></div>
+      <div class="str-item"><div class="str-key">수수료·정산</div><div class="str-val">협의 후 확정<br>월 1회 정산</div></div>
+      <div class="str-item"><div class="str-key">계약 기간</div><div class="str-val">3개월 단위<br>(이후 재협의)</div></div>
+      <div class="str-item"><div class="str-key">독점 여부</div><div class="str-val">독점 계약 아님<br>기존 채널 유지 가능</div></div>
+    </div>
+  </div>
+  <div class="pf"><span>SOWN · 위탁판매 입점 제안서</span></div>
+</div>
+
+<!-- P9 · CLOSING -->
+<div class="page p-closing">
+  <div class="closing-l">
+    <div class="ph ph-dark" style="padding: 8mm 0 0; margin-bottom: 5mm;"><span>05 · 입점 문의</span><span>09 / 09</span></div>
+    <div class="lbl lbl-muted">Contact</div>
+    <div class="closing-headline">함께<br>발효의 문을<br><em>만들어 주실</em><br>파트너를<br>기다립니다.</div>
+    <div class="closing-sub">씨앗을 뿌리듯, 발효를 시작한다.<br>SOWN과 함께라면 더 많은 사람에게 닿습니다.</div>
+    <div class="pf pf-dark" style="padding: 5mm 0 0; margin-top: auto;"><span>SOWN · 위탁판매 입점 제안서 · Draft 1.0 · 2026.05</span></div>
+  </div>
+  <div class="closing-r">
+    <div class="lbl lbl-muted" style="margin-bottom: 5mm;">입점 문의</div>
+    <div class="contact-row"><span class="contact-key">이메일</span><span class="contact-val">(미정)</span></div>
+    <div class="contact-row"><span class="contact-key">인스타그램</span><span class="contact-val">(미정)</span></div>
+    <div class="contact-row"><span class="contact-key">브랜드</span><span class="contact-val">SOWN (소원)</span></div>
+    <div class="closing-note" style="margin-top: 8mm;">본 제안서의 내용은 협의에 따라 변경될 수 있으며,<br>독점 계약이 아닙니다. 기존 판매 채널을 유지하면서<br>SOWN에 입점하실 수 있습니다.</div>
+    <div class="pf pf-dark" style="padding: 5mm 0 0; margin-top: auto; letter-spacing: 0.1em; text-transform: uppercase;">Prepared by · SOWN</div>
+  </div>
+</div>
+
+</body>
+</html>
