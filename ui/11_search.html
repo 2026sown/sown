@@ -423,5 +423,27 @@ body { background:#D8D3CC; font-family:var(--f-body); color:var(--text); }
   if(o) o.addEventListener('click',closeNav);
 })();
 </script>
+
+  <!-- NAV DRAWER -->
+  <div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-hd">
+      <span style="font-family:var(--f-head);font-size:18px;font-weight:700;letter-spacing:0.12em;color:var(--green);">SOWN</span>
+      <button class="nav-close" id="navClose" aria-label="메뉴 닫기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <nav class="nav-links">
+      <a href="02_shop.html">Shop</a>
+      <a href="04_class.html">Class</a>
+      <a href="08_about.html">About</a>
+    </nav>
+    <div class="nav-sub-links">
+      <a href="11_search.html">검색</a>
+      <a href="10_mypage.html">마이페이지</a>
+      <a href="05_cart.html">장바구니</a>
+      <a href="09_auth.html">로그인 / 회원가입</a>
+    </div>
+  </div>
+  <div class="nav-overlay" id="navOverlay"></div>
 </body>
 </html>
