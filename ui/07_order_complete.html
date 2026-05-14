@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주문 완료 — SOWN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --bg:#F5F0E8;
+  --bg-subtle:#EDE7D8;
+  --bg-dark:#054f19;
+  --text:#111A13;
+  --text-muted:#4A5C4D;
+  --text-light:#8A9B8D;
+  --green:#054f19;
+  --green-dark:#033610;
+  --lime:#DAF15B;
+  --lime-dark:#B8CC3A;
+  --white:#FFFFFF;
+  --border:rgba(5,79,25,0.12);
+  --shadow-sm:0 1px 4px rgba(5,79,25,0.08);
+  --f-head:'Pretendard',sans-serif;
+  --f-body:'Suit','Noto Sans KR',sans-serif;
+  --f-label:'GMarketSans','Suit',sans-serif;
+  --r-sm:4px;
+  --r-md:8px;
+  --r-lg:16px;
+  --r-full:999px;
+}
+
+body {
+  background:#D8D3CC;
+  font-family:var(--f-body);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+
+.page {
+  max-width:430px;
+  min-width:375px;
+  margin:0 auto;
+  background:var(--bg);
+  min-height:100vh;
+  position:relative;
+}
+
+/* ── GNB ── */
+.gnb {
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:52px;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  border-bottom:1px solid transparent;
+  transition:border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.gnb.scrolled {
+  border-bottom-color:var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.gnb-logo {
+  font-family:var(--f-head);
+  font-size:18px;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.08em;
+  text-decoration:none;
+}
+.gnb-icons {
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.gnb-icon-btn {
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:none;
+  cursor:pointer;
+  border-radius:var(--r-sm);
+  color:var(--green);
+  transition:background 0.15s;
+}
+.gnb-icon-btn:hover { background:var(--bg-subtle); }
+
+/* ── 완료 히어로 ── */
+.order-hero {
+  background:var(--bg-dark);
+  padding:40px 24px 44px;
+  text-align:center;
+}
+.check-circle {
+  width:60px;
+  height:60px;
+  background:var(--lime);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 20px;
+}
+.hero-headline {
+  font-family:var(--f-head);
+  font-size:22px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:-0.01em;
+  margin-bottom:10px;
+}
+.hero-sub {
+  font-family:var(--f-body);
+  font-size:14px;
+  font-weight:400;
+  color:rgba(255,255,255,0.7);
+  line-height:1.65;
+  margin-bottom:24px;
+}
+.order-num-chip {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:var(--r-full);
+  padding:9px 14px 9px 16px;
+}
+.order-num-label {
+  font-family:var(--f-label);
+  font-size:10px;
+  font-weight:700;
+  color:rgba(255,255,255,0.55);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.order-num-value {
+  font-family:var(--f-label);
+  font-size:11px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:0.05em;
+}
+.copy-btn {
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:rgba(218,241,91,0.15);
+  border:1px solid rgba(218,241,91,0.3);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background 0.15s;
+  flex-shrink:0;
+}
+.copy-btn:hover { background:rgba(218,241,91,0.25); }
+.copy-btn.copied { background:rgba(218,241,91,0.35); }
+
+/* ── 섹션 구분선 ── */
+.section-sep {
+  height:8px;
+  background:var(--bg-subtle);
+}
+
+/* ── 공통 섹션 ── */
+.section-block {
+  background:var(--white);
+  padding:20px 16px 24px;
+}
+.section-title {
+  font-family:var(--f-head);
+  font-size:11px;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+
+/* ── 주문 아이템 ── */
+.order-item {
+  display:flex;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.order-item:first-of-type { padding-top:0; }
+.item-img {
+  width:60px;
+  height:60px;
+  border-radius:var(--r-sm);
+  background:#E8E4DC;
+  flex-shrink:0;
+  overflow:hidden;
+}
+.item-info {
+  flex:1;
+  min-width:0;
+}
+.item-name {
+  font-family:var(--f-head);
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.item-option {
+  font-size:12px;
+  color:var(--text-light);
+  margin-bottom:6px;
+}
+.item-qty {
+  font-size:12px;
+  color:var(--text-muted);
+}
+.item-price {
+  font-family:var(--f-head);
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  text-align:right;
+  white-space:nowrap;
+  flex-shrink:0;
+  padding-top:2px;
+}
+
+/* ── 금액 요약 ── */
+.price-summary {
+  padding-top:16px;
+}
+.price-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:5px 0;
+}
+.price-label {
+  font-size:13px;
+  color:var(--text-muted);
+}
+.price-value {
+  font-size:13px;
+  color:var(--text);
+}
+.price-row.total {
+  border-top:1px solid var(--border);
+  margin-top:8px;
+  padding-top:14px;
+}
+.price-row.total .price-label {
+  font-family:var(--f-head);
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+}
+.price-row.total .price-value {
+  font-family:var(--f-head);
+  font-size:16px;
+  font-weight:700;
+  color:var(--green);
+}
+
+/* ── 배송지 ── */
+.delivery-section {
+  background:var(--white);
+  padding:20px 16px 24px;
+}
+.delivery-row {
+  display:flex;
+  gap:12px;
+  padding:6px 0;
+}
+.delivery-key {
+  font-size:12px;
+  color:var(--text-light);
+  width:52px;
+  flex-shrink:0;
+  padding-top:1px;
+}
+.delivery-val {
+  font-size:13px;
+  color:var(--text);
+  line-height:1.55;
+  flex:1;
+}
+
+/* ── 이메일 안내 ── */
+.email-notice {
+  margin:16px 16px 0;
+  background:var(--bg-subtle);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:14px;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+.email-icon {
+  flex-shrink:0;
+  margin-top:1px;
+  color:var(--text-light);
+}
+.email-text {
+  font-size:13px;
+  color:var(--text-muted);
+  line-height:1.65;
+}
+
+/* ── CTA ── */
+.cta-area {
+  padding:20px 16px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.btn-primary {
+  width:100%;
+  height:48px;
+  background:var(--green);
+  color:var(--white);
+  font-family:var(--f-head);
+  font-size:14px;
+  font-weight:700;
+  border:none;
+  border-radius:var(--r-md);
+  cursor:pointer;
+  letter-spacing:0.02em;
+  transition:background 0.15s;
+}
+.btn-primary:hover { background:var(--green-dark); }
+.btn-secondary {
+  width:100%;
+  height:48px;
+  background:var(--white);
+  color:var(--green);
+  font-family:var(--f-head);
+  font-size:14px;
+  font-weight:700;
+  border:1.5px solid var(--green);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  letter-spacing:0.02em;
+  transition:background 0.15s, color 0.15s;
+}
+.btn-secondary:hover { background:var(--bg-subtle); }
+
+/* ── Footer ── */
+.footer {
+  background:var(--bg-dark);
+  padding:32px 16px 40px;
+}
+.footer-logo {
+  font-family:var(--f-head);
+  font-size:20px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:0.08em;
+  margin-bottom:6px;
+}
+.footer-slogan {
+  font-size:12px;
+  color:rgba(255,255,255,0.45);
+  letter-spacing:0.04em;
+  margin-bottom:22px;
+}
+.footer-links {
+  display:flex;
+  gap:16px;
+  margin-bottom:20px;
+}
+.footer-links a {
+  font-size:12px;
+  color:rgba(255,255,255,0.6);
+  text-decoration:none;
+  letter-spacing:0.03em;
+  transition:color 0.15s;
+}
+.footer-links a:hover { color:var(--white); }
+.footer-biz {
+  font-size:11px;
+  color:rgba(255,255,255,0.3);
+  line-height:1.8;
+  margin-bottom:16px;
+}
+.footer-copy {
+  font-size:11px;
+  color:rgba(255,255,255,0.25);
+}
+
+/* ── scroll reveal ── */
+[data-reveal] {
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity 0.55s ease, transform 0.55s ease;
+}
+[data-reveal].revealed {
+  opacity:1;
+  transform:none;
+}
+
+/* ── 토스트 ── */
+.toast {
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--green);
+  color:var(--white);
+  font-size:13px;
+  font-family:var(--f-body);
+  padding:10px 20px;
+  border-radius:var(--r-full);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.2s ease, transform 0.2s ease;
+  white-space:nowrap;
+  z-index:200;
+}
+.toast.show {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- GNB -->
+  <nav class="gnb" id="gnb">
+    <a href="#" class="gnb-logo">SOWN</a>
+    <div class="gnb-icons">
+      <button class="gnb-icon-btn" aria-label="검색">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8.5" cy="8.5" r="5.5"/>
+          <line x1="13" y1="13" x2="17.5" y2="17.5"/>
+        </svg>
+      </button>
+      <button class="gnb-icon-btn" aria-label="장바구니">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3h2l2.4 9.6A2 2 0 007 15h8a2 2 0 001.96-1.6L18 7H5"/>
+          <circle cx="9" cy="17.5" r="1"/>
+          <circle cx="15" cy="17.5" r="1"/>
+        </svg>
+      </button>
+      <button class="gnb-icon-btn" aria-label="마이페이지">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="6.5" r="3.5"/>
+          <path d="M2.5 17.5c0-4.142 3.358-7.5 7.5-7.5s7.5 3.358 7.5 7.5"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 완료 히어로 -->
+  <section class="order-hero">
+    <div class="check-circle">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#054f19" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6,14 11,19 22,9"/>
+      </svg>
+    </div>
+    <h1 class="hero-headline">주문이 완료되었습니다</h1>
+    <p class="hero-sub">발효가 시작되듯, 기다림이 시작되었습니다.</p>
+    <div class="order-num-chip">
+      <span class="order-num-label">주문 번호</span>
+      <span class="order-num-value" id="orderNum">#SOWN-2026-0514</span>
+      <button class="copy-btn" id="copyBtn" aria-label="주문번호 복사">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#DAF15B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="8" height="8" rx="1.5"/>
+          <path d="M2 10V2h8"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- 구분선 -->
+  <div class="section-sep"></div>
+
+  <!-- 주문 내역 -->
+  <section class="section-block" data-reveal>
+    <p class="section-title">주문 내역</p>
+
+    <div class="order-item">
+      <div class="item-img"></div>
+      <div class="item-info">
+        <p class="item-name">발효 된장 · 재래식 숙성</p>
+        <p class="item-option">옵션: 300g</p>
+        <p class="item-qty">수량 1개</p>
+      </div>
+      <p class="item-price">₩30,000</p>
+    </div>
+
+    <div class="order-item">
+      <div class="item-img"></div>
+      <div class="item-info">
+        <p class="item-name">전통 고추장 · 소백산 고추</p>
+        <p class="item-option">옵션: 500g</p>
+        <p class="item-qty">수량 1개</p>
+      </div>
+      <p class="item-price">₩25,000</p>
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row">
+        <span class="price-label">상품금액</span>
+        <span class="price-value">₩55,000</span>
+      </div>
+      <div class="price-row">
+        <span class="price-label">배송비</span>
+        <span class="price-value">₩3,000</span>
+      </div>
+      <div class="price-row total">
+        <span class="price-label">합계</span>
+        <span class="price-value">₩58,000</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 구분선 -->
+  <div class="section-sep"></div>
+
+  <!-- 배송지 -->
+  <section class="delivery-section" data-reveal>
+    <p class="section-title">배송지</p>
+    <div class="delivery-row">
+      <span class="delivery-key">수령인</span>
+      <span class="delivery-val">홍길동</span>
+    </div>
+    <div class="delivery-row">
+      <span class="delivery-key">연락처</span>
+      <span class="delivery-val">010-0000-0000</span>
+    </div>
+    <div class="delivery-row">
+      <span class="delivery-key">주소</span>
+      <span class="delivery-val">서울특별시 성동구 성수일로 89 1층</span>
+    </div>
+  </section>
+
+  <!-- 이메일 안내 -->
+  <div class="email-notice" data-reveal>
+    <svg class="email-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="1" y="3" width="14" height="10" rx="1.5"/>
+      <polyline points="1,4 8,9 15,4"/>
+    </svg>
+    <p class="email-text">주문 확인 이메일을 발송했습니다. 확인되지 않는 경우 스팸함을 확인해주세요.</p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-area" data-reveal>
+    <button class="btn-secondary" onclick="location.href='#mypage'">주문 내역 확인</button>
+    <button class="btn-primary" onclick="location.href='#shop'">Shop으로 돌아가기</button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-logo">SOWN</p>
+    <p class="footer-slogan">기다림이 소원이 되는 시간</p>
+    <nav class="footer-links">
+      <a href="02_shop.html">Shop</a>
+      <a href="04_class.html">Class</a>
+      <a href="08_about.html">About</a>
+    </nav>
+    <p class="footer-biz">[사업자명] · 사업자등록번호 000-00-00000 · 대표자 OOO<br>통신판매업신고번호 제0000-서울OO-0000호</p>
+    <p class="footer-copy">© 2026 SOWN. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toast">주문번호가 복사되었습니다</div>
+
+<script>
+  // GNB scroll shadow
+  const gnb = document.getElementById('gnb');
+  window.addEventListener('scroll', function() {
+    gnb.classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+
+  // 주문번호 복사
+  const copyBtn = document.getElementById('copyBtn');
+  const orderNum = document.getElementById('orderNum');
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
+
+  copyBtn.addEventListener('click', function() {
+    const text = orderNum.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showToast);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast();
+    }
+  });
+
+  function showToast() {
+    copyBtn.classList.add('copied');
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      toast.classList.remove('show');
+      copyBtn.classList.remove('copied');
+    }, 2000);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+  reveals.forEach(function(el) { revealObserver.observe(el); });
+</script>
+</body>
+</html>

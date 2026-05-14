@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOWN Admin — CS·문의</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F5F0E8;
+  --bg-subtle: #EDE7D8;
+  --green: #054f19;
+  --green-dark: #033610;
+  --lime: #DAF15B;
+  --white: #FFFFFF;
+  --text: #111A13;
+  --text-muted: #4A5C4D;
+  --text-light: #8A9B8D;
+  --border: rgba(5,79,25,0.12);
+  --shadow-sm: 0 1px 4px rgba(5,79,25,0.08);
+  --shadow-md: 0 4px 16px rgba(5,79,25,0.12);
+  --error: #C0392B;
+  --sidebar-w: 220px;
+  --topbar-h: 56px;
+  --f-head: 'Pretendard', sans-serif;
+  --f-body: 'Suit', 'Noto Sans KR', sans-serif;
+  --f-label: 'GMarketSans', 'Suit', sans-serif;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 16px;
+  --r-full: 999px;
+}
+
+body {
+  background: var(--bg-subtle);
+  font-family: var(--f-body);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── 레이아웃 ── */
+.admin-wrap { display: flex; min-height: 100vh; }
+
+/* ── 사이드바 ── */
+.sidebar {
+  width: var(--sidebar-w);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  background: var(--green);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease;
+}
+
+.sidebar-logo {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-family: var(--f-label);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lime);
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.95); }
+
+.nav-item.active {
+  background: rgba(255,255,255,0.12);
+  color: var(--white);
+  border-left-color: var(--lime);
+}
+
+.nav-item svg { flex-shrink: 0; opacity: 0.75; }
+.nav-item.active svg, .nav-item:hover svg { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--f-label);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--lime);
+  color: var(--green);
+  padding: 2px 7px;
+  border-radius: var(--r-full);
+  line-height: 1.4;
+}
+
+.sidebar-footer {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ── 메인 ── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* ── 탑바 ── */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-muted);
+}
+
+.topbar-title {
+  font-family: var(--f-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+
+.topbar-greeting {
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.topbar-avatar {
+  width: 32px; height: 32px;
+  border-radius: var(--r-full);
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-label);
+  font-size: 11px; font-weight: 700;
+  color: var(--lime);
+  flex-shrink: 0;
+}
+
+/* ── 콘텐츠 ── */
+.content {
+  padding: 24px;
+  background: var(--bg-subtle);
+  min-height: calc(100vh - var(--topbar-h));
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── 페이지 헤더 ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title {
+  font-family: var(--f-head);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.unread-badge {
+  font-family: var(--f-label);
+  font-size: 11px;
+  font-weight: 700;
+  background: #E65100;
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+}
+
+/* ── 필터 탭 + 검색 ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tab-group {
+  display: flex;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.tab-btn {
+  padding: 8px 16px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:not(:last-child) { border-right: 1px solid var(--border); }
+
+.tab-btn.active {
+  background: var(--green);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.tab-count {
+  font-family: var(--f-label);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--lime);
+  color: var(--green);
+  padding: 1px 6px;
+  border-radius: var(--r-full);
+  line-height: 1.5;
+}
+
+.tab-btn.active .tab-count {
+  background: rgba(218,241,91,0.9);
+  color: var(--green-dark);
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+}
+
+.search-wrap svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-input::placeholder { color: var(--text-light); }
+
+.search-input:focus {
+  border-color: rgba(5,79,25,0.4);
+  box-shadow: 0 0 0 3px rgba(5,79,25,0.08);
+}
+
+/* ── 2컬럼 CS 레이아웃 ── */
+.cs-layout {
+  display: flex;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  min-height: 560px;
+}
+
+/* ── 좌측 목록 ── */
+.cs-list {
+  width: 360px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.cs-list-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--f-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.cs-card {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-card:hover { background: var(--bg-subtle); }
+
+.cs-card.active {
+  border-left-color: var(--green);
+  background: var(--bg-subtle);
+}
+
+.cs-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cs-card-name {
+  font-family: var(--f-head);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cs-card-date {
+  font-size: 11px;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.cs-card-mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cs-card-subject {
+  font-size: 13px;
+  color: var(--text-muted);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 상태 뱃지 */
+.badge-pending {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  font-family: var(--f-label);
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(230,81,0,0.1);
+  color: #E65100;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-done {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  font-family: var(--f-label);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cs-card-preview {
+  font-size: 12px;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 우측 상세 ── */
+.cs-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cs-detail-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cs-detail-title {
+  font-family: var(--f-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cs-detail-body {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+/* 문의자 정보 */
+.inquiry-meta {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.meta-item { display: flex; flex-direction: column; gap: 2px; }
+
+.meta-label {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.meta-value {
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* 말풍선 문의 내용 */
+.inquiry-bubble-wrap { display: flex; flex-direction: column; gap: 6px; }
+
+.bubble-label {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.inquiry-bubble {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  border-top-left-radius: var(--r-sm);
+  padding: 16px 20px;
+  font-family: var(--f-body);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.75;
+  max-width: 100%;
+}
+
+/* 답변 영역 */
+.reply-section { display: flex; flex-direction: column; gap: 8px; }
+
+.reply-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.reply-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.reply-textarea::placeholder { color: var(--text-light); }
+
+.reply-textarea:focus {
+  border-color: rgba(5,79,25,0.4);
+  box-shadow: 0 0 0 3px rgba(5,79,25,0.08);
+}
+
+/* 버튼 */
+.btn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover { background: var(--green-dark); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: var(--white);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-secondary:hover { background: var(--bg-subtle); border-color: rgba(5,79,25,0.25); }
+
+.btn-secondary.resolved {
+  background: rgba(5,79,25,0.08);
+  border-color: rgba(5,79,25,0.3);
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* 빈 상태 */
+.cs-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px;
+  color: var(--text-light);
+}
+
+.cs-empty svg { opacity: 0.35; }
+
+.cs-empty-text {
+  font-family: var(--f-body);
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* 상세 없을 때 */
+.cs-detail-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-light);
+}
+
+.cs-detail-empty svg { opacity: 0.3; }
+
+.cs-detail-empty-text {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* ── 토스트 ── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--text);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-icon { color: var(--lime); flex-shrink: 0; }
+
+/* ── 오버레이 (모바일) ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 1100px) {
+  .cs-list { width: 300px; }
+}
+
+@media (max-width: 900px) {
+  .cs-layout { flex-direction: column; }
+  .cs-list { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+  .cs-detail { display: none; }
+  .cs-detail.mobile-active { display: flex; }
+  .cs-list.mobile-hidden { display: none; }
+  .back-btn { display: inline-flex !important; }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .hamburger { display: flex; }
+  .topbar-greeting { display: none; }
+  .content { padding: 16px; }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .search-wrap { max-width: 100%; }
+  .inquiry-meta { gap: 16px; }
+}
+
+.back-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--f-body);
+}
+
+.back-btn:hover { background: var(--bg); }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+
+  <!-- 사이드바 -->
+  <aside class="sidebar" id="sidebar">
+    <a href="admin_dashboard.html" class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 9.6c-2.67 0-5.01-1.36-6.4-3.4.03-2.12 4.27-3.28 6.4-3.28 2.12 0 6.37 1.16 6.4 3.28-1.39 2.04-3.73 3.4-6.4 3.4z" fill="currentColor"/>
+      </svg>
+      SOWN
+    </a>
+    <nav class="sidebar-nav">
+      <a href="admin_dashboard.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        대시보드
+      </a>
+      <a href="admin_products.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        상품 관리
+      </a>
+      <a href="admin_orders.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+        주문 관리
+      </a>
+      <a href="admin_shipping.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        배송 관리
+      </a>
+      <a href="admin_inventory.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        재고 관리
+      </a>
+      <a href="admin_members.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        회원 관리
+      </a>
+      <a href="admin_sales.html" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        매출 통계
+      </a>
+      <a href="admin_cs.html" class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        CS·문의
+        <span class="nav-badge">3</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        설정
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        로그아웃
+      </a>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- 메인 -->
+  <div class="main">
+    <!-- 탑바 -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="메뉴">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title">CS·문의</span>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-greeting">안녕하세요, 관리자님</span>
+        <div class="topbar-avatar">관</div>
+      </div>
+    </header>
+
+    <!-- 콘텐츠 -->
+    <main class="content">
+
+      <!-- 페이지 헤더 -->
+      <div class="page-header">
+        <h1 class="page-title">CS·문의</h1>
+        <span class="unread-badge" id="unreadBadge">미처리 3건</span>
+      </div>
+
+      <!-- 필터 탭 + 검색 -->
+      <div class="filter-bar">
+        <div class="tab-group">
+          <button class="tab-btn active" data-tab="all">전체</button>
+          <button class="tab-btn" data-tab="pending">
+            미처리
+            <span class="tab-count" id="tabCount">3</span>
+          </button>
+          <button class="tab-btn" data-tab="done">처리 완료</button>
+        </div>
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="search-input" id="searchInput" placeholder="문의자 이름 또는 주문번호 검색">
+        </div>
+      </div>
+
+      <!-- 2컬럼 CS 레이아웃 -->
+      <div class="cs-layout">
+
+        <!-- 좌측 목록 -->
+        <div class="cs-list" id="csList">
+          <div class="cs-list-header">문의 목록 <span id="listCount" style="font-weight:400;color:var(--text-light);">4건</span></div>
+          <div id="cardContainer">
+
+            <!-- 카드 1 — 미처리, 활성 -->
+            <div class="cs-card active" data-id="1" data-status="pending">
+              <div class="cs-card-top">
+                <span class="cs-card-name">김지수</span>
+                <span class="cs-card-date">2026.05.14</span>
+              </div>
+              <div class="cs-card-mid">
+                <span class="cs-card-subject">취소·반품 문의</span>
+                <span class="badge-pending" id="badge-card-1">미처리</span>
+              </div>
+              <div class="cs-card-preview">주문번호 #ORD-2405-0089 상품을 아직 못 받았는데...</div>
+            </div>
+
+            <!-- 카드 2 — 미처리 -->
+            <div class="cs-card" data-id="2" data-status="pending">
+              <div class="cs-card-top">
+                <span class="cs-card-name">박민준</span>
+                <span class="cs-card-date">2026.05.13</span>
+              </div>
+              <div class="cs-card-mid">
+                <span class="cs-card-subject">배송 문의</span>
+                <span class="badge-pending" id="badge-card-2">미처리</span>
+              </div>
+              <div class="cs-card-preview">주문한 지 5일이 지났는데 아직 배송이 시작되지...</div>
+            </div>
+
+            <!-- 카드 3 — 미처리 -->
+            <div class="cs-card" data-id="3" data-status="pending">
+              <div class="cs-card-top">
+                <span class="cs-card-name">이소연</span>
+                <span class="cs-card-date">2026.05.12</span>
+              </div>
+              <div class="cs-card-mid">
+                <span class="cs-card-subject">상품 문의</span>
+                <span class="badge-pending" id="badge-card-3">미처리</span>
+              </div>
+              <div class="cs-card-preview">혼합 피부인데 어떤 제품 조합이 가장 적합할까요?</div>
+            </div>
+
+            <!-- 카드 4 — 처리 완료 -->
+            <div class="cs-card" data-id="4" data-status="done">
+              <div class="cs-card-top">
+                <span class="cs-card-name">최현우</span>
+                <span class="cs-card-date">2026.05.10</span>
+              </div>
+              <div class="cs-card-mid">
+                <span class="cs-card-subject">기타</span>
+                <span class="badge-done" id="badge-card-4">처리 완료</span>
+              </div>
+              <div class="cs-card-preview">정기 구독 결제일을 변경하고 싶습니다.</div>
+            </div>
+
+          </div>
+
+          <!-- 빈 상태 (숨김) -->
+          <div class="cs-empty" id="csEmpty" style="display:none;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span class="cs-empty-text">처리할 문의가 없습니다</span>
+          </div>
+        </div>
+
+        <!-- 우측 상세 -->
+        <div class="cs-detail" id="csDetail">
+
+          <!-- 기본 상세 — 카드 1 -->
+          <div id="detail-panel">
+            <div class="cs-detail-header">
+              <button class="back-btn" id="backBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                목록으로
+              </button>
+              <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+                <span class="cs-detail-title" id="detailTitle">취소·반품 문의</span>
+                <span id="detailBadge" class="badge-pending">미처리</span>
+              </div>
+            </div>
+
+            <div class="cs-detail-body">
+              <!-- 문의자 정보 -->
+              <div class="inquiry-meta">
+                <div class="meta-item">
+                  <span class="meta-label">문의자</span>
+                  <span class="meta-value" id="detailName">김지수</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">이메일</span>
+                  <span class="meta-value" id="detailEmail">jisoo.kim@email.com</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">주문번호</span>
+                  <span class="meta-value" id="detailOrder">#ORD-2405-0089</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">접수일</span>
+                  <span class="meta-value" id="detailDate">2026.05.14</span>
+                </div>
+              </div>
+
+              <!-- 문의 내용 -->
+              <div class="inquiry-bubble-wrap">
+                <span class="bubble-label">문의 내용</span>
+                <div class="inquiry-bubble" id="detailContent">
+                  안녕하세요. 주문번호 #ORD-2405-0089로 구매한 상품을 아직 받지 못했습니다. 결제 후 7일이 지났는데 배송 추적을 해보면 발송 준비 중이라고만 나옵니다. 혹시 재고 문제가 있는 건가요? 일정이 급해서 이번 주 안에 받아야 하는데 취소 후 환불도 가능한지 알고 싶습니다.
+                </div>
+              </div>
+
+              <!-- 답변 입력 -->
+              <div class="reply-section">
+                <span class="reply-label">답변 작성</span>
+                <textarea class="reply-textarea" id="replyTextarea" placeholder="고객에게 보낼 답변을 입력해주세요..."></textarea>
+              </div>
+
+              <!-- 버튼 -->
+              <div class="btn-row">
+                <button class="btn-primary" id="saveReplyBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                  답변 저장
+                </button>
+                <button class="btn-secondary" id="resolveBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  처리 완료
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toast">
+  <svg class="toast-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">답변이 저장되었습니다. 고객에게 이메일이 발송됩니다.</span>
+</div>
+
+<script>
+// ── 데이터 ──
+const inquiries = [
+  {
+    id: 1, status: 'pending',
+    name: '김지수', email: 'jisoo.kim@email.com', order: '#ORD-2405-0089', date: '2026.05.14',
+    subject: '취소·반품 문의',
+    content: '안녕하세요. 주문번호 #ORD-2405-0089로 구매한 상품을 아직 받지 못했습니다. 결제 후 7일이 지났는데 배송 추적을 해보면 발송 준비 중이라고만 나옵니다. 혹시 재고 문제가 있는 건가요? 일정이 급해서 이번 주 안에 받아야 하는데 취소 후 환불도 가능한지 알고 싶습니다.',
+    reply: ''
+  },
+  {
+    id: 2, status: 'pending',
+    name: '박민준', email: 'minjun.park@email.com', order: '#ORD-2405-0076', date: '2026.05.13',
+    subject: '배송 문의',
+    content: '주문한 지 5일이 지났는데 아직 배송이 시작되지 않았습니다. 운송장 번호도 조회되지 않고요. 언제쯤 발송이 될 수 있을까요? 선물용으로 구매한 상품이라 날짜가 중요합니다.',
+    reply: ''
+  },
+  {
+    id: 3, status: 'pending',
+    name: '이소연', email: 'soyeon.lee@email.com', order: '#ORD-2405-0061', date: '2026.05.12',
+    subject: '상품 문의',
+    content: '혼합 피부인데 어떤 제품 조합이 가장 적합할까요? T존은 유분이 많고 볼쪽은 건조한 편입니다. 현재 세럼과 보습크림을 찾고 있는데 SOWN 제품 중 추천해주실 수 있을까요?',
+    reply: ''
+  },
+  {
+    id: 4, status: 'done',
+    name: '최현우', email: 'hyunwoo.choi@email.com', order: '#ORD-2405-0048', date: '2026.05.10',
+    subject: '기타',
+    content: '정기 구독 결제일을 변경하고 싶습니다. 현재 매월 1일인데 15일로 바꿀 수 있을까요?',
+    reply: '안녕하세요, 최현우 고객님. 정기 구독 결제일 변경 요청을 확인하였습니다. 마이페이지 > 구독 관리에서 직접 변경하시거나, 고객센터로 연락 주시면 처리해 드리겠습니다. 감사합니다.'
+  }
+];
+
+let currentTab = 'all';
+let currentId = 1;
+let searchQuery = '';
+
+// ── 필터된 목록 ──
+function getFiltered() {
+  return inquiries.filter(q => {
+    const tabOk = currentTab === 'all' || (currentTab === 'pending' && q.status === 'pending') || (currentTab === 'done' && q.status === 'done');
+    const searchOk = !searchQuery || q.name.includes(searchQuery) || q.order.includes(searchQuery);
+    return tabOk && searchOk;
+  });
+}
+
+// ── 목록 렌더링 ──
+function renderList() {
+  const filtered = getFiltered();
+  const container = document.getElementById('cardContainer');
+  const empty = document.getElementById('csEmpty');
+  const listCount = document.getElementById('listCount');
+
+  listCount.textContent = filtered.length + '건';
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'flex';
+    renderEmpty();
+    return;
+  }
+
+  empty.style.display = 'none';
+  container.innerHTML = '';
+
+  filtered.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'cs-card' + (q.id === currentId ? ' active' : '');
+    card.dataset.id = q.id;
+    card.dataset.status = q.status;
+
+    const badgeHtml = q.status === 'pending'
+      ? `<span class="badge-pending">미처리</span>`
+      : `<span class="badge-done">처리 완료</span>`;
+
+    const previewMap = {
+      1: '주문번호 #ORD-2405-0089 상품을 아직 못 받았는데...',
+      2: '주문한 지 5일이 지났는데 아직 배송이 시작되지...',
+      3: '혼합 피부인데 어떤 제품 조합이 가장 적합할까요?',
+      4: '정기 구독 결제일을 변경하고 싶습니다.'
+    };
+
+    card.innerHTML = `
+      <div class="cs-card-top">
+        <span class="cs-card-name">${q.name}</span>
+        <span class="cs-card-date">${q.date}</span>
+      </div>
+      <div class="cs-card-mid">
+        <span class="cs-card-subject">${q.subject}</span>
+        ${badgeHtml}
+      </div>
+      <div class="cs-card-preview">${previewMap[q.id] || ''}</div>
+    `;
+
+    card.addEventListener('click', () => selectCard(q.id));
+    container.appendChild(card);
+  });
+}
+
+// ── 상세 렌더링 ──
+function renderDetail(id) {
+  const q = inquiries.find(i => i.id === id);
+  if (!q) { renderEmpty(); return; }
+
+  const badgeHtml = q.status === 'pending'
+    ? `<span class="badge-pending" id="detailBadge">미처리</span>`
+    : `<span class="badge-done" id="detailBadge">처리 완료</span>`;
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="cs-detail-header">
+      <button class="back-btn" id="backBtn" style="display:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        목록으로
+      </button>
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+        <span class="cs-detail-title">${q.subject}</span>
+        ${badgeHtml}
+      </div>
+    </div>
+    <div class="cs-detail-body">
+      <div class="inquiry-meta">
+        <div class="meta-item">
+          <span class="meta-label">문의자</span>
+          <span class="meta-value">${q.name}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">이메일</span>
+          <span class="meta-value">${q.email}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">주문번호</span>
+          <span class="meta-value">${q.order}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">접수일</span>
+          <span class="meta-value">${q.date}</span>
+        </div>
+      </div>
+      <div class="inquiry-bubble-wrap">
+        <span class="bubble-label">문의 내용</span>
+        <div class="inquiry-bubble">${q.content}</div>
+      </div>
+      <div class="reply-section">
+        <span class="reply-label">답변 작성</span>
+        <textarea class="reply-textarea" id="replyTextarea" placeholder="고객에게 보낼 답변을 입력해주세요...">${q.reply}</textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="saveReplyBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+          답변 저장
+        </button>
+        <button class="btn-secondary${q.status === 'done' ? ' resolved' : ''}" id="resolveBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          ${q.status === 'done' ? '완료됨' : '처리 완료'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  // 버튼 이벤트 재등록
+  document.getElementById('saveReplyBtn').addEventListener('click', saveReply);
+  document.getElementById('resolveBtn').addEventListener('click', toggleResolve);
+  const backBtn = document.getElementById('backBtn');
+  if (backBtn) backBtn.addEventListener('click', showMobileList);
+
+  // 모바일 back 표시
+  if (window.innerWidth <= 900) {
+    const bb = document.getElementById('backBtn');
+    if (bb) bb.style.display = 'inline-flex';
+  }
+}
+
+function renderEmpty() {
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="cs-detail-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3;color:var(--text-light)"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span style="font-size:13px;color:var(--text-light);">문의를 선택해주세요</span>
+    </div>
+  `;
+}
+
+// ── 카드 선택 ──
+function selectCard(id) {
+  currentId = id;
+  renderList();
+  renderDetail(id);
+
+  // 모바일: 상세 보이기
+  if (window.innerWidth <= 900) {
+    document.getElementById('csList').classList.add('mobile-hidden');
+    document.getElementById('csDetail').classList.add('mobile-active');
+    document.getElementById('csDetail').style.display = 'flex';
+    const bb = document.getElementById('backBtn');
+    if (bb) bb.style.display = 'inline-flex';
+  }
+}
+
+// ── 답변 저장 ──
+function saveReply() {
+  const textarea = document.getElementById('replyTextarea');
+  const q = inquiries.find(i => i.id === currentId);
+  if (q) q.reply = textarea ? textarea.value : '';
+  showToast('답변이 저장되었습니다. 고객에게 이메일이 발송됩니다.');
+}
+
+// ── 처리 완료 토글 ──
+function toggleResolve() {
+  const q = inquiries.find(i => i.id === currentId);
+  if (!q) return;
+
+  q.status = q.status === 'done' ? 'pending' : 'done';
+
+  updateUnreadCount();
+  renderList();
+  renderDetail(currentId);
+  showToast(q.status === 'done' ? '문의가 처리 완료 상태로 변경되었습니다.' : '문의가 미처리 상태로 변경되었습니다.');
+}
+
+// ── 미처리 건수 업데이트 ──
+function updateUnreadCount() {
+  const pendingCount = inquiries.filter(q => q.status === 'pending').length;
+  const badge = document.getElementById('unreadBadge');
+  const tabCount = document.getElementById('tabCount');
+  if (badge) badge.textContent = '미처리 ' + pendingCount + '건';
+  if (tabCount) tabCount.textContent = pendingCount;
+}
+
+// ── 탭 전환 ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    renderList();
+
+    const filtered = getFiltered();
+    if (filtered.length > 0) {
+      currentId = filtered[0].id;
+      renderDetail(currentId);
+    } else {
+      renderEmpty();
+    }
+  });
+});
+
+// ── 검색 ──
+document.getElementById('searchInput').addEventListener('input', function() {
+  searchQuery = this.value.trim();
+  renderList();
+  const filtered = getFiltered();
+  if (filtered.length > 0) {
+    currentId = filtered[0].id;
+    renderDetail(currentId);
+  } else {
+    renderEmpty();
+  }
+});
+
+// ── 토스트 ──
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  if (toastMsg) toastMsg.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ── 모바일 목록으로 ──
+function showMobileList() {
+  document.getElementById('csList').classList.remove('mobile-hidden');
+  document.getElementById('csDetail').classList.remove('mobile-active');
+  document.getElementById('csDetail').style.display = '';
+}
+
+// ── 모바일 사이드바 ──
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+});
+
+document.getElementById('sidebarOverlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+});
+
+// ── 초기 렌더 ──
+renderList();
+renderDetail(1);
+updateUnreadCount();
+
+// ── 초기 버튼 이벤트 ──
+(function initEvents() {
+  const saveBtn = document.getElementById('saveReplyBtn');
+  const resolveBtn = document.getElementById('resolveBtn');
+  const backBtn = document.getElementById('backBtn');
+  if (saveBtn) saveBtn.addEventListener('click', saveReply);
+  if (resolveBtn) resolveBtn.addEventListener('click', toggleResolve);
+  if (backBtn) backBtn.addEventListener('click', showMobileList);
+})();
+</script>
+</body>
+</html>

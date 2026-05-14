@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — SOWN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+:root {
+  --bg:#F5F0E8; --bg-subtle:#EDE7D8; --bg-dark:#054f19;
+  --text:#111A13; --text-muted:#4A5C4D; --text-light:#8A9B8D;
+  --green:#054f19; --green-dark:#033610; --lime:#DAF15B; --lime-dark:#B8CC3A; --white:#FFFFFF;
+  --border:rgba(5,79,25,0.12); --shadow-sm:0 1px 4px rgba(5,79,25,0.08); --shadow-md:0 4px 16px rgba(5,79,25,0.12);
+  --f-head:'Pretendard',sans-serif; --f-body:'Suit','Noto Sans KR',sans-serif; --f-label:'GMarketSans','Suit',sans-serif;
+  --r-sm:4px; --r-md:8px; --r-lg:16px; --r-full:999px;
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+body { background:#D8D3CC; font-family:var(--f-body); color:var(--text); }
+
+.page { max-width:430px; min-width:375px; margin:0 auto; background:var(--bg); min-height:100vh; }
+
+/* GNB */
+.gnb {
+  position:sticky; top:0; z-index:100;
+  height:52px;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
+  transition:box-shadow 0.2s ease;
+  font-family:var(--f-head);
+}
+.gnb.scrolled { box-shadow:var(--shadow-md); }
+.gnb-logo {
+  font-family:var(--f-head);
+  font-size:18px; font-weight:700;
+  color:var(--green); text-decoration:none;
+  letter-spacing:0.08em;
+}
+.gnb-icons { display:flex; align-items:center; gap:16px; }
+.gnb-icons a {
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px;
+  color:var(--text); text-decoration:none;
+}
+.gnb-icons a svg { width:20px; height:20px; }
+
+/* Hero */
+.hero {
+  background:var(--bg-dark);
+  padding:48px 20px 40px;
+}
+.hero-label {
+  font-family:var(--f-label);
+  font-size:11px;
+  color:var(--lime);
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-bottom:16px;
+  display:block;
+}
+.hero-head {
+  font-family:var(--f-head);
+  font-size:28px;
+  font-weight:700;
+  color:var(--white);
+  line-height:1.35;
+  margin-bottom:12px;
+}
+.hero-sub {
+  font-size:14px;
+  color:rgba(255,255,255,0.7);
+  line-height:1.7;
+}
+
+/* Section label */
+.section-label {
+  font-family:var(--f-label);
+  font-size:11px;
+  color:var(--text-light);
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+  display:block;
+}
+
+/* Story Section */
+.story-section {
+  background:var(--bg);
+  padding:40px 20px;
+}
+.story-body {
+  font-size:15px;
+  color:var(--text-muted);
+  line-height:2;
+}
+.story-body p { margin-bottom:20px; }
+.story-body p:last-child { margin-bottom:0; }
+
+/* Section separator */
+.section-sep {
+  height:8px;
+  background:var(--bg-subtle);
+}
+
+/* Philosophy Section */
+.philosophy-section {
+  background:var(--bg-subtle);
+  padding:40px 20px;
+}
+.philosophy-quote {
+  border-left:3px solid var(--lime);
+  padding-left:16px;
+}
+.philosophy-quote p {
+  font-family:var(--f-head);
+  font-size:17px;
+  color:var(--text);
+  line-height:1.8;
+  font-weight:500;
+}
+
+/* Curation Section */
+.curation-section {
+  background:var(--bg);
+  padding:40px 20px;
+}
+.curation-list { margin-top:0; }
+.curation-item {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:24px;
+}
+.curation-item:last-child {
+  padding-bottom:0;
+  border-bottom:none;
+  margin-bottom:0;
+}
+.curation-num {
+  width:24px; height:24px;
+  border-radius:50%;
+  background:var(--lime);
+  color:var(--green);
+  font-family:var(--f-label);
+  font-size:11px;
+  font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.curation-content { flex:1; }
+.curation-title {
+  font-family:var(--f-head);
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:6px;
+  line-height:1.4;
+}
+.curation-body {
+  font-size:13px;
+  color:var(--text-muted);
+  line-height:1.7;
+}
+
+/* CTA Section */
+.cta-section {
+  background:var(--bg-dark);
+  padding:48px 20px;
+  text-align:center;
+}
+.cta-head {
+  font-family:var(--f-head);
+  font-size:18px;
+  font-weight:700;
+  color:var(--white);
+  line-height:1.5;
+  margin-bottom:24px;
+}
+.btn-primary {
+  display:block;
+  width:100%;
+  background:var(--lime);
+  color:var(--green);
+  font-family:var(--f-label);
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  padding:14px 24px;
+  border-radius:var(--r-sm);
+  text-decoration:none;
+  text-align:center;
+  transition:background 0.18s ease, transform 0.15s ease;
+}
+.btn-primary:hover { background:var(--lime-dark); transform:translateY(-1px); }
+.btn-primary:active { transform:translateY(0); }
+
+/* Footer */
+.footer {
+  background:var(--bg-dark);
+  padding:32px 20px 28px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.footer-logo {
+  font-family:var(--f-head);
+  font-size:20px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:0.1em;
+  margin-bottom:6px;
+}
+.footer-slogan {
+  font-size:12px;
+  color:rgba(255,255,255,0.45);
+  margin-bottom:20px;
+  font-family:var(--f-body);
+}
+.footer-nav {
+  display:flex; gap:16px;
+  margin-bottom:20px;
+}
+.footer-nav a {
+  font-size:12px;
+  color:rgba(255,255,255,0.55);
+  text-decoration:none;
+  font-family:var(--f-body);
+  transition:color 0.15s;
+}
+.footer-nav a:hover { color:var(--lime); }
+.footer-biz {
+  font-size:11px;
+  color:rgba(255,255,255,0.3);
+  line-height:1.8;
+  font-family:var(--f-body);
+  margin-bottom:16px;
+}
+.footer-copy {
+  font-size:11px;
+  color:rgba(255,255,255,0.25);
+  font-family:var(--f-body);
+}
+
+/* Scroll Reveal */
+[data-reveal] {
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].revealed {
+  opacity:1;
+  transform:none;
+}
+[data-reveal]:nth-child(2) { transition-delay:0.08s; }
+[data-reveal]:nth-child(3) { transition-delay:0.16s; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- GNB -->
+  <nav class="gnb" id="gnb">
+    <a href="01_home.html" class="gnb-logo">SOWN</a>
+    <div class="gnb-icons">
+      <a href="11_search.html" aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </a>
+      <a href="05_cart.html" aria-label="장바구니">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+      </a>
+      <a href="10_mypage.html" aria-label="마이페이지">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-label">Editor's Note</span>
+    <h1 class="hero-head">기다릴 줄 아는 편집자</h1>
+    <p class="hero-sub">SOWN은 발효 재료와 도구를 직접 고릅니다.</p>
+  </section>
+
+  <!-- Brand Story -->
+  <section class="story-section">
+    <span class="section-label">SOWN 이야기</span>
+    <div class="story-body">
+      <p data-reveal>발효는 기다림입니다.<br>서두를 수 없고, 대신할 수 없고, 오직 시간만이 할 수 있는 일.</p>
+      <p data-reveal>SOWN은 그 기다림의 첫 단계—재료를 고르는 일—에서 시작했습니다.<br>어디서 무엇을 사야 할지 몰라 막막했던 경험.<br>어떤 항아리가 맞는지, 어떤 누룩이 필요한지 아무도 알려주지 않았던 그 순간.</p>
+      <p data-reveal>그래서 우리가 먼저 골랐습니다.<br>쓰는 이유와 방법이 함께 담긴 재료들.<br>기다림을 시작할 수 있도록.</p>
+    </div>
+  </section>
+
+  <!-- Separator -->
+  <div class="section-sep"></div>
+
+  <!-- Philosophy -->
+  <section class="philosophy-section">
+    <span class="section-label">발효의 미학</span>
+    <div class="philosophy-quote" data-reveal>
+      <p>가장 원초적이면서도 가장 인간적인 행위—발효. 시간 앞에 겸손한 사람들을 위한 편집샵.</p>
+    </div>
+  </section>
+
+  <!-- Separator -->
+  <div class="section-sep"></div>
+
+  <!-- Curation -->
+  <section class="curation-section">
+    <span class="section-label">어떻게 고르는가</span>
+    <div class="curation-list">
+      <div class="curation-item" data-reveal>
+        <div class="curation-num">01</div>
+        <div class="curation-content">
+          <p class="curation-title">먼저 써봅니다</p>
+          <p class="curation-body">에디터가 직접 사용해본 재료와 도구만 입고합니다.</p>
+        </div>
+      </div>
+      <div class="curation-item" data-reveal>
+        <div class="curation-num">02</div>
+        <div class="curation-content">
+          <p class="curation-title">이유가 있어야 합니다</p>
+          <p class="curation-body">왜 이 상품인지, 어떻게 쓰는지—큐레이션 노트에 담습니다.</p>
+        </div>
+      </div>
+      <div class="curation-item" data-reveal>
+        <div class="curation-num">03</div>
+        <div class="curation-content">
+          <p class="curation-title">기다림의 가치를 파는 곳</p>
+          <p class="curation-body">재료 하나가 담긴 상자는 기다림의 시작입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <p class="cta-head" data-reveal>기다림을 시작할 재료를<br>고르세요</p>
+    <a href="02_shop.html" class="btn-primary" data-reveal>Shop 보기</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-logo">SOWN</div>
+    <div class="footer-slogan">기다림이 소원이 되는 시간</div>
+    <nav class="footer-nav">
+      <a href="02_shop.html">Shop</a>
+      <a href="04_class.html">Class</a>
+      <a href="08_about.html">About</a>
+    </nav>
+    <div class="footer-biz">
+      [사업자명] · 사업자등록번호 000-00-00000 · 대표자 OOO<br>
+      통신판매업신고번호 제0000-서울OO-0000호
+    </div>
+    <div class="footer-copy">© 2026 SOWN. All rights reserved.</div>
+  </footer>
+
+</div>
+
+<script>
+  // GNB scroll shadow
+  const gnb = document.getElementById('gnb');
+  window.addEventListener('scroll', function() {
+    gnb.classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(
+    function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          io.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('[data-reveal]').forEach(function(el) { io.observe(el); });
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>검색 — SOWN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+:root {
+  --bg:#F5F0E8; --bg-subtle:#EDE7D8; --bg-dark:#054f19;
+  --text:#111A13; --text-muted:#4A5C4D; --text-light:#8A9B8D;
+  --green:#054f19; --green-dark:#033610; --lime:#DAF15B; --lime-dark:#B8CC3A; --white:#FFFFFF;
+  --border:rgba(5,79,25,0.12); --shadow-sm:0 1px 4px rgba(5,79,25,0.08); --shadow-md:0 4px 16px rgba(5,79,25,0.12);
+  --f-head:'Pretendard',sans-serif; --f-body:'Suit','Noto Sans KR',sans-serif; --f-label:'GMarketSans','Suit',sans-serif;
+  --r-sm:4px; --r-md:8px; --r-lg:16px; --r-full:999px;
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+body { background:#D8D3CC; font-family:var(--f-body); color:var(--text); }
+
+.page { max-width:430px; min-width:375px; margin:0 auto; background:var(--bg); min-height:100vh; display:flex; flex-direction:column; }
+
+/* GNB */
+.gnb {
+  position:sticky; top:0; z-index:100;
+  height:52px; background:var(--bg);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px;
+  border-bottom:1px solid transparent;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.gnb.scrolled {
+  border-bottom-color:var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.gnb-left { display:flex; align-items:center; gap:4px; }
+.gnb-back {
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  background:none; border:none; cursor:pointer; color:var(--text); padding:0;
+  border-radius:var(--r-sm);
+}
+.gnb-back:active { background:var(--bg-subtle); }
+.gnb-logo {
+  font-family:var(--f-head); font-size:18px; font-weight:700;
+  color:var(--green); text-decoration:none; letter-spacing:0.04em;
+}
+.gnb-right { display:flex; align-items:center; gap:4px; }
+.gnb-icon {
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  background:none; border:none; cursor:pointer; color:var(--text); padding:0;
+  border-radius:var(--r-sm); text-decoration:none;
+}
+.gnb-icon:active { background:var(--bg-subtle); }
+
+/* Search Bar */
+.search-bar {
+  position:sticky; top:52px; z-index:99;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center;
+  padding:10px 16px;
+  gap:8px;
+}
+.search-bar input {
+  flex:1; font-family:var(--f-body); font-size:15px; color:var(--text);
+  border:none; outline:none; background:transparent;
+  line-height:1.5;
+}
+.search-bar input::placeholder { color:var(--text-light); }
+.search-btn {
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  background:none; border:none; cursor:pointer; color:var(--green); padding:0;
+  flex-shrink:0;
+}
+.search-btn:active { opacity:0.7; }
+
+/* Main content */
+.search-content { flex:1; }
+
+/* Result Header */
+.result-header {
+  padding:16px 20px 12px;
+  display:flex; align-items:center; gap:6px;
+}
+.result-query {
+  font-family:var(--f-body); font-size:14px; font-weight:700; color:var(--green);
+}
+.result-count {
+  font-family:var(--f-body); font-size:14px; color:var(--text-muted);
+}
+
+/* Product Grid */
+.product-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; padding:0 16px 24px;
+}
+
+/* Product Card */
+.card-product {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--r-md); overflow:hidden;
+  text-decoration:none; color:inherit;
+  display:block;
+}
+.card-img { aspect-ratio:1/1; position:relative; }
+.img-ph { width:100%; height:100%; background:#E8E4DC; display:block; }
+.card-body { padding:12px; }
+.card-origin { font-family:var(--f-label); font-size:9px; color:var(--text-muted); letter-spacing:0.05em; margin-bottom:4px; }
+.card-name { font-family:var(--f-body); font-size:13px; font-weight:600; color:var(--text); line-height:1.4; margin-bottom:6px; }
+.card-price { font-family:var(--f-head); font-size:14px; font-weight:700; color:var(--green); }
+
+/* Empty State */
+.empty-state { display:none; flex-direction:column; align-items:center; padding:48px 24px 32px; }
+.empty-state.active { display:flex; }
+.empty-icon { color:var(--text-light); margin-bottom:16px; }
+.empty-head { font-family:var(--f-head); font-size:16px; font-weight:600; color:var(--text); margin-bottom:8px; text-align:center; }
+.empty-sub { font-family:var(--f-body); font-size:13px; color:var(--text-muted); text-align:center; line-height:1.7; margin-bottom:28px; }
+.recommend-label {
+  font-family:var(--f-label); font-size:11px; font-weight:700; color:var(--green);
+  letter-spacing:0.08em; align-self:flex-start; margin-bottom:12px;
+}
+.recommend-scroll {
+  width:100%; overflow-x:auto; scrollbar-width:none;
+  margin:0 -24px; padding:0 24px;
+  -webkit-overflow-scrolling:touch;
+}
+.recommend-scroll::-webkit-scrollbar { display:none; }
+.recommend-track {
+  display:flex; gap:12px; width:max-content; padding-bottom:4px;
+}
+.recommend-track .card-product { width:160px; flex-shrink:0; }
+
+/* Error State */
+.error-state { display:none; flex-direction:column; align-items:center; padding:40px 24px; }
+.error-state.active { display:flex; }
+.error-msg { font-family:var(--f-body); font-size:14px; color:var(--text-muted); margin-bottom:16px; text-align:center; }
+.btn-retry {
+  font-family:var(--f-body); font-size:14px; font-weight:600; color:var(--green);
+  background:none; border:1px solid var(--green); border-radius:var(--r-full);
+  padding:8px 20px; cursor:pointer;
+}
+.btn-retry:active { background:var(--bg-subtle); }
+
+/* Dev toggle */
+.dev-toggle {
+  display:flex; gap:8px; padding:12px 16px; flex-wrap:wrap;
+}
+.dev-btn {
+  font-family:var(--f-body); font-size:11px; color:var(--text-muted);
+  background:var(--bg-subtle); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:4px 10px; cursor:pointer;
+}
+.dev-btn:active { background:var(--border); }
+
+/* Footer */
+.footer { background:var(--bg-dark); padding:32px 20px 28px; margin-top:auto; }
+.footer-logo { font-family:var(--f-head); font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px; }
+.footer-slogan { font-family:var(--f-body); font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:20px; }
+.footer-links { display:flex; gap:16px; margin-bottom:20px; }
+.footer-links a { font-family:var(--f-body); font-size:12px; color:rgba(255,255,255,0.6); text-decoration:none; }
+.footer-links a:hover { color:var(--white); }
+.footer-biz { font-family:var(--f-body); font-size:11px; color:rgba(255,255,255,0.35); line-height:1.8; margin-bottom:16px; }
+.footer-copy { font-family:var(--f-body); font-size:11px; color:rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- GNB -->
+  <header class="gnb" id="gnb">
+    <div class="gnb-left">
+      <button class="gnb-back" onclick="history.back()" aria-label="뒤로가기">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <a href="01_home.html" class="gnb-logo">SOWN</a>
+    </div>
+    <div class="gnb-right">
+      <a href="05_cart.html" class="gnb-icon" aria-label="장바구니">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M3 3H4.5L6.5 13H16.5L18.5 6H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8.5" cy="16.5" r="1" fill="currentColor"/>
+          <circle cx="15" cy="16.5" r="1" fill="currentColor"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input
+      type="search"
+      id="searchInput"
+      placeholder="재료, 도구, 카테고리 검색"
+      autocomplete="off"
+      enterkeyhint="search"
+      aria-label="검색어 입력"
+    >
+    <button class="search-btn" id="searchBtn" aria-label="검색">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Search Content -->
+  <div class="search-content">
+
+    <!-- Dev Toggle (목업용) -->
+    <div class="dev-toggle">
+      <button class="dev-btn" onclick="showResults()">결과 있음</button>
+      <button class="dev-btn" onclick="showEmpty()">결과 없음</button>
+      <button class="dev-btn" onclick="showError()">에러 상태</button>
+    </div>
+
+    <!-- Result State -->
+    <div id="resultState">
+      <div class="result-header">
+        <span class="result-query">"된장"</span>
+        <span class="result-count">검색 결과 3개</span>
+      </div>
+      <div class="product-grid">
+        <!-- Product 1 -->
+        <a href="03_product_detail.html" class="card-product">
+          <div class="card-img">
+            <div class="img-ph"></div>
+          </div>
+          <div class="card-body">
+            <p class="card-origin">JEOLLANAM-DO</p>
+            <p class="card-name">전통 재래 된장 500g</p>
+            <p class="card-price">18,000원</p>
+          </div>
+        </a>
+        <!-- Product 2 -->
+        <a href="03_product_detail.html" class="card-product">
+          <div class="card-img">
+            <div class="img-ph"></div>
+          </div>
+          <div class="card-body">
+            <p class="card-origin">GYEONGSANGBUK-DO</p>
+            <p class="card-name">집된장 항아리 숙성 1kg</p>
+            <p class="card-price">32,000원</p>
+          </div>
+        </a>
+        <!-- Product 3 -->
+        <a href="03_product_detail.html" class="card-product">
+          <div class="card-img">
+            <div class="img-ph"></div>
+          </div>
+          <div class="card-body">
+            <p class="card-origin">CHUNGCHEONGBUK-DO</p>
+            <p class="card-name">시골 메주 된장 800g</p>
+            <p class="card-price">24,000원</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <svg class="empty-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="22" cy="22" r="13" stroke="currentColor" stroke-width="2"/>
+        <path d="M32 32L42 42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M17 22H27M22 17V27" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p class="empty-head">찾으시는 상품이 없습니다</p>
+      <p class="empty-sub">다른 키워드로 검색하거나,<br>에디터가 고른 재료를 둘러보세요.</p>
+      <p class="recommend-label">SOWN이 추천하는 재료</p>
+      <div class="recommend-scroll">
+        <div class="recommend-track">
+          <a href="03_product_detail.html" class="card-product">
+            <div class="card-img">
+              <div class="img-ph"></div>
+            </div>
+            <div class="card-body">
+              <p class="card-origin">JEONBUK</p>
+              <p class="card-name">순창 고추장 450g</p>
+              <p class="card-price">16,000원</p>
+            </div>
+          </a>
+          <a href="03_product_detail.html" class="card-product">
+            <div class="card-img">
+              <div class="img-ph"></div>
+            </div>
+            <div class="card-body">
+              <p class="card-origin">GANGWON-DO</p>
+              <p class="card-name">참기름 국산 들깨 200ml</p>
+              <p class="card-price">22,000원</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" id="errorState">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="color:var(--text-light);margin-bottom:14px;">
+        <circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/>
+        <path d="M20 12V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="28" r="1.5" fill="currentColor"/>
+      </svg>
+      <p class="error-msg">검색 중 오류가 발생했습니다.<br>다시 시도해주세요.</p>
+      <button class="btn-retry" onclick="showResults()">다시 검색하기</button>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-logo">SOWN</p>
+    <p class="footer-slogan">기다림이 소원이 되는 시간</p>
+    <div class="footer-links">
+      <a href="02_shop.html">Shop</a>
+      <a href="04_class.html">Class</a>
+      <a href="08_about.html">About</a>
+    </div>
+    <p class="footer-biz">[사업자명] · 사업자등록번호 000-00-00000 · 대표자 OOO<br>통신판매업신고번호 제0000-서울OO-0000호</p>
+    <p class="footer-copy">© 2026 SOWN. All rights reserved.</p>
+  </footer>
+
+</div>
+
+<script>
+  // GNB scroll shadow
+  var gnb = document.getElementById('gnb');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 0) {
+      gnb.classList.add('scrolled');
+    } else {
+      gnb.classList.remove('scrolled');
+    }
+  }, { passive: true });
+
+  // State elements
+  var resultState = document.getElementById('resultState');
+  var emptyState = document.getElementById('emptyState');
+  var errorState = document.getElementById('errorState');
+
+  function hideAll() {
+    resultState.style.display = 'none';
+    emptyState.classList.remove('active');
+    errorState.classList.remove('active');
+  }
+
+  function showResults() {
+    hideAll();
+    resultState.style.display = 'block';
+  }
+
+  function showEmpty() {
+    hideAll();
+    emptyState.classList.add('active');
+  }
+
+  function showError() {
+    hideAll();
+    errorState.classList.add('active');
+  }
+
+  // Search submit
+  var searchInput = document.getElementById('searchInput');
+  var searchBtn = document.getElementById('searchBtn');
+  var resultQuery = document.querySelector('.result-query');
+  var resultCount = document.querySelector('.result-count');
+
+  function doSearch() {
+    var query = searchInput.value.trim();
+    if (!query) return;
+    // 목업: 결과 있음 상태 표시
+    if (resultQuery) resultQuery.textContent = '"' + query + '"';
+    showResults();
+  }
+
+  searchBtn.addEventListener('click', function() {
+    doSearch();
+  });
+
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      doSearch();
+    }
+  });
+</script>
+</body>
+</html>

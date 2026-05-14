@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>배송 관리 — SOWN Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+:root {
+  --bg:#F5F0E8; --bg-subtle:#EDE7D8;
+  --green:#054f19; --green-dark:#033610; --lime:#DAF15B;
+  --white:#FFFFFF; --text:#111A13; --text-muted:#4A5C4D; --text-light:#8A9B8D;
+  --border:rgba(5,79,25,0.12); --shadow-sm:0 1px 4px rgba(5,79,25,0.08);
+  --error:#C0392B;
+  --sidebar-w:220px; --topbar-h:56px;
+  --f-head:'Pretendard',sans-serif; --f-body:'Suit','Noto Sans KR',sans-serif; --f-label:'GMarketSans','Suit',sans-serif;
+  --r-sm:4px; --r-md:8px; --r-lg:16px; --r-full:999px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-subtle);
+  font-family: var(--f-body);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── 레이아웃 ── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── 사이드바 ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--green);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo-text {
+  font-family: var(--f-label);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--lime);
+  letter-spacing: 0.06em;
+}
+
+.sidebar-nav {
+  padding: 12px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.62);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9);
+}
+
+.nav-item.active {
+  background: rgba(218,241,91,0.12);
+  color: var(--lime);
+  font-weight: 700;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px; height: 100%;
+  background: var(--lime);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--lime);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--f-head);
+  padding: 1px 5px;
+  border-radius: var(--r-full);
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ── 메인 영역 ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── 탑바 ── */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-title {
+  font-family: var(--f-head);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--green);
+  letter-spacing: -0.01em;
+}
+
+.topbar-user {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── 콘텐츠 ── */
+.content {
+  padding: 28px;
+  flex: 1;
+}
+
+/* ── 페이지 헤더 ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-family: var(--f-head);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: var(--white);
+}
+
+.btn-primary:hover { background: var(--green-dark); }
+
+.btn-outline {
+  background: var(--white);
+  color: var(--green);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover { background: var(--bg-subtle); }
+
+.btn-sm {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover { background: var(--bg-subtle); }
+
+/* ── 필터 + 검색 ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tab-list {
+  display: flex;
+  gap: 2px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 4px;
+}
+
+.tab-item {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--f-body);
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.tab-item.active {
+  background: var(--green);
+  color: var(--white);
+}
+
+.tab-item:not(.active):hover {
+  background: var(--bg-subtle);
+  color: var(--text);
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  width: 14px;
+  height: 14px;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.search-input {
+  padding: 8px 12px 8px 32px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+  width: 240px;
+  transition: border-color 0.15s;
+}
+
+.search-input:focus { border-color: var(--green); }
+.search-input::placeholder { color: var(--text-light); }
+
+/* ── 테이블 카드 ── */
+.table-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table thead {
+  background: var(--bg-subtle);
+}
+
+.data-table th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--f-head);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr:hover { background: var(--bg); }
+
+.order-no {
+  font-family: var(--f-head);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--green);
+}
+
+.recipient-name {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.address-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+.tracking-no {
+  font-family: var(--f-head);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.carrier-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.order-date {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* ── 상태 뱃지 ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--f-head);
+  white-space: nowrap;
+}
+
+.badge-unregistered {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.badge-shipping {
+  background: var(--green);
+  color: var(--white);
+}
+
+.badge-done {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+/* ── 인라인 운송장 입력 ── */
+.inline-track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.inline-input {
+  padding: 5px 9px;
+  font-family: var(--f-body);
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  outline: none;
+  width: 130px;
+  background: var(--bg);
+  transition: border-color 0.15s;
+}
+
+.inline-input:focus { border-color: var(--green); }
+
+.inline-select {
+  padding: 5px 8px;
+  font-family: var(--f-body);
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  outline: none;
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.inline-select:focus { border-color: var(--green); }
+
+/* ── 관리 버튼 ── */
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── 빈 상태 ── */
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.empty-state svg {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 12px;
+  opacity: 0.35;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── 모달 ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(5,79,25,0.16);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-family: var(--f-head);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--r-sm);
+  transition: background 0.15s;
+}
+
+.modal-close:hover { background: var(--bg-subtle); color: var(--text); }
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--f-head);
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.form-select,
+.form-input {
+  padding: 10px 12px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  outline: none;
+  background: var(--bg);
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.form-select:focus,
+.form-input:focus { border-color: var(--green); }
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── 토스트 ── */
+.toast-wrap {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--green);
+  color: var(--white);
+  padding: 12px 18px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--f-body);
+  box-shadow: 0 4px 16px rgba(5,79,25,0.25);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-text">SOWN</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin_dashboard.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="6" height="6" rx="1"/>
+          <rect x="9" y="1" width="6" height="6" rx="1"/>
+          <rect x="1" y="9" width="6" height="6" rx="1"/>
+          <rect x="9" y="9" width="6" height="6" rx="1"/>
+        </svg>
+        대시보드
+      </a>
+      <a href="admin_products.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 4h12l-1.5 8H3.5L2 4z"/>
+          <circle cx="6" cy="14" r="1"/>
+          <circle cx="11" cy="14" r="1"/>
+          <path d="M1 1h2l.5 3"/>
+        </svg>
+        상품 관리
+      </a>
+      <a href="admin_orders.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="1" width="12" height="14" rx="1.5"/>
+          <path d="M5 5h6M5 8h6M5 11h4"/>
+        </svg>
+        주문 관리
+      </a>
+      <a href="admin_shipping.html" class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M1 5h10v7H1z"/>
+          <path d="M11 7l2.5 1.5V12H11"/>
+          <circle cx="4" cy="13" r="1.2"/>
+          <circle cx="12" cy="13" r="1.2"/>
+        </svg>
+        배송 관리
+      </a>
+      <a href="admin_inventory.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="3" width="14" height="10" rx="1"/>
+          <path d="M5 3V1M11 3V1M1 7h14"/>
+        </svg>
+        재고 관리
+      </a>
+      <a href="admin_members.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="5" r="3"/>
+          <path d="M1 14c0-3.314 3.134-6 7-6s7 2.686 7 6"/>
+        </svg>
+        회원 관리
+      </a>
+      <a href="admin_sales.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 12 L5 8 L8 10 L12 5 L15 7"/>
+          <path d="M2 14h12"/>
+        </svg>
+        매출 통계
+      </a>
+      <a href="admin_cs.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 1C4.686 1 2 3.462 2 6.5c0 1.7.8 3.22 2.07 4.24L3.5 14l3.1-1.55C6.89 12.48 7.44 12.5 8 12.5c3.314 0 6-2.462 6-5.5S11.314 1 8 1z"/>
+        </svg>
+        고객 문의
+        <span class="nav-badge">3</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <div class="main">
+
+    <!-- 탑바 -->
+    <header class="topbar">
+      <span class="topbar-title">배송 관리</span>
+      <span class="topbar-user">안녕하세요, 관리자님</span>
+    </header>
+
+    <!-- 콘텐츠 -->
+    <main class="content">
+
+      <!-- 페이지 헤더 -->
+      <div class="page-header">
+        <h1 class="page-title">배송 관리</h1>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="downloadExcel()">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M8 2v9M4 8l4 4 4-4"/>
+              <path d="M2 13h12"/>
+            </svg>
+            엑셀 다운로드
+          </button>
+          <button class="btn btn-primary" onclick="openModal()">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 3v10M3 8h10"/>
+            </svg>
+            운송장 등록
+          </button>
+        </div>
+      </div>
+
+      <!-- 필터 탭 + 검색 -->
+      <div class="toolbar">
+        <div class="tab-list" role="tablist">
+          <button class="tab-item active" data-tab="all" onclick="switchTab(this,'all')" role="tab">전체</button>
+          <button class="tab-item" data-tab="unregistered" onclick="switchTab(this,'unregistered')" role="tab">운송장 미등록</button>
+          <button class="tab-item" data-tab="shipping" onclick="switchTab(this,'shipping')" role="tab">배송 중</button>
+          <button class="tab-item" data-tab="done" onclick="switchTab(this,'done')" role="tab">배송 완료</button>
+        </div>
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="6.5" cy="6.5" r="4.5"/>
+            <path d="M10.5 10.5 L14 14"/>
+          </svg>
+          <input class="search-input" type="text" placeholder="주문번호 또는 수령인 검색" oninput="filterSearch(this.value)">
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="table-card">
+        <table class="data-table" id="shippingTable">
+          <thead>
+            <tr>
+              <th>주문번호</th>
+              <th>수령인</th>
+              <th>주소</th>
+              <th>운송장번호</th>
+              <th>택배사</th>
+              <th>상태</th>
+              <th>주문일</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+
+            <!-- 행 1: 배송 완료 -->
+            <tr data-status="done">
+              <td><span class="order-no">ORD-2025-0481</span></td>
+              <td><span class="recipient-name">김지수</span></td>
+              <td><span class="address-text">서울시 마포구 홍익로 24, 101호</span></td>
+              <td><span class="tracking-no">560123456789</span></td>
+              <td><span class="carrier-text">CJ대한통운</span></td>
+              <td><span class="badge badge-done">배송 완료</span></td>
+              <td><span class="order-date">2025.05.10</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-ghost btn-sm">조회</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 행 2: 배송 중 -->
+            <tr data-status="shipping">
+              <td><span class="order-no">ORD-2025-0482</span></td>
+              <td><span class="recipient-name">이민준</span></td>
+              <td><span class="address-text">경기도 성남시 분당구 판교로 235</span></td>
+              <td><span class="tracking-no">370987654321</span></td>
+              <td><span class="carrier-text">한진택배</span></td>
+              <td><span class="badge badge-shipping">배송 중</span></td>
+              <td><span class="order-date">2025.05.11</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-outline btn-sm" onclick="markDelivered(this)">배송 완료</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 행 3: 운송장 미등록 (인라인 입력) -->
+            <tr data-status="unregistered">
+              <td><span class="order-no">ORD-2025-0483</span></td>
+              <td><span class="recipient-name">박서연</span></td>
+              <td><span class="address-text">부산시 해운대구 해운대로 12, 3층</span></td>
+              <td>
+                <div class="inline-track">
+                  <input class="inline-input" type="text" placeholder="운송장번호 입력">
+                  <select class="inline-select">
+                    <option value="">택배사</option>
+                    <option value="cj">CJ대한통운</option>
+                    <option value="hanjin">한진택배</option>
+                    <option value="lotte">롯데택배</option>
+                    <option value="post">우체국택배</option>
+                    <option value="logen">로젠택배</option>
+                  </select>
+                  <button class="btn btn-primary btn-sm" onclick="registerInline(this)">등록</button>
+                </div>
+              </td>
+              <td><span class="carrier-text">—</span></td>
+              <td><span class="badge badge-unregistered">운송장 미등록</span></td>
+              <td><span class="order-date">2025.05.12</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-ghost btn-sm" onclick="openModal()">모달 등록</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 행 4: 배송 중 -->
+            <tr data-status="shipping">
+              <td><span class="order-no">ORD-2025-0484</span></td>
+              <td><span class="recipient-name">최현우</span></td>
+              <td><span class="address-text">인천시 연수구 갯벌로 38, 207호</span></td>
+              <td><span class="tracking-no">410234567890</span></td>
+              <td><span class="carrier-text">롯데택배</span></td>
+              <td><span class="badge badge-shipping">배송 중</span></td>
+              <td><span class="order-date">2025.05.12</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-outline btn-sm" onclick="markDelivered(this)">배송 완료</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 행 5: 운송장 미등록 (인라인 입력) -->
+            <tr data-status="unregistered">
+              <td><span class="order-no">ORD-2025-0485</span></td>
+              <td><span class="recipient-name">정수아</span></td>
+              <td><span class="address-text">대구시 수성구 달구벌대로 2180</span></td>
+              <td>
+                <div class="inline-track">
+                  <input class="inline-input" type="text" placeholder="운송장번호 입력">
+                  <select class="inline-select">
+                    <option value="">택배사</option>
+                    <option value="cj">CJ대한통운</option>
+                    <option value="hanjin">한진택배</option>
+                    <option value="lotte">롯데택배</option>
+                    <option value="post">우체국택배</option>
+                    <option value="logen">로젠택배</option>
+                  </select>
+                  <button class="btn btn-primary btn-sm" onclick="registerInline(this)">등록</button>
+                </div>
+              </td>
+              <td><span class="carrier-text">—</span></td>
+              <td><span class="badge badge-unregistered">운송장 미등록</span></td>
+              <td><span class="order-date">2025.05.13</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn btn-ghost btn-sm" onclick="openModal()">모달 등록</button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- 빈 상태 (숨김) -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 14h25l-4 20H9L5 14z"/>
+            <path d="M12 14l2-6h9l2 6"/>
+            <circle cx="14" cy="37" r="2"/>
+            <circle cx="26" cy="37" r="2"/>
+          </svg>
+          <p class="empty-text">처리할 배송이 없습니다</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── 운송장 등록 모달 ── -->
+<div class="modal-overlay" id="trackingModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">운송장 등록</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="닫기">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3l10 10M13 3L3 13"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="modalCarrier">택배사</label>
+        <select class="form-select" id="modalCarrier">
+          <option value="">택배사를 선택하세요</option>
+          <option value="cj">CJ대한통운</option>
+          <option value="hanjin">한진택배</option>
+          <option value="lotte">롯데택배</option>
+          <option value="post">우체국택배</option>
+          <option value="logen">로젠택배</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="modalTracking">운송장번호</label>
+        <input class="form-input" type="text" id="modalTracking" placeholder="운송장번호를 입력하세요">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" onclick="submitModal()">등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 토스트 ── -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── 탭 전환 ──
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  const rows = document.querySelectorAll('#tableBody tr');
+  let visibleCount = 0;
+
+  rows.forEach(row => {
+    const status = row.dataset.status;
+    const show = tab === 'all' || status === tab;
+    row.style.display = show ? '' : 'none';
+    if (show) visibleCount++;
+  });
+
+  document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+// ── 검색 필터 ──
+function filterSearch(val) {
+  const keyword = val.trim().toLowerCase();
+  const rows = document.querySelectorAll('#tableBody tr');
+  let visibleCount = 0;
+
+  rows.forEach(row => {
+    if (row.style.display === 'none' && keyword === '') return;
+    const text = row.innerText.toLowerCase();
+    const show = !keyword || text.includes(keyword);
+    row.style.display = show ? '' : 'none';
+    if (show) visibleCount++;
+  });
+
+  document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+// ── 인라인 운송장 등록 ──
+function registerInline(btn) {
+  const row = btn.closest('tr');
+  const input = row.querySelector('.inline-input');
+  const select = row.querySelector('.inline-select');
+
+  if (!input.value.trim() || !select.value) {
+    input.style.borderColor = 'var(--error)';
+    setTimeout(() => { input.style.borderColor = ''; }, 1500);
+    return;
+  }
+
+  const carrierMap = { cj:'CJ대한통운', hanjin:'한진택배', lotte:'롯데택배', post:'우체국택배', logen:'로젠택배' };
+  const trackingNo = input.value.trim();
+  const carrier = carrierMap[select.value] || select.value;
+
+  // 운송장번호 셀 교체
+  const tdTracking = row.cells[3];
+  tdTracking.innerHTML = `<span class="tracking-no">${trackingNo}</span>`;
+
+  // 택배사 셀 교체
+  const tdCarrier = row.cells[4];
+  tdCarrier.innerHTML = `<span class="carrier-text">${carrier}</span>`;
+
+  // 상태 뱃지 업데이트
+  const tdStatus = row.cells[5];
+  tdStatus.innerHTML = `<span class="badge badge-shipping">배송 중</span>`;
+
+  // 관리 버튼 교체
+  const tdAction = row.cells[7];
+  tdAction.innerHTML = `<div class="action-group"><button class="btn btn-outline btn-sm" onclick="markDelivered(this)">배송 완료</button></div>`;
+
+  // data-status 갱신
+  row.dataset.status = 'shipping';
+
+  showToast('운송장이 등록되었습니다');
+}
+
+// ── 배송 완료 처리 ──
+function markDelivered(btn) {
+  const row = btn.closest('tr');
+  const tdStatus = row.cells[5];
+  tdStatus.innerHTML = `<span class="badge badge-done">배송 완료</span>`;
+
+  const tdAction = row.cells[7];
+  tdAction.innerHTML = `<div class="action-group"><button class="btn btn-ghost btn-sm">조회</button></div>`;
+
+  row.dataset.status = 'done';
+  showToast('배송 완료 처리되었습니다');
+}
+
+// ── 모달 ──
+function openModal() {
+  document.getElementById('trackingModal').classList.add('open');
+  document.getElementById('modalCarrier').value = '';
+  document.getElementById('modalTracking').value = '';
+}
+
+function closeModal() {
+  document.getElementById('trackingModal').classList.remove('open');
+}
+
+function submitModal() {
+  const carrier = document.getElementById('modalCarrier').value;
+  const tracking = document.getElementById('modalTracking').value.trim();
+
+  if (!carrier || !tracking) {
+    const field = !carrier ? document.getElementById('modalCarrier') : document.getElementById('modalTracking');
+    field.style.borderColor = 'var(--error)';
+    setTimeout(() => { field.style.borderColor = ''; }, 1500);
+    return;
+  }
+
+  closeModal();
+  showToast('운송장이 등록되었습니다');
+}
+
+// 모달 오버레이 클릭 닫기
+document.getElementById('trackingModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ESC 닫기
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── 엑셀 다운로드 (더미) ──
+function downloadExcel() {
+  showToast('엑셀 파일을 다운로드합니다');
+}
+
+// ── 토스트 ──
+function showToast(msg) {
+  const wrap = document.getElementById('toastWrap');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+      <path d="M2.5 8.5l3.5 3.5 7.5-7.5"/>
+    </svg>
+    ${msg}
+  `;
+  wrap.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { toast.classList.add('show'); });
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => { toast.remove(); }, 300);
+  }, 2800);
+}
+</script>
+
+</body>
+</html>

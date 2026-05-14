@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이페이지 — SOWN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2'); font-weight:700; }
+@font-face { font-family:'GMarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GMarket_TTBold.woff') format('woff'); font-weight:700; }
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+:root {
+  --bg:#F5F0E8;
+  --bg-subtle:#EDE7D8;
+  --bg-dark:#054f19;
+  --text:#111A13;
+  --text-muted:#4A5C4D;
+  --text-light:#8A9B8D;
+  --green:#054f19;
+  --green-dark:#033610;
+  --lime:#DAF15B;
+  --lime-dark:#B8CC3A;
+  --white:#FFFFFF;
+  --border:rgba(5,79,25,0.12);
+  --shadow-sm:0 1px 4px rgba(5,79,25,0.08);
+  --shadow-md:0 4px 16px rgba(5,79,25,0.12);
+  --error:#C0392B;
+  --f-head:'Pretendard',sans-serif;
+  --f-body:'Suit','Noto Sans KR',sans-serif;
+  --f-label:'GMarketSans','Suit',sans-serif;
+  --r-sm:4px;
+  --r-md:8px;
+  --r-lg:16px;
+  --r-full:999px;
+}
+
+body {
+  background:#D8D3CC;
+  font-family:var(--f-body);
+  color:var(--text);
+}
+
+.page {
+  max-width:430px;
+  min-width:375px;
+  margin:0 auto;
+  background:var(--bg);
+  min-height:100vh;
+  position:relative;
+}
+
+/* ── GNB ── */
+.gnb {
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:52px;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  transition:box-shadow 0.2s ease;
+  border-bottom:1px solid transparent;
+}
+.gnb.scrolled {
+  box-shadow:var(--shadow-sm);
+  border-bottom-color:var(--border);
+}
+.gnb-logo {
+  font-family:var(--f-head);
+  font-weight:700;
+  font-size:18px;
+  color:var(--green);
+  text-decoration:none;
+  letter-spacing:0.08em;
+}
+.gnb-icons {
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.gnb-icon {
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:var(--r-md);
+  text-decoration:none;
+  color:var(--text-muted);
+  transition:background 0.15s;
+}
+.gnb-icon:hover { background:var(--bg-subtle); }
+.gnb-icon.active { color:var(--green); }
+.gnb-icon svg { width:22px; height:22px; stroke-width:1.8; }
+
+/* ── 페이지 헤더 ── */
+.page-header {
+  background:var(--bg-subtle);
+  padding:24px 20px;
+  border-bottom:1px solid var(--border);
+}
+.page-header-title {
+  font-family:var(--f-head);
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-light);
+  letter-spacing:0.1em;
+  margin-bottom:6px;
+}
+.page-header-welcome {
+  font-family:var(--f-head);
+  font-size:18px;
+  font-weight:700;
+  color:var(--text);
+}
+
+/* ── 메뉴 리스트 ── */
+.menu-list {
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.menu-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:48px;
+  padding:0 20px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.15s;
+  text-decoration:none;
+}
+.menu-item:last-child { border-bottom:none; }
+.menu-item:hover { background:var(--bg-subtle); }
+.menu-item-label {
+  font-family:var(--f-body);
+  font-size:14px;
+  font-weight:500;
+  color:var(--text);
+}
+.menu-item-label.logout { color:var(--text-light); }
+.menu-item-arrow {
+  color:var(--text-light);
+  display:flex;
+  align-items:center;
+}
+.menu-item-arrow svg { width:16px; height:16px; stroke-width:1.8; }
+
+/* ── 섹션 공통 ── */
+.section {
+  padding:24px 20px;
+}
+.section-title {
+  font-family:var(--f-head);
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:16px;
+}
+
+/* ── 주문 카드 ── */
+.order-card {
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow-sm);
+}
+.order-card:last-child { margin-bottom:0; }
+.order-card-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.order-number {
+  font-family:var(--f-body);
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-muted);
+}
+.order-date {
+  font-family:var(--f-body);
+  font-size:11px;
+  color:var(--text-light);
+  margin-top:2px;
+}
+.order-badge {
+  display:inline-flex;
+  align-items:center;
+  height:22px;
+  padding:0 8px;
+  border-radius:var(--r-full);
+  font-family:var(--f-body);
+  font-size:11px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.badge-paid { background:var(--lime); color:var(--green); }
+.badge-preparing { background:var(--bg-subtle); color:var(--text-muted); border:1px solid var(--border); }
+.badge-shipping { background:var(--green); color:var(--white); }
+.badge-delivered { background:var(--bg-subtle); color:var(--text-muted); }
+.badge-cancelled { background:rgba(192,57,43,0.1); color:var(--error); }
+
+.order-product {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin-bottom:12px;
+}
+.order-img {
+  width:60px;
+  height:60px;
+  border-radius:var(--r-md);
+  background:var(--bg-subtle);
+  border:1px solid var(--border);
+  flex-shrink:0;
+  object-fit:cover;
+}
+.order-product-info { flex:1; min-width:0; }
+.order-product-name {
+  font-family:var(--f-body);
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+  margin-bottom:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.order-product-price {
+  font-family:var(--f-head);
+  font-size:14px;
+  font-weight:700;
+  color:var(--green);
+}
+
+.order-actions {
+  display:flex;
+  gap:8px;
+}
+.btn-ghost {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:32px;
+  padding:0 12px;
+  border:1px solid var(--green);
+  border-radius:var(--r-sm);
+  background:transparent;
+  color:var(--green);
+  font-family:var(--f-body);
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background 0.15s, color 0.15s;
+  text-decoration:none;
+}
+.btn-ghost:hover { background:var(--green); color:var(--white); }
+
+/* ── 빈 상태 ── */
+.empty-state {
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  padding:48px 20px;
+  text-align:center;
+}
+.empty-state.visible { display:flex; }
+.empty-icon {
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:var(--bg-subtle);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:16px;
+}
+.empty-icon svg { width:28px; height:28px; color:var(--text-light); }
+.empty-head {
+  font-family:var(--f-head);
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.empty-sub {
+  font-family:var(--f-body);
+  font-size:13px;
+  color:var(--text-muted);
+  margin-bottom:20px;
+  line-height:1.6;
+}
+.btn-primary-sm {
+  display:inline-flex;
+  align-items:center;
+  height:40px;
+  padding:0 20px;
+  background:var(--green);
+  color:var(--white);
+  border:none;
+  border-radius:var(--r-md);
+  font-family:var(--f-body);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
+  transition:background 0.15s;
+}
+.btn-primary-sm:hover { background:var(--green-dark); }
+
+/* ── 서브뷰 공통 ── */
+.subview {
+  display:none;
+  flex-direction:column;
+  min-height:100vh;
+}
+.subview.visible { display:flex; }
+
+.subview-header {
+  position:sticky;
+  top:52px;
+  z-index:90;
+  height:48px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+}
+.back-btn {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  height:32px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  color:var(--text);
+  border-radius:var(--r-sm);
+  transition:background 0.15s;
+}
+.back-btn:hover { background:var(--bg-subtle); }
+.back-btn svg { width:20px; height:20px; stroke-width:2; }
+.subview-title {
+  font-family:var(--f-head);
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+}
+
+/* ── 폼 ── */
+.form-body { padding:24px 20px; flex:1; }
+.form-group { margin-bottom:16px; }
+.form-label {
+  display:block;
+  font-family:var(--f-body);
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-muted);
+  margin-bottom:6px;
+  letter-spacing:0.04em;
+}
+.form-input {
+  width:100%;
+  height:44px;
+  padding:0 12px;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-md);
+  font-family:var(--f-body);
+  font-size:14px;
+  color:var(--text);
+  outline:none;
+  transition:border-color 0.2s;
+}
+.form-input:focus { border-color:var(--green); }
+.form-input::placeholder { color:var(--text-light); }
+
+.form-footer {
+  padding:16px 20px 24px;
+}
+.btn-primary {
+  width:100%;
+  height:48px;
+  background:var(--green);
+  color:var(--white);
+  border:none;
+  border-radius:var(--r-md);
+  font-family:var(--f-head);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:0.02em;
+  transition:background 0.15s;
+}
+.btn-primary:hover { background:var(--green-dark); }
+
+/* ── 배송지 ── */
+.address-top {
+  padding:16px 20px 0;
+}
+.btn-add {
+  width:100%;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:1.5px dashed var(--green);
+  border-radius:var(--r-md);
+  background:transparent;
+  color:var(--green);
+  font-family:var(--f-body);
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background 0.15s;
+}
+.btn-add:hover { background:rgba(5,79,25,0.04); }
+
+.address-list { padding:16px 20px; }
+.address-card {
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow-sm);
+}
+.address-card-top {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.address-card-name-wrap { display:flex; align-items:center; gap:8px; }
+.address-name {
+  font-family:var(--f-body);
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+}
+.badge-default {
+  display:inline-flex;
+  align-items:center;
+  height:20px;
+  padding:0 7px;
+  background:var(--lime);
+  color:var(--green);
+  border-radius:var(--r-full);
+  font-family:var(--f-body);
+  font-size:10px;
+  font-weight:700;
+}
+.address-phone {
+  font-family:var(--f-body);
+  font-size:13px;
+  color:var(--text-muted);
+  margin-bottom:6px;
+}
+.address-addr {
+  font-family:var(--f-body);
+  font-size:13px;
+  color:var(--text-muted);
+  line-height:1.5;
+  margin-bottom:12px;
+}
+.address-actions { display:flex; gap:8px; }
+.btn-ghost-sm {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 10px;
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  background:transparent;
+  color:var(--text-muted);
+  font-family:var(--f-body);
+  font-size:11px;
+  font-weight:500;
+  cursor:pointer;
+  transition:border-color 0.15s, color 0.15s;
+}
+.btn-ghost-sm:hover { border-color:var(--green); color:var(--green); }
+.btn-ghost-sm.danger:hover { border-color:var(--error); color:var(--error); }
+
+.address-limit-note {
+  font-family:var(--f-body);
+  font-size:12px;
+  color:var(--text-light);
+  text-align:center;
+  padding:8px 20px 24px;
+}
+
+/* ── 토스트 ── */
+.toast {
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--green);
+  color:var(--white);
+  font-family:var(--f-body);
+  font-size:13px;
+  font-weight:500;
+  padding:12px 20px;
+  border-radius:var(--r-full);
+  box-shadow:var(--shadow-md);
+  opacity:0;
+  transition:opacity 0.3s ease, transform 0.3s ease;
+  pointer-events:none;
+  white-space:nowrap;
+  z-index:999;
+}
+.toast.show {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* ── 메인 뷰 ── */
+#mainView {
+  display:block;
+}
+
+/* ── 푸터 ── */
+footer {
+  background:var(--bg-dark);
+  padding:32px 20px 24px;
+}
+.footer-logo {
+  font-family:var(--f-head);
+  font-size:20px;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:0.12em;
+  margin-bottom:6px;
+}
+.footer-slogan {
+  font-family:var(--f-body);
+  font-size:12px;
+  color:rgba(255,255,255,0.5);
+  margin-bottom:20px;
+  letter-spacing:0.04em;
+}
+.footer-links {
+  display:flex;
+  gap:16px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.footer-link {
+  font-family:var(--f-body);
+  font-size:12px;
+  color:rgba(255,255,255,0.6);
+  text-decoration:none;
+  transition:color 0.15s;
+}
+.footer-link:hover { color:var(--white); }
+.footer-biz {
+  font-family:var(--f-body);
+  font-size:11px;
+  color:rgba(255,255,255,0.35);
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.footer-copy {
+  font-family:var(--f-body);
+  font-size:11px;
+  color:rgba(255,255,255,0.3);
+}
+</style>
+</head>
+<body>
+<div class="page" id="pageRoot">
+
+  <!-- GNB -->
+  <nav class="gnb" id="gnb">
+    <a href="01_home.html" class="gnb-logo">SOWN</a>
+    <div class="gnb-icons">
+      <a href="11_search.html" class="gnb-icon" aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </a>
+      <a href="05_cart.html" class="gnb-icon" aria-label="장바구니">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+      </a>
+      <a href="10_mypage.html" class="gnb-icon active" aria-label="마이페이지">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ══ 메인 뷰 ══ -->
+  <div id="mainView">
+
+    <!-- 페이지 헤더 -->
+    <div class="page-header">
+      <div class="page-header-title">MYPAGE</div>
+      <div class="page-header-welcome">안녕하세요, 김소원님</div>
+    </div>
+
+    <!-- 메뉴 리스트 -->
+    <div class="menu-list">
+      <div class="menu-item" onclick="scrollToOrders()">
+        <span class="menu-item-label">주문 내역</span>
+        <span class="menu-item-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+      <div class="menu-item" onclick="scrollToOrders()">
+        <span class="menu-item-label">배송 조회</span>
+        <span class="menu-item-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+      <div class="menu-item" onclick="showSubview('profileSection')">
+        <span class="menu-item-label">개인정보 수정</span>
+        <span class="menu-item-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+      <div class="menu-item" onclick="showSubview('addressSection')">
+        <span class="menu-item-label">배송지 관리</span>
+        <span class="menu-item-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+      <div class="menu-item" onclick="handleLogout()">
+        <span class="menu-item-label logout">로그아웃</span>
+        <span class="menu-item-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- 주문 내역 섹션 -->
+    <div class="section" id="orderSection">
+      <div class="section-title">주문 내역</div>
+
+      <!-- 주문 카드 1 -->
+      <div class="order-card">
+        <div class="order-card-header">
+          <div>
+            <div class="order-number">#SOWN-2026-0001</div>
+            <div class="order-date">2026.05.10</div>
+          </div>
+          <span class="order-badge badge-shipping">배송 중</span>
+        </div>
+        <div class="order-product">
+          <img src="" alt="생강청 200g" class="order-img" onerror="this.style.background='var(--bg-subtle)'">
+          <div class="order-product-info">
+            <div class="order-product-name">생강청 200g · 발효 한정 에디션</div>
+            <div class="order-product-price">28,000원</div>
+          </div>
+        </div>
+        <div class="order-actions">
+          <button class="btn-ghost">배송 조회</button>
+          <button class="btn-ghost">취소·반품 신청</button>
+        </div>
+      </div>
+
+      <!-- 주문 카드 2 -->
+      <div class="order-card">
+        <div class="order-card-header">
+          <div>
+            <div class="order-number">#SOWN-2026-0002</div>
+            <div class="order-date">2026.05.12</div>
+          </div>
+          <span class="order-badge badge-paid">결제 완료</span>
+        </div>
+        <div class="order-product">
+          <img src="" alt="레몬 유자 발효청 키트" class="order-img" onerror="this.style.background='var(--bg-subtle)'">
+          <div class="order-product-info">
+            <div class="order-product-name">레몬 유자 발효청 키트</div>
+            <div class="order-product-price">52,000원</div>
+          </div>
+        </div>
+        <div class="order-actions">
+          <button class="btn-ghost">배송 조회</button>
+          <button class="btn-ghost">취소·반품 신청</button>
+        </div>
+      </div>
+
+      <!-- 빈 상태 -->
+      <div class="empty-state" id="emptyOrders">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+          </svg>
+        </div>
+        <div class="empty-head">아직 주문 내역이 없습니다</div>
+        <div class="empty-sub">에디터가 고른 발효 재료를 만나보세요.</div>
+        <a href="02_shop.html" class="btn-primary-sm">Shop 바로가기</a>
+      </div>
+    </div>
+
+  </div><!-- /mainView -->
+
+  <!-- ══ 개인정보 수정 서브뷰 ══ -->
+  <div class="subview" id="profileSection">
+    <div class="subview-header">
+      <button class="back-btn" onclick="hideSubview('profileSection')" aria-label="뒤로가기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="subview-title">개인정보 수정</span>
+    </div>
+    <div class="form-body">
+      <div class="form-group">
+        <label class="form-label" for="currentPw">현재 비밀번호</label>
+        <input class="form-input" type="password" id="currentPw" placeholder="현재 비밀번호를 입력하세요">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="newPw">새 비밀번호</label>
+        <input class="form-input" type="password" id="newPw" placeholder="새 비밀번호를 입력하세요">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="newPwConfirm">새 비밀번호 확인</label>
+        <input class="form-input" type="password" id="newPwConfirm" placeholder="새 비밀번호를 다시 입력하세요">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="userName">이름</label>
+        <input class="form-input" type="text" id="userName" placeholder="이름을 입력하세요" value="김소원">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="userPhone">연락처</label>
+        <input class="form-input" type="tel" id="userPhone" placeholder="010-0000-0000" value="010-1234-5678" maxlength="13">
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn-primary" onclick="handleSaveProfile()">저장하기</button>
+    </div>
+  </div>
+
+  <!-- ══ 배송지 관리 서브뷰 ══ -->
+  <div class="subview" id="addressSection">
+    <div class="subview-header">
+      <button class="back-btn" onclick="hideSubview('addressSection')" aria-label="뒤로가기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="subview-title">배송지 관리</span>
+    </div>
+    <div class="address-top">
+      <button class="btn-add" onclick="handleAddAddress()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        배송지 추가
+      </button>
+    </div>
+    <div class="address-list">
+      <div class="address-card">
+        <div class="address-card-top">
+          <div class="address-card-name-wrap">
+            <span class="address-name">김소원</span>
+            <span class="badge-default">기본</span>
+          </div>
+        </div>
+        <div class="address-phone">010-1234-5678</div>
+        <div class="address-addr">서울특별시 마포구 합정동 123-4<br>101동 502호</div>
+        <div class="address-actions">
+          <button class="btn-ghost-sm">기본으로 설정</button>
+          <button class="btn-ghost-sm danger">삭제</button>
+        </div>
+      </div>
+    </div>
+    <div class="address-limit-note">배송지는 최대 5개까지 저장할 수 있습니다</div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer id="siteFooter">
+    <div class="footer-logo">SOWN</div>
+    <div class="footer-slogan">기다림이 소원이 되는 시간</div>
+    <div class="footer-links">
+      <a href="02_shop.html" class="footer-link">Shop</a>
+      <a href="04_class.html" class="footer-link">Class</a>
+      <a href="08_about.html" class="footer-link">About</a>
+    </div>
+    <div class="footer-biz">
+      [사업자명] · 사업자등록번호 000-00-00000 · 대표자 OOO<br>
+      통신판매업신고번호 제0000-서울OO-0000호
+    </div>
+    <div class="footer-copy">© 2026 SOWN. All rights reserved.</div>
+  </footer>
+
+  <!-- 토스트 -->
+  <div class="toast" id="toast"></div>
+
+</div><!-- /page -->
+
+<script>
+// ── GNB 스크롤 shadow ──
+(function() {
+  var gnb = document.getElementById('gnb');
+  window.addEventListener('scroll', function() {
+    gnb.classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+})();
+
+// ── 서브뷰 전환 ──
+function showSubview(id) {
+  document.getElementById('mainView').style.display = 'none';
+  document.getElementById('siteFooter').style.display = 'none';
+  var el = document.getElementById(id);
+  el.classList.add('visible');
+  window.scrollTo(0, 0);
+}
+
+function hideSubview(id) {
+  document.getElementById(id).classList.remove('visible');
+  document.getElementById('mainView').style.display = 'block';
+  document.getElementById('siteFooter').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+// ── 주문 내역 스크롤 ──
+function scrollToOrders() {
+  var el = document.getElementById('orderSection');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// ── 로그아웃 ──
+function handleLogout() {
+  if (confirm('로그아웃 하시겠습니까?')) {
+    window.location.href = '01_home.html';
+  }
+}
+
+// ── 저장하기 ──
+function handleSaveProfile() {
+  showToast('정보가 수정되었습니다');
+}
+
+// ── 배송지 추가 ──
+function handleAddAddress() {
+  showToast('배송지 추가 기능은 준비 중입니다');
+}
+
+// ── 토스트 ──
+function showToast(msg) {
+  var toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() {
+    toast.classList.remove('show');
+  }, 2400);
+}
+
+// ── 연락처 자동 하이픈 ──
+(function() {
+  var phoneInput = document.getElementById('userPhone');
+  if (!phoneInput) return;
+  phoneInput.addEventListener('input', function(e) {
+    var val = e.target.value.replace(/[^0-9]/g, '');
+    if (val.length <= 3) {
+      e.target.value = val;
+    } else if (val.length <= 7) {
+      e.target.value = val.slice(0,3) + '-' + val.slice(3);
+    } else {
+      e.target.value = val.slice(0,3) + '-' + val.slice(3,7) + '-' + val.slice(7,11);
+    }
+  });
+})();
+</script>
+</body>
+</html>
