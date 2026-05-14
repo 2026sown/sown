@@ -175,9 +175,9 @@ body { background:#D8D3CC; font-family:var(--f-body); color:var(--text); }
 .footer-copy { font-family:var(--f-body); font-size:11px; color:rgba(255,255,255,0.25); }
 
 /* ── NAV DRAWER ── */
-.nav-drawer{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:var(--bg);z-index:200;transition:right 0.35s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.12);}
-.nav-drawer.open{right:0;}
-.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+.nav-drawer{position:fixed;top:0;left:0;width:280px;height:100vh;background:var(--bg);z-index:200;transform:translateX(calc(100% + 20px));transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.12);}
+.nav-drawer.open{transform:translateX(0);}
+.nav-overlay{position:fixed;top:0;left:0;height:100vh;background:rgba(0,0,0,0.45);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
 .nav-overlay.open{opacity:1;pointer-events:all;}
 .nav-drawer-hd{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid var(--border);}
 .nav-close{width:40px;height:40px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--r-md);color:var(--text);transition:background 0.2s;}
@@ -416,8 +416,11 @@ body { background:#D8D3CC; font-family:var(--f-body); color:var(--text); }
 // Nav drawer
 (function(){
   var d=document.getElementById('navDrawer'),o=document.getElementById('navOverlay'),c=document.getElementById('navClose'),m=document.querySelector('[aria-label="메뉴"]');
-  function openNav(){d.classList.add('open');o.classList.add('open');document.body.style.overflow='hidden';}
+  function positionNav(){var p=document.querySelector('.page');if(!p)return;var r=p.getBoundingClientRect();d.style.left=(r.right-280)+'px';o.style.left=r.left+'px';o.style.width=r.width+'px';}
+  function openNav(){positionNav();d.classList.add('open');o.classList.add('open');document.body.style.overflow='hidden';}
   function closeNav(){d.classList.remove('open');o.classList.remove('open');document.body.style.overflow='';}
+  positionNav();
+  window.addEventListener('resize',positionNav,{passive:true});
   if(m) m.addEventListener('click',openNav);
   if(c) c.addEventListener('click',closeNav);
   if(o) o.addEventListener('click',closeNav);
