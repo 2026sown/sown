@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>장바구니 — SOWN</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 <style>
 @font-face { font-family:'Suit'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2'); font-weight:400; }
@@ -501,6 +502,23 @@ body {
   color: rgba(255,255,255,0.25);
   font-weight: 400;
 }
+
+/* ── NAV DRAWER ── */
+.nav-drawer{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:var(--bg);z-index:200;transition:right 0.35s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.12);}
+.nav-drawer.open{right:0;}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+.nav-overlay.open{opacity:1;pointer-events:all;}
+.nav-drawer-hd{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid var(--border);}
+.nav-close{width:40px;height:40px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:var(--r-md);color:var(--text);transition:background 0.2s;}
+.nav-close:hover{background:var(--bg-subtle);}
+.nav-close svg{width:20px;height:20px;}
+.nav-links{padding:24px 20px;display:flex;flex-direction:column;gap:0;}
+.nav-links a{font-family:var(--f-head);font-size:22px;font-weight:700;color:var(--text);padding:14px 0;border-bottom:1px solid var(--border);transition:color 0.2s;display:block;}
+.nav-links a:last-child{border-bottom:none;}
+.nav-links a:hover{color:var(--green);}
+.nav-sub-links{padding:20px 20px;display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--border);}
+.nav-sub-links a{font-family:var(--f-label);font-size:12px;font-weight:700;letter-spacing:0.06em;color:var(--text-muted);padding:8px 0;transition:color 0.2s;display:block;}
+.nav-sub-links a:hover{color:var(--green);}
 </style>
 </head>
 <body>
@@ -787,6 +805,16 @@ body {
   updateCart();
   initReveal();
 
+})();
+
+// Nav drawer
+(function(){
+  var d=document.getElementById('navDrawer'),o=document.getElementById('navOverlay'),c=document.getElementById('navClose'),m=document.querySelector('[aria-label="메뉴"]');
+  function openNav(){d.classList.add('open');o.classList.add('open');document.body.style.overflow='hidden';}
+  function closeNav(){d.classList.remove('open');o.classList.remove('open');document.body.style.overflow='';}
+  if(m) m.addEventListener('click',openNav);
+  if(c) c.addEventListener('click',closeNav);
+  if(o) o.addEventListener('click',closeNav);
 })();
 </script>
 </body>
