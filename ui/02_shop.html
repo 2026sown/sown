@@ -120,14 +120,10 @@ a { text-decoration:none; color:inherit; }
   background:var(--bg); border-bottom:1px solid var(--border);
   position:sticky; top:52px; z-index:50;
 }
-.cat-tabs-row {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 20px; gap:8px;
-}
+.cat-tabs-row { padding:0 20px; }
 .cat-tabs {
   display:flex; gap:0;
   overflow-x:scroll; scrollbar-width:none;
-  flex:1;
 }
 .cat-tabs::-webkit-scrollbar { display:none; }
 .cat-tab {
@@ -140,8 +136,18 @@ a { text-decoration:none; color:inherit; }
 .cat-tab:hover { color:var(--green); }
 .cat-tab.active { color:var(--green); border-bottom-color:var(--green); }
 
+/* ── PRODUCT GRID ── */
+.shop-body { padding:10px 20px 60px; }
+.shop-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
+}
+.result-count {
+  font-family:var(--f-label); font-size:10px; font-weight:700;
+  letter-spacing:0.08em; color:var(--text-muted);
+}
 /* ── SORT ── */
-.sort-wrap { position:relative; flex-shrink:0; }
+.sort-wrap { position:relative; }
 .sort-select {
   font-family:var(--f-label); font-size:11px; font-weight:700;
   letter-spacing:0.04em; color:var(--text-muted);
@@ -152,13 +158,6 @@ a { text-decoration:none; color:inherit; }
 .sort-select:focus { border-color:var(--green); }
 .sort-icon { position:absolute; right:8px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--text-muted); }
 .sort-icon svg { width:12px; height:12px; }
-
-/* ── PRODUCT GRID ── */
-.shop-body { padding:12px 20px 60px; }
-.result-count {
-  font-family:var(--f-label); font-size:10px; font-weight:700;
-  letter-spacing:0.08em; color:var(--text-muted); margin-bottom:14px;
-}
 .product-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
 /* ── PRODUCT CARD ── */
@@ -250,7 +249,7 @@ a { text-decoration:none; color:inherit; }
     <p class="page-sub">에디터가 직접 고른 발효 재료와 도구들</p>
   </div>
 
-  <!-- CATEGORY TABS + SORT -->
+  <!-- CATEGORY TABS -->
   <div class="cat-tabs-wrap">
     <div class="cat-tabs-row">
       <div class="cat-tabs" role="tablist">
@@ -260,6 +259,13 @@ a { text-decoration:none; color:inherit; }
         <button class="cat-tab" data-cat="brew" role="tab">술 담그기</button>
         <button class="cat-tab" data-cat="gift" role="tab">선물 세트</button>
       </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="shop-body">
+    <div class="shop-toolbar">
+      <p class="result-count">총 6개 상품</p>
       <div class="sort-wrap">
         <select class="sort-select" aria-label="정렬 기준">
           <option value="new">신상품순</option>
@@ -270,11 +276,6 @@ a { text-decoration:none; color:inherit; }
         <span class="sort-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
     </div>
-  </div>
-
-  <!-- PRODUCT GRID -->
-  <div class="shop-body">
-    <p class="result-count">총 6개 상품</p>
     <div class="product-grid" id="product-grid">
 
       <a href="03_product_detail.html" class="card-product" data-slide data-cat="jang">
@@ -414,19 +415,26 @@ document.querySelectorAll('[data-slide]').forEach(el => io.observe(el));
 const tabs = document.querySelectorAll('.cat-tab');
 const cards = document.querySelectorAll('[data-cat]');
 const countEl = document.querySelector('.result-count');
+const grid = document.querySelector('.product-grid');
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
+    if (tab.classList.contains('active')) return;
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     const cat = tab.dataset.cat;
-    let visible = 0;
-    cards.forEach(card => {
-      const match = cat === 'all' || card.dataset.cat === cat;
-      card.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-    countEl.textContent = `총 ${visible}개 상품`;
+    grid.style.transition = 'opacity 0.18s ease';
+    grid.style.opacity = '0';
+    setTimeout(() => {
+      let visible = 0;
+      cards.forEach(card => {
+        const match = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      countEl.textContent = `총 ${visible}개 상품`;
+      grid.style.opacity = '1';
+    }, 180);
   });
 });
 
