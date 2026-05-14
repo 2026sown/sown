@@ -81,12 +81,12 @@ body {
   box-shadow: var(--shadow-sm);
 }
 .gnb-logo {
-  font-family: var(--f-label);
+  font-family: var(--f-head);
   font-size: 18px;
   font-weight: 700;
   color: var(--green);
   text-decoration: none;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
 }
 .gnb-actions {
   display: flex;
@@ -306,7 +306,7 @@ body {
 }
 .shipping-bar-fill {
   height: 100%;
-  background: var(--lime);
+  background: var(--green);
   border-radius: var(--r-full);
   transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
 }
@@ -637,9 +637,9 @@ body {
 
     <!-- 결제 버튼 -->
     <div class="checkout-wrap" id="checkout-wrap">
-      <button class="btn-primary" id="checkout-btn">
-        결제하기 — <span id="checkout-amount">₩ 58,000</span>
-      </button>
+      <a href="06_checkout.html" class="btn-primary" id="checkout-btn">
+        <span id="checkout-amount">₩ 58,000</span>
+      </a>
     </div>
 
     <!-- 빈 장바구니 -->
